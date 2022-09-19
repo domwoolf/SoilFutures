@@ -24,7 +24,7 @@
 #' @export
 create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp, gcm, crop, scenario, weather_filename) {
   cell_data = cell_data[1] # we only process a single cell's data
-  schedule_path = paste(out_path, ssp, gcm)
+  schedule_path = paste(pkg.env$out_path, ssp, gcm)
   schedule_filename = cell_data[1, paste(scenario, '_', crop, '_', cell, '.sched')]
   N_or_S = c('N', 'S')[cell_data$plant > cell_data$harvest + 1L] # determine "cropping hemisphere" by whether planting date comes before or after harvest date in Gregorian calendar
   schedule_table = schedule_table[scenario %in% c(scenario,           'all') &
