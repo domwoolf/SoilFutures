@@ -3,11 +3,6 @@
 # contains functions to construct DayCent schedule files from spatial data
 #
 
-#' Reads planting and harvest date from crop calendar rasters
-read_crop_calendar = function(crop, cell) {
-
-}
-
 
 
 #' Create a DayCent Schedule file
@@ -17,14 +12,35 @@ read_crop_calendar = function(crop, cell) {
 #' This function creates a schedule file for a specified scenario and crop,
 #' using spatial climate, crop calendar, crop management, and soil data.
 #'
+#' @param cell_data single row data.table providing input data for the simulation.
+#'  If more than one row is provided, only first will be used
+#' @param schedule_table data.table providing template of schedule file.
+#' @param ssp character, specifies scenario
+#' @param gcm character, specifies scenario
 #' @param crop character, one of 'maize', 'wwheat', 'swheat', 'soy'
-#' @param cell location of spatial data, cell number assumes all rasters in common form
 #' @param scenario character, specifies scenario
 
-#' @returns invisibly returns boolean indicating whether file was written succesfully.
-create_sched = function(crop, cell, scenario, main_table) {
-  crop_calendar = read_crop_calendar(crop, cell)
-  N_or_S = c('N', 'S')[crop_calendar$plant > crop_calendar$harvest + 1L]
-  sched_template = paste0(template_path, N_or_S, '_', scenario, '.sch')
+#' @returns invisibly returns boolean indicating whether file was written successfully.
+#' @export
+create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp, gcm, crop, scenario, weather_filename) {
+  cell_data = cell_data[1] # we only process a single cell's data
+  schedule_path = paste(out_path, ssp, gcm)
+  schedule_filename = cell_data[1, paste(scenario, '_', crop, '_', cell, '.sched')]
+  N_or_S = c('N', 'S')[cell_data$plant > cell_data$harvest + 1L] # determine "cropping hemisphere" by whether planting date comes before or after harvest date in Gregorian calendar
+  schedule_table = schedule_table[scenario %in% c(scenario,           'all') &
+                                  ssp      %in% c(ssp,                'all') &
+                                  N_or_S   %in% c(N_or_S,             'all') &
+                                  crop     %in% c(crop,               'all')]
+  schedule_table[, schedule := gsub('<fname>',               schedule_filename)]
+  schedule_table[, schedule := gsub('<weather_file>',        weather_filename)]
+  schedule_table[, schedule := gsub('<crop_code>',           cell_data$crop_code)]
+  schedule_table[, schedule := gsub('<cult_day_preharvest>', cell_data$cult_day_preharvest)]
+  schedule_table[, schedule := gsub('<manure>',              cell_data$manure)]
+  schedule_table[, schedule := gsub('<plant_day>',           cell_data$plant_day)]
+  schedule_table[, schedule := gsub('<harvest_day>',         cell_data$harvest_day)]
+  schedule_table[, schedule := gsub('<cult_day_postharvest>',cell_data$cult_day_postharvest)]
+  schedule_table[, schedule := gsub('<harvest_day>',         cell_data$harvest_day)]
 
+  fwrite(schedule_table[, schedule], schedule_filename, quote = FALSE, col.names = FALSE)
+  return(schedule_filename)
   }

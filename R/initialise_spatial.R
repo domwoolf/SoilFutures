@@ -1,14 +1,32 @@
+#' @import data.table
+#' @import lubridate
+#' @export
 wwheat = function(calendar, mat, map, N_or_S) {
-  gsd = # growing season days
-    plant_date = calendar$plant
-  harv_date  = calendar$harvest
-  tot.days   =
-
-    has_winter = ifelse(N_or_S == 'N', plant_date + )
-  ifelse(between(tasmin, -10, 7) & (tot.days > 150) & (gsd >= 335))
+  # test whether midwinter falls inside the interval between planting and harvesting
+  plant_day = calendar$plant_date
+  harv_day =  calendar$harv_date
+  if (harv_day < plant_day) harv_day = harv_day + 365
+  midwinter = yday(ymd(c(150621,151221)))[(N_or_S == 'N') + 1L]
+  has_winter = midwinter %between% c(plant_day, harv_day)
+  # winter wheat is determined by having a cold month, a long growing season, and midwinter falling inside the growing period
+  wwheat = (temp_coldest_month %between% c(-10, 7) & (calendar$tot.days > 150) & (gsd >= 335) & has_winter)
 }
 
-create_main_table = function(gis_path) {
+
+#' Create a data.table containing all variables required to run a DayCent simulation
+#'
+#' Returns a large table of all data required to run global simulations.
+#'
+#' This function generates a data.table with rows for every combination of scenario, crop and ssp
+#' and the raster cell numbers corresponding to locations where that crop is grown globally.
+#' Data values are automatically populated using spatial crop calendar, crop management, and soil data.
+#'
+#' @import data.table
+#' @export
+create_main_table = function() {
+  # Final version of this function will read values directly from gis files
+  # For development we just create a dummy table with fake values
+
   # crop_area      = rast(paste(gis_path, 'spam',      'area.tif',     sep='/'))
   # crop_calendar  = rast(paste(gis_path, 'sacks',     'calendar.tif', sep='/'))
   # tillage        = rast(paste(gis_path, 'tillage',   'tillage.tif',  sep='/'))
@@ -26,20 +44,22 @@ create_main_table = function(gis_path) {
   set.seed(123)
   n=20
   main_table = data.table(
-    crop           = rep(crop_types)
-    cell           = 1:n,
+    crop           = rep(crop_types, each=5),
+    cell           = 1:n,    # in final version, cell should refer to specific cell number in the unrotated rasters...
+                             # The table should only include cells where each crop is to be simulated
     crop_area      = runif(n),
-    plant_date     =
-      harv_date  =
-      tillage        =
-      min_N          =
-      org_N          =
-      org_CN         =
-      residue_return =
-      BD             =
-      clay           =
-      pH             =
-      sand           =
-      SOC            =
+    plant_date     = round(runif(n, yday(ymd(150320)), yday(ymd(150425)))),
+    harv_date      = round(runif(n, yday(ymd(150820)), yday(ymd(150925)))),
+    tillage        = 'K'
+      # min_N          =
+      # org_N          =
+      # org_CN         =
+      # residue_return =
+      # BD             =
+      # clay           =
+      # pH             =
+      # sand           =
+      # SOC            =
   )
+  return(main_table)
 }
