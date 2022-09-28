@@ -7,7 +7,7 @@
 
 #' @import data.table
 #' @import terra
-#' @import lubridate
+#' @importFrom lubridate leap_year
 
 initialize_weather = function() {
   index = data.table()
