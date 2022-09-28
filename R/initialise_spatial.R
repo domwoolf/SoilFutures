@@ -1,5 +1,5 @@
 #' @import data.table
-#' @import lubridate
+#' @importFrom lubridate ymd
 #' @export
 wwheat = function(main_table, mat, map, N_or_S) {
   # test whether midwinter falls inside the interval between planting and harvesting

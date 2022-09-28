@@ -2,6 +2,9 @@
 
 export(create_main_table)
 export(create_sched)
+export(extract_weather)
 export(wwheat)
 import(data.table)
-import(lubridate)
+import(terra)
+importFrom(lubridate,leap_year)
+importFrom(lubridate,ymd)

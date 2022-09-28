@@ -6,8 +6,7 @@
 # Dominic Woolf 7/4/22
 
 #' @import data.table
-#' @import terra
-#' @import lubridate
+#' @importFrom lubridate leap_year
 
 initialize_weather = function() {
   index = data.table()
@@ -30,17 +29,21 @@ initialize_weather = function() {
   return(invisible(weather_data))
 }
 
+#' @import terra
 load_climate_vbl = function(vbl, path) {
   clim_files = list.files(path = path, pattern = paste(vbl, '.+tif$'), full.names = TRUE)
   clim_files = sort(clim_files)
   return(rast(clim_files))
 }
 
+#' @import terra
 load_climate = function(ssp, gcm) {
   climate_path = paste(pkg.env$gis_path, ssp, gcm)
   sapply(pkg.env$climate_vbls, load_climate_vbl, climate_path, USE.NAMES = TRUE)
 }
 
+#' @import terra
+#' @export
 extract_weather = function(climate, gcm, weather) {
   # dummy code for now
    return(NULL)
