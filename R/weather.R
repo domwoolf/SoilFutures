@@ -78,17 +78,19 @@ make_weather_file = function(climate, cell, .gcm, ssp, weather) {
   calendar = cmip6_calendars[gcm == .gcm, calendar]
   # Daycent column order: day of month, month, calendar year, day of year, maximum air temperature (°C), minimum air temperature (°C), and precipitation (cm).
   .SDcols = c('dom', 'm', 'y', 'doy')
-  .SDcols = c(.SDcols, calendar_idx[match(calendar, calendars)])
-  weather = copy(weather)[, .SD, .SDcols = .SDcols]
-  setnames(weather, 3, 'idx')
+  idx_col = calendar_idx[match(calendar, calendars)]
+  .SDcols = c(.SDcols, idx_col)
+  w = copy(weather)[, .SD, .SDcols = .SDcols]
+  setnames(w, idx_col, 'idx')
   daily_pr     = unname(unlist(extract(climate$pr,     cell)))
   daily_tasmin = unname(unlist(extract(climate$tasmin, cell)))
   daily_tasmax = unname(unlist(extract(climate$tasmax, cell)))
-  weather[, tasmax := daily_tasmax[idx]/10]
-  weather[, tasmin := daily_tasmin[idx]/10]
-  weather[, pr     := daily_pr[idx]]
-  weather[, idx := NULL]
+  w[, tasmax := daily_tasmax[idx]/10]
+  w[, tasmin := daily_tasmin[idx]/10]
+  w[, pr     := daily_pr[idx]]
+  w[, idx := NULL]
+  w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
   weather_fname = paste0(pkg.env$out_path, '/weather_', ssp, '_', .gcm, '_', cell, '.wth')
-  fwrite(weather, weather_fname, sep = ' ', col.names = FALSE)
+  fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
   return(weather_fname)
 }
