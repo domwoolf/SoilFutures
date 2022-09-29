@@ -53,7 +53,7 @@ create_cell_data_table = function() {
 #' This function tests if crop area is allocated to winter or spring wheat where wheat is grown.
 #'
 #' @import data.table
-#' @import lubridate
+#' @importFrom lubridate ymd
 #' @import terra
 #' @export
 wwheat = function(main_table, mat, map, N_or_S) {

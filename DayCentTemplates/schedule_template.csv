@@ -1,37 +1,311 @@
 ssp,  scenario, N-or_S, crop, schedule
-all,  all,      all,    all,  "2015          Starting year"
-all,  all,      all,    all,  "2064          Last year"
-all,  all,      all,    all,  "<fname>       Site file name"
-all,  all,      all,    all,  "0             Labeling type"
-all,  all,      all,    all,  "-1            Labeling year"
-all,  all,      all,    all,  "-1.00         Microcosm"
-all,  all,      all,    all,  "1             CO2 Systems"
-all,  all,      all,    all,  "2015 <end_year>"
-all,  all,      all,    all,  "-1            pH effect"
-all,  all,      all,    all,  "-1            Soil Warming"
-all,  all,      all,    all,  "0             N input scalar option"
-all,  all,      all,    all,  "0             OMAD scalar option"
-all,  all,      all,    all,  "-1            Climate scalar option"
-all,  all,      all,    all,  "1             Initial system"
-all,  all,      all,    all,  "<crop_cultivar>        Initial crop"
-all,  all,      all,    all,  "              Initial tree"
-all,  all,      all,    all,  ""
-all,  all,      all,    all,  "Year Month Option"
-all,  all,      all,    all,  "1             Block #   <block_name>"
-all,  all,      all,    all,  "<end_year>    Last year"
-all,  all,      all,    all,  "1             Repeats # years"
-all,  all,      all,    all,  "2015          Output starting year"
-all,  all,      all,    all,  "12            Output month"
-all,  all,      all,    all,  "1.0           Output interval"
-all,  all,      all,    all,  "F             Weather choice"
-all,  all,      all,    all,  "<weather_file>"
-all,  all,      all,    all,  "   1   <cult_day_preharvest> CULT K"
-all,  all,      all,    all,  "   1   <cult_day_preharvest> OMAD <manure>"
-all,  all,      all,    all,  "   1   <plant_day>  CROP <crop_cultivar>"
-all,  all,      all,    all,  "   1   <plant_day>  PLTM"
-all,  all,      all,    all,  "   1   <plant_day>  CULT B"
-all,  all,      all,    all,  "   1   <plant_day>  FERT (0.5N,1.0F)"
-all,  all,      all,    all,  "   1   <harvest_day>  HARV G90S"
-all,  all,      all,    all,  "   1   <harvest_day>  LAST"
-all,  all,      all,    all,  "   1   <cult_day_postharvest> CULT K"
-all,  all,      all,    all,  "-999 -999 X"
+all,  all,      all,    all,<start_year>           Starting year
+all,  all,      all,    all,<end_year>         Last year
+all,  all,      all,    all,<fname>       Site file name
+all,  all,      all,    all,0             Labeling type
+all,  all,      all,    all,-1            Labeling year
+all,  all,      all,    all,-1.00         Microcosm
+all,  all,      all,    all,1             CO2 Systems
+all,  all,      all,    all,<start_year>  <end_year>
+all,  all,      all,    all,-1            pH effect
+all,  all,      all,    all,-1            Soil Warming
+all,  all,      all,    all,0             N input scalar option
+all,  all,      all,    all,0             OMAD scalar option
+all,  all,      all,    all,-1            Climate scalar option
+all,  all,      all,    all,1             Initial system
+all,  all,      all,    all,<crop_cultivar>        Initial crop
+all,  all,      all,    all,              Initial tree
+all,  all,      all,    all,
+all,  all,      all,    all,Year Month Option
+all,  all,      all,    all,1             Block #   <block_name>
+all,  all,      all,    all,<end_year>    Last year
+all,  all,      all,    all,1             Repeats # years
+all,  all,      all,    all,<start_year>          Output starting year
+all,  all,      all,    all,12            Output month
+all,  all,      all,    all,1.0           Output interval
+all,  all,      all,    all,F             Weather choice
+all,  all,      all,    all,<weather_file>
+all,bau,N,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,bau,N,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,bau,N,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,bau,N,c-s,   1   <plant_day>  PLTM
+all,bau,N,c-s,   1   <plant_day>  CULT B
+all,bau,N,c-s,   1   <plant_day>  FERT <fert-amt>
+all,bau,N,c-s,   1   <harvest_day>  HARV <res-amt>
+all,bau,N,c-s,   1   <harvest_day>  LAST
+all,bau,N,c-s,   1   <cult_day_postharvest> CULT <cult-opt>
+all,bau,N,c-s,-999 -999 X
+all,bau,N,ww,   1   <harvest_day>  HARV <res-amt>
+all,bau,N,ww,   1   <harvest_day>  LAST
+all,bau,N,ww,   1   <cult_day_postharvest> CULT <cult-opt>
+all,bau,N,ww,   1   <cult_day_preharvest> CULT <cult-opt>
+all,bau,N,ww,   1   <cult_day_preharvest> OMAD <manure>
+all,bau,N,ww,   1   <plant_day>  CROP <crop_cultivar>
+all,bau,N,ww,   1   <plant_day>  PLTM
+all,bau,N,ww,   1   <plant_day>  FERT <fert-amt>
+all,bau,N,ww,-999 -999 X
+all,bau,N,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,bau,N,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,bau,N,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,bau,N,sw,   1   <plant_day>  PLTM
+all,bau,N,sw,   1   <plant_day>  FERT <fert-amt>
+all,bau,N,sw,   1   <harvest_day>  HARV <res-amt>
+all,bau,N,sw,   1   <harvest_day>  LAST
+all,bau,N,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,bau,N,sw,-999 -999 X
+all,bau,S,c-s,   1   <harvest_day>  HARV <res-amt>
+all,bau,S,c-s,   1   <harvest_day>  LAST
+all,bau,S,c-s,   1   <cult_day_postharvest> CULT <cult-opt>
+all,bau,S,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,bau,S,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,bau,S,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,bau,S,c-s,   1   <plant_day>  PLTM
+all,bau,S,c-s,   1   <plant_day>  CULT B
+all,bau,S,c-s,   1   <plant_day>  FERT <fert-amt>
+all,bau,S,c-s,-999 -999 X
+all,bau,S,ww,   1   <cult_day_preharvest> CULT <cult-opt>
+all,bau,S,ww,   1   <cult_day_preharvest> OMAD <manure>
+all,bau,S,ww,   1   <plant_day>  CROP <crop_cultivar>
+all,bau,S,ww,   1   <plant_day>  PLTM
+all,bau,S,ww,   1   <plant_day>  FERT <fert-amt>
+all,bau,S,ww,   1   <harvest_day>  HARV <res-amt>
+all,bau,S,ww,   1   <harvest_day>  LAST
+all,bau,S,ww,   1   <cult_day_postharvest> CULT <cult-opt>
+all,bau,S,ww,-999 -999 X
+all,bau,S,sw,   1   <harvest_day>  HARV <res-amt>
+all,bau,S,sw,   1   <harvest_day>  LAST
+all,bau,S,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,bau,S,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,bau,S,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,bau,S,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,bau,S,sw,   1   <plant_day>  PLTM
+all,bau,S,sw,   1   <plant_day>  FERT <fert-amt>
+all,bau,S,sw,-999 -999 X
+all,residue,N,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,residue,N,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,residue,N,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,residue,N,c-s,   1   <plant_day>  PLTM
+all,residue,N,c-s,   1   <plant_day>  CULT B
+all,residue,N,c-s,   1   <plant_day>  FERT <fert-amt>
+all,residue,N,c-s,   1   <harvest_day>  HARV <res-amt>
+all,residue,N,c-s,   1   <harvest_day>  LAST
+all,residue,N,c-s,   1   <cult_day_postharvest> CULT <cult-opt>
+all,residue,N,c-s,-999 -999 X
+all,residue,N,ww,   1   <harvest_day>  HARV <res-amt>
+all,residue,N,ww,   1   <harvest_day>  LAST
+all,residue,N,ww,   1   <cult_day_postharvest> CULT <cult-opt>
+all,residue,N,ww,   1   <cult_day_preharvest> CULT <cult-opt>
+all,residue,N,ww,   1   <cult_day_preharvest> OMAD <manure>
+all,residue,N,ww,   1   <plant_day>  CROP <crop_cultivar>
+all,residue,N,ww,   1   <plant_day>  PLTM
+all,residue,N,ww,   1   <plant_day>  FERT <fert-amt>
+all,residue,N,ww,-999 -999 X
+all,residue,N,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,residue,N,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,residue,N,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,residue,N,sw,   1   <plant_day>  PLTM
+all,residue,N,sw,   1   <plant_day>  FERT <fert-amt>
+all,residue,N,sw,   1   <harvest_day>  HARV <res-amt>
+all,residue,N,sw,   1   <harvest_day>  LAST
+all,residue,N,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,residue,N,sw,-999 -999 X
+all,residue,S,c-s,   1   <harvest_day>  HARV <res-amt>
+all,residue,S,c-s,   1   <harvest_day>  LAST
+all,residue,S,c-s,   1   <cult_day_postharvest> CULT <cult-opt>
+all,residue,S,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,residue,S,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,residue,S,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,residue,S,c-s,   1   <plant_day>  PLTM
+all,residue,S,c-s,   1   <plant_day>  CULT B
+all,residue,S,c-s,   1   <plant_day>  FERT <fert-amt>
+all,residue,S,c-s,-999 -999 X
+all,residue,S,ww,   1   <cult_day_preharvest> CULT <cult-opt>
+all,residue,S,ww,   1   <cult_day_preharvest> OMAD <manure>
+all,residue,S,ww,   1   <plant_day>  CROP <crop_cultivar>
+all,residue,S,ww,   1   <plant_day>  PLTM
+all,residue,S,ww,   1   <plant_day>  FERT <fert-amt>
+all,residue,S,ww,   1   <harvest_day>  HARV <res-amt>
+all,residue,S,ww,   1   <harvest_day>  LAST
+all,residue,S,ww,   1   <cult_day_postharvest> CULT <cult-opt>
+all,residue,S,ww,-999 -999 X
+all,residue,S,sw,   1   <harvest_day>  HARV <res-amt>
+all,residue,S,sw,   1   <harvest_day>  LAST
+all,residue,S,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,residue,S,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,residue,S,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,residue,S,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,residue,S,sw,   1   <plant_day>  PLTM
+all,residue,S,sw,   1   <plant_day>  FERT <fert-amt>
+all,residue,S,sw,-999 -999 X
+all,tillage,N,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,tillage,N,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,tillage,N,c-s,   1   <plant_day>  PLTM
+all,tillage,N,c-s,   1   <plant_day>  CULT B
+all,tillage,N,c-s,   1   <plant_day>  FERT <fert-amt>
+all,tillage,N,c-s,   1   <harvest_day>  HARV <res-amt>
+all,tillage,N,c-s,   1   <harvest_day>  LAST
+all,tillage,N,c-s,-999 -999 X
+all,tillage,N,ww,   1   <harvest_day>  HARV <res-amt>
+all,tillage,N,ww,   1   <harvest_day>  LAST
+all,tillage,N,ww,   1   <cult_day_preharvest> OMAD <manure>
+all,tillage,N,ww,   1   <plant_day>  CROP <crop_cultivar>
+all,tillage,N,ww,   1   <plant_day>  PLTM
+all,tillage,N,ww,   1   <plant_day>  CULT B
+all,tillage,N,ww,   1   <plant_day>  FERT <fert-amt>
+all,tillage,N,ww,-999 -999 X
+all,tillage,N,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,tillage,N,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,tillage,N,sw,   1   <plant_day>  PLTM
+all,tillage,N,sw,   1   <plant_day>  CULT B
+all,tillage,N,sw,   1   <plant_day>  FERT <fert-amt>
+all,tillage,N,sw,   1   <harvest_day>  HARV <res-amt>
+all,tillage,N,sw,   1   <harvest_day>  LAST
+all,tillage,N,sw,-999 -999 X
+all,tillage,S,c-s,   1   <harvest_day>  HARV <res-amt>
+all,tillage,S,c-s,   1   <harvest_day>  LAST
+all,tillage,S,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,tillage,S,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,tillage,S,c-s,   1   <plant_day>  PLTM
+all,tillage,S,c-s,   1   <plant_day>  CULT B
+all,tillage,S,c-s,   1   <plant_day>  FERT <fert-amt>
+all,tillage,S,c-s,-999 -999 X
+all,tillage,S,ww,   1   <cult_day_preharvest> OMAD <manure>
+all,tillage,S,ww,   1   <plant_day>  CROP <crop_cultivar>
+all,tillage,S,ww,   1   <plant_day>  PLTM
+all,tillage,S,ww,   1   <plant_day>  CULT B
+all,tillage,S,ww,   1   <plant_day>  FERT <fert-amt>
+all,tillage,S,ww,   1   <harvest_day>  HARV <res-amt>
+all,tillage,S,ww,   1   <harvest_day>  LAST
+all,tillage,S,ww,-999 -999 X
+all,tillage,S,sw,   1   <harvest_day>  HARV <res-amt>
+all,tillage,S,sw,   1   <harvest_day>  LAST
+all,tillage,S,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,tillage,S,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,tillage,S,sw,   1   <plant_day>  PLTM
+all,tillage,S,sw,   1   <plant_day>  CULT B
+all,tillage,S,sw,   1   <plant_day>  FERT <fert-amt>
+all,tillage,S,sw,-999 -999 X
+all,covercrop-g,N,c-s,   1    <cc_harvest_day> LAST
+all,covercrop-g,N,c-s,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-g,N,c-s,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-g,N,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-g,N,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-g,N,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-g,N,c-s,   1   <plant_day>  PLTM
+all,covercrop-g,N,c-s,   1   <plant_day>  CULT B
+all,covercrop-g,N,c-s,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-g,N,c-s,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-g,N,c-s,   1   <harvest_day>  LAST
+all,covercrop-g,N,c-s,   1   <cult_day_postharvest-cc> CULT <cult-opt>
+all,covercrop-g,N,c-s,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-g,N,c-s,   1    <cc_plant_day> PLTM
+all,covercrop-g,N,c-s,   1    <cc_plant_day> CULT B
+all,covercrop-g,N,c-s,-999 -999 X
+all,covercrop-g,N,sw,   1    <cc_harvest_day> LAST
+all,covercrop-g,N,sw,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-g,N,sw,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-g,N,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-g,N,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-g,N,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-g,N,sw,   1   <plant_day>  PLTM
+all,covercrop-g,N,sw,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-g,N,sw,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-g,N,sw,   1   <harvest_day>  LAST
+all,covercrop-g,N,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,covercrop-g,N,sw,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-g,N,sw,   1    <cc_plant_day> PLTM
+all,covercrop-g,N,sw,   1    <cc_plant_day> CULT B
+all,covercrop-g,N,sw,-999 -999 X
+all,covercrop-g,S,c-s,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-g,S,c-s,   1   <harvest_day>  LAST
+all,covercrop-g,S,c-s,   1   <cult_day_postharvest> CULT <cult-opt>
+all,covercrop-g,S,c-s,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-g,S,c-s,   1    <cc_plant_day> PLTM
+all,covercrop-g,S,c-s,   1    <cc_plant_day> CULT B
+all,covercrop-g,S,c-s,   1    <cc_harvest_day> LAST
+all,covercrop-g,S,c-s,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-g,S,c-s,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-g,S,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-g,S,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-g,S,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-g,S,c-s,   1   <plant_day>  PLTM
+all,covercrop-g,S,c-s,   1   <plant_day>  CULT B
+all,covercrop-g,S,c-s,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-g,S,c-s,-999 -999 X
+all,covercrop-g,S,sw,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-g,S,sw,   1   <harvest_day>  LAST
+all,covercrop-g,S,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,covercrop-g,S,sw,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-g,S,sw,   1    <cc_plant_day> PLTM
+all,covercrop-g,S,sw,   1    <cc_plant_day> CULT B
+all,covercrop-g,S,sw,   1    <cc_harvest_day> LAST
+all,covercrop-g,S,sw,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-g,S,sw,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-g,S,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-g,S,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-g,S,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-g,S,sw,   1   <plant_day>  PLTM
+all,covercrop-g,S,sw,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-g,S,sw,-999 -999 X
+all,covercrop-l,N,c-s,   1    <cc_harvest_day> LAST
+all,covercrop-l,N,c-s,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-l,N,c-s,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-l,N,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-l,N,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-l,N,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-l,N,c-s,   1   <plant_day>  PLTM
+all,covercrop-l,N,c-s,   1   <plant_day>  CULT B
+all,covercrop-l,N,c-s,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-l,N,c-s,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-l,N,c-s,   1   <harvest_day>  LAST
+all,covercrop-l,N,c-s,   1   <cult_day_postharvest-cc> CULT <cult-opt>
+all,covercrop-l,N,c-s,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-l,N,c-s,   1    <cc_plant_day> PLTM
+all,covercrop-l,N,c-s,   1    <cc_plant_day> CULT B
+all,covercrop-l,N,c-s,-999 -999 X
+all,covercrop-l,N,sw,   1    <cc_harvest_day> LAST
+all,covercrop-l,N,sw,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-l,N,sw,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-l,N,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-l,N,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-l,N,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-l,N,sw,   1   <plant_day>  PLTM
+all,covercrop-l,N,sw,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-l,N,sw,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-l,N,sw,   1   <harvest_day>  LAST
+all,covercrop-l,N,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,covercrop-l,N,sw,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-l,N,sw,   1    <cc_plant_day> PLTM
+all,covercrop-l,N,sw,   1    <cc_plant_day> CULT B
+all,covercrop-l,N,sw,-999 -999 X
+all,covercrop-l,S,c-s,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-l,S,c-s,   1   <harvest_day>  LAST
+all,covercrop-l,S,c-s,   1   <cult_day_postharvest> CULT <cult-opt>
+all,covercrop-l,S,c-s,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-l,S,c-s,   1    <cc_plant_day> PLTM
+all,covercrop-l,S,c-s,   1    <cc_plant_day> CULT B
+all,covercrop-l,S,c-s,   1    <cc_harvest_day> LAST
+all,covercrop-l,S,c-s,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-l,S,c-s,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-l,S,c-s,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-l,S,c-s,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-l,S,c-s,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-l,S,c-s,   1   <plant_day>  PLTM
+all,covercrop-l,S,c-s,   1   <plant_day>  CULT B
+all,covercrop-l,S,c-s,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-l,S,c-s,-999 -999 X
+all,covercrop-l,S,sw,   1   <harvest_day>  HARV <res-amt>
+all,covercrop-l,S,sw,   1   <harvest_day>  LAST
+all,covercrop-l,S,sw,   1   <cult_day_postharvest> CULT <cult-opt>
+all,covercrop-l,S,sw,   1    <cc_plant_day> CROP <cc_cultivar>
+all,covercrop-l,S,sw,   1    <cc_plant_day> PLTM
+all,covercrop-l,S,sw,   1    <cc_plant_day> CULT B
+all,covercrop-l,S,sw,   1    <cc_harvest_day> LAST
+all,covercrop-l,S,sw,   1    <cc_harvest_day> HARV <cc_cultivar>
+all,covercrop-l,S,sw,   1    <cc_harv-cult_day> LAST <cc-cult-opt>
+all,covercrop-l,S,sw,   1   <cult_day_preharvest> CULT <cult-opt>
+all,covercrop-l,S,sw,   1   <cult_day_preharvest> OMAD <manure>
+all,covercrop-l,S,sw,   1   <plant_day>  CROP <crop_cultivar>
+all,covercrop-l,S,sw,   1   <plant_day>  PLTM
+all,covercrop-l,S,sw,   1   <plant_day>  FERT <fert-amt>
+all,covercrop-l,S,sw,-999 -999 X
