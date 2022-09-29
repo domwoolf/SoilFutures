@@ -1,21 +1,25 @@
 # Dominic Woolf 17/9/22
 
 #' @import data.table
-#' @importFrom lubridate leap_year
+# #' @importFrom lubridate leap_year
+#' @export
 initialize_weather = function() {
-  index = data.table()
-  index[, year := 2015:2100]
-  index[, days.in.year := c(365,366)[leap_year(year) + 1L]]
-  weather_data = index[, .(days.in.year, doy = seq_len(days.in.year)), keyby=year]
+  weather_data = data.table(.date = seq.Date(ymd("2015-01-01"),ymd("2100-12-31"), 1))
+  weather_data[, dom := mday(.date)] # day of month
+  weather_data[, m   := month(.date)]
+  weather_data[, y   := year(.date)]
+  weather_data[, doy := yday(.date)] # day of year
+  setkey(weather_data, y)
+
+  # calculate vectors to convert calendar to raster layer index
   weather_data[, doy_360 := doy]
   weather_data[, doy_365 := doy]
-  weather_data[doy_360 > 360, doy_360 := doy_360 - .N, by=year]
+  weather_data[doy_360 > 360, doy_360 := doy_360 - .N, by=y]
   weather_data[doy_365 > 365, doy_365 := 365]
-  # calculate vectors to convert calendar to raster layer index
-  shift_days = weather_data[, last(doy_360), by=year][, .(year, shift_360 = data.table::shift(cumsum(V1), fill=0))]
+  shift_days = weather_data[, last(doy_360), by=y][, .(y, shift_360 = data.table::shift(cumsum(V1), fill=0))]
   weather_data = weather_data[shift_days]
   weather_data[, idx_360 := doy_360 + shift_360][, shift_360 := NULL]
-  shift_days = weather_data[, last(doy_365), by=year][, .(year, shift_365 = data.table::shift(cumsum(V1), fill=0))]
+  shift_days = weather_data[, last(doy_365), by=y][, .(y, shift_365 = data.table::shift(cumsum(V1), fill=0))]
   weather_data = weather_data[shift_days]
   weather_data[, idx_365 := doy_365 + shift_365][, shift_365 := NULL]
   weather_data[, idx_gregorian := .I]
@@ -68,21 +72,23 @@ load_climate = function(ssp, gcm) {
 #' from a daily climate rast that uses a different calendar. Usually created using initialize_weather()
 #' @importFrom terra rast extract
 #' @export
-extract_weather = function(climate, cell, .gcm, ssp, weather) {
+make_weather_file = function(climate, cell, .gcm, ssp, weather) {
   calendars    = c('proleptic_gregorian', '365_day', 'standard',      '360_day')
   calendar_idx = c('idx_gregorian',       'idx_365', 'idx_gregorian', 'idx_360')
   calendar = cmip6_calendars[gcm == .gcm, calendar]
-  .SDcols = c('year', 'doy')
+  # Daycent column order: day of month, month, calendar year, day of year, maximum air temperature (°C), minimum air temperature (°C), and precipitation (cm).
+  .SDcols = c('dom', 'm', 'y', 'doy')
   .SDcols = c(.SDcols, calendar_idx[match(calendar, calendars)])
   weather = copy(weather)[, .SD, .SDcols = .SDcols]
   setnames(weather, 3, 'idx')
   daily_pr     = unname(unlist(extract(climate$pr,     cell)))
   daily_tasmin = unname(unlist(extract(climate$tasmin, cell)))
   daily_tasmax = unname(unlist(extract(climate$tasmax, cell)))
-  weather[, pr     := daily_pr[idx]]
-  weather[, tasmin := daily_tasmin[idx]/10]
   weather[, tasmax := daily_tasmax[idx]/10]
+  weather[, tasmin := daily_tasmin[idx]/10]
+  weather[, pr     := daily_pr[idx]]
+  weather[, idx := NULL]
   weather_fname = paste0(pkg.env$out_path, '/weather_', ssp, '_', .gcm, '_', cell, '.wth')
-  fwrite(weather, weather_fname, sep = ' ')
+  fwrite(weather, weather_fname, sep = ' ', col.names = FALSE)
   return(weather_fname)
 }

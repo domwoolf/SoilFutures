@@ -2,11 +2,11 @@
 
 export(create_main_table)
 export(create_sched)
-export(extract_weather)
+export(initialize_weather)
 export(load_climate)
+export(make_weather_file)
 export(wwheat)
 import(data.table)
-importFrom(lubridate,leap_year)
 importFrom(lubridate,ymd)
 importFrom(terra,extract)
 importFrom(terra,rast)
