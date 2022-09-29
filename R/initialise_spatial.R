@@ -44,6 +44,7 @@ create_cell_data_table = function() {
   # use focal to align crop_area and crop_cal?
   # keep these rotated cell numbers, could add row with main cell # and the unrotated cell #
   # consider deleting NaN crop_area cells (but hold off until aligned with Yi's sims)
+  # need to add a 'crop_code' level in variable column
 
   return(main_table)
   fwrite(main_table, paste(pkg.env$out_path,"cell_data_table.csv", sep = "/")) #csv
