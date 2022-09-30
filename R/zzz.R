@@ -3,7 +3,8 @@ pkg.env = NULL
   pkg.env <<- new.env(parent = emptyenv())
   assign('crop_types',   c('maize', 'wwheat', 'swheat', 'soy'), pkg.env)
   assign('climate_vbls', c('tasmin', 'tasmax', 'tas', 'pr'), pkg.env)
-  assign('ssps',         c('ssp126', "ssp370"), pkg.env)
+  assign('ssps',         c('historical','ssp126', "ssp370"), pkg.env)
+  assign('scenario',     c('all','bau', 'residue', 'tillage', 'covercrop-g', 'covercrop-l'), pkg.env)
   # cat(paste('SOIL_FUTURES_GIS_PATH =', Sys.getenv('SOIL_FUTURES_GIS_PATH'), '\n))
   assign('gis_path', Sys.getenv('SOIL_FUTURES_GIS_PATH'), pkg.env)
   if (isFALSE(nchar(pkg.env$gis_path))) {
