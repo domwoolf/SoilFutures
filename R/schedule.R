@@ -2,6 +2,17 @@
 #
 # contains functions to construct DayCent schedule files from spatial data
 #
+#' Create an omad.100 file
+#'
+#' Used for writing an omad.100 file based on spatial data.
+#'
+#' This function modifies the omad.100 file by creating a new entry for a cell
+#' using spatial manure-N and manure-CN data.
+#'
+create_omad = function(){
+
+}
+
 #' Create a DayCent Schedule file
 #'
 #' Used for writing a schedule file based on spatial data.
@@ -37,6 +48,8 @@ create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp
   # spring wheat check condition for S. Hemi harvest (could span into two years)
   schedule_table[, schedule := gsub('<fname>',               schedule_filename)]
   schedule_table[, schedule := gsub('<weather_file>',        weather_filename)]
+
+  # grab filtered table here based on function input for 'scenario', 'N or S'
   schedule_table[, schedule := gsub('<crop_code>',           cell_data$crop_code)]
   schedule_table[, schedule := gsub('<cult_day_preharvest>', cell_data$cult_day_preharvest)]
   schedule_table[, schedule := gsub('<manure>',              cell_data$manure)]
