@@ -30,8 +30,11 @@ create_omad = function(){
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
+
+cell_data = fread(paste(pkg.env$out_path, "cell_data_table.csv", sep = "/")) # for testing
+
 create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp, gcm, crop, scenario, weather_filename) {
-  cell_data = cell_data[1] # we only process a single cell's data
+  cell_data = cell_data[[1,1]] # we only process a single cell's data
   schedule_path = paste(pkg.env$out_path, ssp, gcm)
   schedule_filename = cell_data[1, paste(scenario, '_', crop, '_', cell, '.sch')]
   N_or_S = c('N', 'S')[cell_data$plant > cell_data$harvest + 1L] # determine "cropping hemisphere" by whether planting date comes before or after harvest date in Gregorian calendar
