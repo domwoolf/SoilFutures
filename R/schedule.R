@@ -10,7 +10,7 @@
 #' using spatial manure-N and manure-CN data.
 #'
 create_omad = function(){
-
+  omad.cell #cell_mn, the name of the omad.100 entry for look-up
 }
 
 #' Create a DayCent Schedule file
@@ -51,6 +51,8 @@ create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp
   # cropping hemisphere (by planting and harvest date in Gregorian calendar)
   plant.date          = round(cell_data[variable %in% paste('plant_', str_to_title(crop), sep = ""), value])
   harvest.date        = round(cell_data[variable %in% paste('harvest_', str_to_title(crop), sep = ""), value])
+  pre.harvest.cult    = 14
+  post.harvest.cult   = 30
   N_or_S              = fifelse(plant.date > harvest.date, 'S','N')
 
   # tillage value recode
@@ -67,6 +69,18 @@ create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp
   } else {
     cult_opt = 'J'
   }
+
+  # fertilizer value recode
+  cell_data[variable %like% c(paste(start_year, '_', sep = "")), variable := paste(start_year, '_', c(pkg.env$crop_types[1], pkg.env$crop_types[4], 'wheat'), sep = "")]
+  fertN.values = cell_data[variable %like% c(paste(start_year, '_', sep = "")),]
+  fertN.match  = grep(crop, fertN.values$variable, value = TRUE)
+  fertN.amt    = ifelse(fertN.values[variable %in% fertN.match, value] > 0, round((fertN.values[variable %in% fertN.match, value])/10, digits = 1), 0) # convert to g m-2 (currently kg ha)
+
+  # res.rtrn
+  # since narrow range of values --> create table of names to be read into this function?
+  # modify harv.100 in advance (no need to keep overwriting)
+  # match value from cell_data to the harv_code?
+  # could be a similar table to the schedule_table (look up by scenario type)
 
   # crop schedule_table recode
   if (crop == pkg.env$crop_types[1] || crop == pkg.env$crop_types[4]) {
@@ -90,24 +104,27 @@ create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp
   schedule_table_head[, schedule := gsub('<end_year>',            end_year,                               schedule_table_head$schedule)]
   schedule_table_head[, schedule := gsub('<crop_cultivar>',       crop_cultivar,                          schedule_table_head$schedule)]
 
-  # if no-till remove pre-plant, post-harvest CULT events
   # spring wheat check condition for S. Hemi harvest (could span into two years)
 
   # create .sch block
-
+  # what about for scenarios? eg the cult_day_postharvest is different if it is cover crop, wheat
   schedule_table_block = schedule_table[scenario   %in% c(scenario.sched) &
                                           ssp      %in% c('all')          &
                                           `N-or_S` %in% c(N_or_S)         &
                                           crop     %in% c(crop.in.sched)]
-  schedule_table_block[, schedule := gsub('<plant_day>',           plant.date, schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<harvest_day>',         harvest.date, schedule_table_block$schedule)]
-  # stopped here
-  schedule_table_block[, schedule := gsub('<cult_day_postharvest>',cell_data$cult_day_postharvest)]
-  schedule_table_block[, schedule := gsub('<harvest_day>',         cell_data$harvest_day)]
-  schedule_table_block[, schedule := gsub('<crop_code>',           cell_data$crop_code)]
-  schedule_table_block[, schedule := gsub('<cult_day_preharvest>', cell_data$cult_day_preharvest)]
-  schedule_table_block[, schedule := gsub('<manure>',              cell_data$manure)]
+  schedule_table_block[, schedule := gsub('<plant_day>',            plant.date,                                schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<harvest_day>',          harvest.date,                              schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harvest.cult),           schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harvest.cult),        schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<cult-opt>',             cult_opt,                                  schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<crop_cultivar>',        crop_cultivar,                             schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<manure>',               omad.cell,                                 schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<fert-amt>',             paste('(',fertN.amt, 'N,1.0F)', sep = ""), schedule_table_block$schedule)]
+  schedule_table_block[, schedule := gsub('<res-amt>',              res.rtrn,                                  schedule_table_block$schedule)]
+  # how to handle NA cases for fertilizer, manure? also need checks for plant/harv dates
+  # if no-till remove pre-plant, post-harvest CULT events (add ifelse here)
 
+  # bind header, block; drop all cols except schedule, remove header (looks like below dowing this)
   fwrite(schedule_table[, schedule], schedule_filename, quote = FALSE, col.names = FALSE)
   return(schedule_filename)
   }
