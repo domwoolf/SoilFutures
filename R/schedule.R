@@ -6,11 +6,39 @@
 #'
 #' Used for writing an omad.100 file based on spatial data.
 #'
-#' This function modifies the omad.100 file by creating a new entry for a cell
+#' This function modifies the omad.100 file by creating a new event entry for a cell
 #' using spatial manure-N and manure-CN data.
 #'
-create_omad = function(){
-  omad.cell #cell_mn, the name of the omad.100 entry for look-up
+#'@import data.table
+#'
+#'@param omad.100 DayCent input file with organic matter events
+#'@param cell_data multiple row data.table providing input data for the simulation.
+
+# for testing, delete below later
+cell_data = fread(paste(pkg.env$out_path, "cell_data_table.csv", sep = "/")) # for testing
+omad.100 = fread('/home/shelby/Documents/daycent/dev_30cmLAI4RriceGrass/input_files/omad.100', sep = "", header = FALSE)
+
+create_omad = function(omad.100, cell_data){
+  start_year     = 2015
+  omad.cell      = paste(cell,'_mn', sep='')     # name of omad event for cell
+  cell_data      = cell_data[cell %in% c(cell),] # we only process a single cell's data
+
+  #extract cell data
+  manureN.cell   = round(cell_data[variable %in% start_year, value]/10, digits = 1) #g m-2 conversion
+  ASTREC1.cell   = round(cell_data[variable %in% 'weighted_C.N', value], digits = 1)
+  ASTGC.cell     = round(manureN.cell*ASTREC1.cell, digits = 1)
+  # add NA check here?
+
+  omad_event     = omad.100[1:8,] # copy event structure
+  omad_event[, V1 := gsub('^M',           omad.cell,    omad_event$V1)]
+  omad_event[, V1 := gsub('STRAW-MANURE', 'CELL-EVENT', omad_event$V1)]
+  omad_event[, V1 := gsub('100.0',        ASTGC.cell,   omad_event$V1)]
+  omad_event[, V1 := gsub('30.0',         ASTREC1.cell, omad_event$V1)]
+
+  omad.100.cell  = rbind(omad_event, omad.100)
+
+  fwrite(omad.100.cell, paste(pkg.env$out_path, '/omad.100', sep = ''), quote = FALSE, col.names = FALSE)
+  return(omad.100.cell)
 }
 
 #' Create a DayCent Schedule file
@@ -23,8 +51,7 @@ create_omad = function(){
 #' @import data.table
 #' @import stringr
 #'
-#' @param cell_data single row data.table providing input data for the simulation.
-#'  If more than one row is provided, only first will be used
+#' @param cell_data multiple row data.table providing input data for the simulation.
 #' @param schedule_table data.table providing template of schedule file.
 #' @param ssp character, specifies scenario
 #' @param gcm character, specifies scenario
