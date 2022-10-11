@@ -1,6 +1,89 @@
 # schedule.R
 #
-# contains functions to construct DayCent schedule files from spatial data
+# contains functions to construct DayCent run files from spatial data
+#
+#' Create a crop.100 file
+#'
+#' Used for writing a crop.100 file based on Yang et al. (2022) ERL
+#'
+#' This function accepts parameter values from a csv file and creates a crop.100 for
+#' all simulations for a crop type in a cell.
+#' @import data.table
+#'
+#' @param cell_data multiple row data.table providing input data for the simulation.
+#' @param gridid unique cell value to be passed to function.
+
+create_crop = function(cell_data, gridid) {
+  # get gridid, crop parameter data
+  cell_data[gridid %in% c(gridid), .(dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
+                                     PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)] # update, only need to process 1 row, crop
+  # create parameter vectors
+  param.vector = c("<value_crop>      <crop_name>","<value_RUETB>     RUETB",
+                   "<value_PPDF(1)>   PPDF(1)",    "<value_PPDF(2)>   PPDF(2)",
+                   "<value_PPDF(3)>   PPDF(3)",    "<value_PPDF(4)>   PPDF(4)",
+                   "0.0               BIOFLG",     "1800.0            BIOK5",       "<value_PLTMRF>               PLTMRF",
+                   "150.0             FULCAN",     "5                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
+                   "0.1               FRTC(2)",    "90.0              FRTC(3)",     "0.1               FRTC(4)",
+                   "0.1               FRTC(5)",    "0.3               CFRTCN(1)",   "0.25              CFRTCN(2)",
+                   "0.5               CFRTCW(1)",  "0.1               CFRTCW(2)",   "700.0             BIOMAX",
+                   "15.0              PRAMN(1,1)", "150.0             PRAMN(2,1)",  "190.0             PRAMN(3,1)",
+                   "62.5              PRAMN(1,2)", "150.0             PRAMN(2,2)",  "150.0             PRAMN(3,2)",
+                   "40.0              PRAMX(1,1)", "230.0             PRAMX(2,1)",  "230.0             PRAMX(3,1)",
+                   "125.0             PRAMX(1,2)", "230.0             PRAMX(2,2)",  "230.0             PRAMX(3,2)",
+                   "45.0              PRBMN(1,1)", "390.0             PRBMN(2,1)",  "340.0             PRBMN(3,1)",
+                   "0.0               PRBMN(1,2)", "0.0               PRBMN(2,2)",  "0.0               PRBMN(3,2)",
+                   "60.0              PRBMX(1,1)", "420.0             PRBMX(2,1)",  "420.0             PRBMX(3,1)",
+                   "0.0               PRBMX(1,2)", "0.0               PRBMX(2,2)",  "0.0               PRBMX(3,2)",
+                   "0.12              FLIGNI(1,1)","0.0               FLIGNI(2,1)", "0.06              FLIGNI(1,2)",
+                   "0.0               FLIGNI(2,2)","0.06              FLIGNI(1,3)", "0.0               FLIGNI(2,3)",
+                   "0.55              HIMAX",      "0.7               HIWSF",       "1.0               HIMON(1)",
+                   "0.0               HIMON(2)",   "0.75              EFRGRN(1)",   "0.6               EFRGRN(2)",
+                   "0.6               EFRGRN(3)",  "0.04              VLOSSP",      "0.0               FSDETH(1)",
+                   "0.0               FSDETH(2)",  "0.0               FSDETH(3)",   "500.0             FSDETH(4)",
+                   "0.1               FALLRT",     "0.05              RDRJ",        "0.05              RDRM",      "0.14              RDSRFC",
+                   "2.0               RTDTMP",     "0.0               CRPRTF(1)",   "0.0               CRPRTF(2)",
+                   "0.0               CRPRTF(3)",  "0.05              MRTFRAC",     "0.0               SNFXMX(1)",
+                   "-15.0             DEL13C",     "1.0               CO2IPR(1)",   "0.82              CO2ITR(1)",
+                   "1.0               CO2ICE(1,1,1)", "1.0            CO2ICE(1,1,2)","1.0              CO2ICE(1,1,3)",
+                   "1.0               CO2ICE(1,2,1)", "1.0            CO2ICE(1,2,2)","1.0              CO2ICE(1,2,3)",
+                   "1.0               CO2IRS(1)",  "0.10000           CKMRSPMX(1)", "0.15000           CKMRSPMX(2)",
+                   "0.05000           CKMRSPMX(3)","0.00000           CMRSPNPP(1)", "0.00000           CMRSPNPP(2)",
+                   "1.25000           CMRSPNPP(3)","1.00000           CMRSPNPP(4)", "4.00000           CMRSPNPP(5)",
+                   "1.50000           CMRSPNPP(6)","0.23000           CGRESP(1)",   "0.23000           CGRESP(2)",
+                   "0.23000           CGRESP(3)",  "0.25000           NO3PREF(1)",  "6.00000           CLAYPG",
+                   "0.50000           CMIX ",      "-13.000           TMPGERM",     "<value_DDBASE>    DDBASE",
+                   "-3.5              TMPKILL",    "10                BASETEMP",    "30                BASETEMP(2)",
+                   "-1	              BASETEMP(3)","-1	              BASETEMP(4)", "100               MNDDHRV",
+                   "550               MXDDHRV",    "120.0             CURGDYS",     "0.5               CLSGRES",
+                   "0.12              CMXTURN",    "1.0               NPP2CS(1)",   "2.0               CAFUE",
+                   "1.40              EMAX",       "1.2 	            KCET",        "<value_KLIGHT>    KLIGHT",
+                   "<value_SLA>       SLA",        "0.9               LEAFCL",      "0.9               LEAFEMERG",
+                   "0.25              LEAFMX",     "0.02              LEAFPM",      "80                DDEMERG",
+                   "<value_DDLAIMX>   DDLAIMX",    "-1		            DDPPSTART",   "-1		             DDPPEND",
+                   "-1		            PPTYPE",     "-1		            PPCRITICAL",  "-1		             PPSNST",
+                   "-1		            VERNALSNST", "0.0               LUXEUPF(1)",  "0.0               LUXEUPF(2)",
+                   "0.0               LUXEUPF(3)", "0.0               CSTGEUPF(1)", "0.0               CSTGEUPF(2)",
+                   "0.0               CSTGEUPF(3)","0                 CSTGDYS",     "1.0               CSTGA2DRAT")
+
+  # create crop.100 DT, replace values
+  crop.100 = data.table(crop.100 = param.vector)
+  crop.100[, crop.100 := gsub('<value_crop>',   dc_cropname, crop.100)] # update all replacement values
+  crop.100[, crop.100 := gsub('<crop_name>',    crop,   crop.100)]
+  crop.100[, crop.100 := gsub('<value_RUETB>',  RUETB, crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF(1)', PPDF1, crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF(2)', PPDF2, crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF(3)', PPDF3, crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF(4)', PPDF4, crop.100)]
+  crop.100[, crop.100 := gsub('<value_PLTMRF',  PLTMRF, crop.100)]
+  crop.100[, crop.100 := gsub('<value_FRTC1',   FRTC1,  crop.100)]
+  crop.100[, crop.100 := gsub('<value_DDBASE',  DDBASE, crop.100)]
+  crop.100[, crop.100 := gsub('<value_KLIGHT',  KLIGHT, crop.100)]
+  crop.100[, crop.100 := gsub('<value_SLA',     SLA,    crop.100)]
+  crop.100[, crop.100 := gsub('<value_DDLAIMX', PPDF4,  crop.100)]
+
+  fwrite(crop.100, paste(pkg.env$out_path, '/crop.100', sep = ''), quote = FALSE, col.names = FALSE)
+  return(crop.100)
+}
 #
 #' Create an omad.100 file
 #'
@@ -151,7 +234,7 @@ create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp
   # how to handle NA cases for fertilizer, manure? also need checks for plant/harv dates
   # if no-till remove pre-plant, post-harvest CULT events (add ifelse here)
 
-  # bind header, block; drop all cols except schedule, remove header (looks like below dowing this)
+  # bind header, block
   fwrite(schedule_table[, schedule], schedule_filename, quote = FALSE, col.names = FALSE)
   return(schedule_filename)
   }
