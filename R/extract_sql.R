@@ -41,14 +41,13 @@ sql.query = function(con, table, gridid, run_seq) {
 # 5) Run DayCent:
 #   I usually run it by:
 # a) pathing the name of the build
-#
 # b) pathing the folder containing the set of 100 files (using the -l switch)
-#
 # c) supplying the name of the schedule file
-#
 # d) providing an over-ride to the site file (--site <site file name>)
 #
-# Note: the site file is usually an extended site file with the values from the EQ & Spin-up runs stored as ending values that become the starting values used by the current run. This file also stores the soils data, so there is no explicit use of a soils file when running using an NRI site from the Inventory.
+# Note: the site file is usually an extended site file with the values from the EQ & Spin-up runs
+# stored as ending values that become the starting values used by the current run. This file also stores the soils data,
+# so there is no explicit use of a soils file when running using an NRI site from the Inventory.
 #
 # e) provide a log file name which can be helpful
 # /data/ogle/Daycent/Builds/Trunk/DDcentEVI_Trunk -l /data/ogle/Daycent/Builds/Trunk/100_Files/INV2018 -s NRI_32415_GC.sch -n --site SU_ext_site.100 >! NRI_GC_run.log
@@ -56,11 +55,7 @@ sql.query = function(con, table, gridid, run_seq) {
 # This should generate the BIN file and any outfile specified in the outfiles.in file.
 #
 # 6) Run the LIS file extraction to get the variables out of the BIN file:
-#
-#   - The 1st parameter is the name of the BIN file, which is usually the same as the schedule file name
-#
+# - The 1st parameter is the name of the BIN file, which is usually the same as the schedule file name
 # - The 2nd Parameter is the name of the LIS file to be generated, again usually the same as the SchlFile name, but you can change it to what ever you really want.
-#
 # - The 3rd parameter specifies the outvars.txt file using the '-c outvars.txt' switch
-#
 # /data/ogle/Daycent/Builds/Trunk/DDlist100 NRI_32415_GC NRI_32415_GC -c outvars.txt

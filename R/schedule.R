@@ -13,7 +13,7 @@
 #' @param cell_data multiple row data.table providing input data for the simulation.
 #' @param cell unique cell value to be passed to function.
 
-create_crop = function(cell_data, cell) {
+create_crop = function(cell_data, cell, cover_crop = copy(cover_crop_template)) {
   # get gridid, crop parameter data
   cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
                                      PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)])
@@ -82,6 +82,10 @@ create_crop = function(cell_data, cell) {
   crop.100[, crop.100 := gsub('<value_SLA>',    cell_crop_data[,SLA],         crop.100)]
   crop.100[, crop.100 := gsub('<value_DDLAIMX>',cell_crop_data[,PPDF4],       crop.100)]
 
+  # read in cover_crop.100 to append to C6_00s for gridid
+  colnames(cover_crop) = 'crop.100'
+  crop.100             = rbind(crop.100, cover_crop)
+
   fwrite(crop.100, paste(pkg.env$out_path, '/crop.100', sep = ''), quote = FALSE, col.names = FALSE)
   return(crop.100)
 }
@@ -111,7 +115,6 @@ create_omad = function(cell_data, cell){
                         "<value_ASTREC1> 'ASTREC(1)'",
                         "300.0           'ASTREC(2)'",
                         "300.0           'ASTREC(3)'")
-  if(cell_omad_data[,orgCN.ratio] > 0) {
     # create omad.100 DT, replace values
     omad.100 = data.table(omad.100 = param.vector)
     omad.100[, omad.100 := gsub('<value_name>',   cell_omad_data[,gridid],                                  omad.100)]
@@ -120,14 +123,11 @@ create_omad = function(cell_data, cell){
 
     fwrite(omad.100, paste(pkg.env$out_path, '/omad.100', sep = ''), quote = FALSE, col.names = FALSE)
     return(omad.100)
-  } else {
-    print("No omad.100 returned because C:N reported as 0.")
-  }
 }
 
-#' Create a DayCent Schedule file
+#' Create a DayCent Schedule file for CSU extended simulations
 #'
-#' Used for writing a schedule file based on spatial data.
+#' Used for writing a schedule file based on spatial data and CSU spin-ups.
 #'
 #' This function creates a schedule file for a specified scenario and crop,
 #' using spatial climate, crop calendar, and crop management data.
@@ -139,96 +139,62 @@ create_omad = function(cell_data, cell){
 #' @param schedule_table data.table providing template of schedule file.
 #' @param ssp character, specifies scenario
 #' @param gcm character, specifies scenario
-#' @param crop character, one of 'maize', 'wwheat', 'swheat', 'soy'
+#' @param crop character, one of 'maiz', 'wwheat', 'swheat', 'soy'
 #' @param scenario character, specifies scenario
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
-create_sched = function(cell_data, schedule_table = copy(schedule_template), cell, ssp, gcm, crop, scenario, start.yr, end.yr, weather_filename) {
+create_csu_sched = function(cell_data, schedule_table = copy(schedule_template), cell, ssp, gcm, crop, scenario_n, irr_n, start.yr, end.yr, weather_fname) {
   # variable definition
-  cell_data           = cell_data[cell %in% c(cell),] # we only process a single cell's data
+  cell_sch_data       = cell_data[gridid %in% cell &
+                                    scenario %in% scenario_n &
+                                    irr %in% irr_n,] # we only process a single cell's data
   schedule_path       = paste(pkg.env$out_path,'/', ssp,'_', gcm, sep = "")
-  schedule_filename   = cell_data[1, paste(scenario, '_', crop, '_', cell, '.sch', sep = "")]
-  block_name          = paste(crop, '_', scenario, sep = "")
-  crop_cultivar       = crop.100_type # this will need to be added to the cell_data table
-  scenario.sched      = scenario
+  schedule_filename   = cell_sch_data[1, paste(scenario, '_', crop, '_irr',irr_n, '_', cell, '.sch', sep = "")]
+  block_name          = cell_sch_data[1, paste(scenario, '_', crop, '_',irr, sep = "")]
+  crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]
+
   # cropping hemisphere (by planting and harvest date in Gregorian calendar)
-  plant.date          = round(cell_data[variable %in% paste('plant_', str_to_title(crop), sep = ""), value])
-  harvest.date        = round(cell_data[variable %in% paste('harvest_', str_to_title(crop), sep = ""), value])
-  pre.harvest.cult    = 14
-  post.harvest.cult   = 30
-  N_or_S              = fifelse(plant.date > harvest.date, 'S','N')
+  plant.date          = cell_sch_data[,plant.date]
+  harvest.date        = cell_sch_data[,harvest.date]
+  crop_hemi           = fifelse(plant.date > harvest.date, 'S','N')
 
-  # tillage value recode
-  cell_data[variable %like% c('till'), variable := paste(c(pkg.env$crop_types[1], 'wheat', pkg.env$crop_types[4]), '_till', sep = "")]
+  # event doy
+  pre.harv.cult       = 14
+  post.harv.cult      = 30
+  post.harv.cc.cult   = 1L
 
-  if (cell_data[variable %in% paste(crop,'_till', sep = ""), value] == 1 ||
-      is.na(cell_data[variable %in% paste(crop,'_till', sep = ""), value])) {
-    cult_opt = 'K'
-  } else if (cell_data[variable %in% paste(crop,'_till', sep = ""), value] == 2||
-             cell_data[variable %in% paste(crop,'_till', sep = ""), value] == 6) {
-    cult_opt = 'G'
-  } else if (cell_data[variable %in% paste(crop,'_till', sep = ""), value] == 4) {
-    cult_opt = 'B'
-  } else {
-    cult_opt = 'J'
-  }
-
-  # fertilizer value recode
-  cell_data[variable %like% c(paste(start_year, '_', sep = "")), variable := paste(start_year, '_', c(pkg.env$crop_types[1], pkg.env$crop_types[4], 'wheat'), sep = "")]
-  fertN.values = cell_data[variable %like% c(paste(start_year, '_', sep = "")),]
-  fertN.match  = grep(crop, fertN.values$variable, value = TRUE)
-  fertN.amt    = ifelse(fertN.values[variable %in% fertN.match, value] > 0, round((fertN.values[variable %in% fertN.match, value])/10, digits = 1), 0) # convert to g m-2 (currently kg ha)
-
-  # res.rtrn
-  # since narrow range of values --> create table of names to be read into this function?
-  # modify harv.100 in advance (no need to keep overwriting)
-  # match value from cell_data to the harv_code?
-  # could be a similar table to the schedule_table (look up by scenario type)
-
-  # crop schedule_table recode
-  if (crop == pkg.env$crop_types[1] || crop == pkg.env$crop_types[4]) {
-    crop.in.sched = "c-s"
-  } else if (crop == pkg.env$crop_types[2]) {
-    crop.in.sched = 'ww'
-  } else {
-    crop.in.sched = 'sw'
-  }
-
-  #create .sch header
-  schedule_table_head = schedule_table[scenario %in% c('all') &
-                                       ssp      %in% c('all') &
-                                       `N-or_S` %in% c('all') &
-                                       crop     %in% c('all')]
-
-  schedule_table_head[, schedule := gsub('<fname>',               paste('site_', cell, '.100', sep = ""), schedule_table_head$schedule)]
-  schedule_table_head[, schedule := gsub('<weather_file>',        weather_filename,                       schedule_table_head$schedule)]
-  schedule_table_head[, schedule := gsub('<block_name>',          block_name,                             schedule_table_head$schedule)]
-  schedule_table_head[, schedule := gsub('<start_year>',          start_year,                             schedule_table_head$schedule)]
-  schedule_table_head[, schedule := gsub('<end_year>',            end_year,                               schedule_table_head$schedule)]
-  schedule_table_head[, schedule := gsub('<crop_cultivar>',       crop_cultivar,                          schedule_table_head$schedule)]
-
-  # spring wheat check condition for S. Hemi harvest (could span into two years)
-
+  # read in schedule template from file
+  crop.index          = match(crop, pkg.env$crop_types)
+  cell_schedule_f     = schedule_table[scenario       %in% scenario_n &
+                                         N_or_S       %in% crop_hemi  &
+                                         irr          %in% irr_n      &
+                                         get(crop)    %in% crop.index ]
+  cell_schedule_f[, schedule := gsub('<fname>',        paste(cell_sch_data[,gridid],cell_sch_data[,run_seq],'site.100', sep = '_'), schedule)]
+  cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,                                                               schedule)]
+  cell_schedule_f[, schedule := gsub('<block_name>',   block_name,                                                                  schedule)]
+  cell_schedule_f[, schedule := gsub('<start_year>',   start_year,                                                                  schedule)]
+  cell_schedule_f[, schedule := gsub('<end_year>',     end_year,                                                                    schedule)]
+  cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,                                                               schedule)]
+  cell_schedule_f[, schedule := gsub('<co2_option>',   gsub('ssp','',ssp),                                                          schedule)]
   # create .sch block
-  # what about for scenarios? eg the cult_day_postharvest is different if it is cover crop, wheat
-  schedule_table_block = schedule_table[scenario   %in% c(scenario.sched) &
-                                          ssp      %in% c('all')          &
-                                          `N-or_S` %in% c(N_or_S)         &
-                                          crop     %in% c(crop.in.sched)]
-  schedule_table_block[, schedule := gsub('<plant_day>',            plant.date,                                schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<harvest_day>',          harvest.date,                              schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harvest.cult),           schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harvest.cult),        schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<cult-opt>',             cult_opt,                                  schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<crop_cultivar>',        crop_cultivar,                             schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<manure>',               omad.cell,                                 schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<fert-amt>',             paste('(',fertN.amt, 'N,1.0F)', sep = ""), schedule_table_block$schedule)]
-  schedule_table_block[, schedule := gsub('<res-amt>',              res.rtrn,                                  schedule_table_block$schedule)]
-  # how to handle NA cases for fertilizer, manure? also need checks for plant/harv dates
-  # if no-till remove pre-plant, post-harvest CULT events (add ifelse here)
+  cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,                                                                  schedule)]
+  cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,                                                                schedule)]
+  cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult),                                        schedule)]
+  # cover crop check for post-harv cult
+  ifelse(scenario_n %in% 'conv'| scenario_n %in% 'residue'| scenario_n %in% 'ntill', cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)],
+        cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cc.cult), schedule)])
+  cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
+  cell_schedule_f[, schedule := gsub('<manure>',       cell_sch_data[,gridid],                                                      schedule)]
+  cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                          schedule)]
+  # IRIG events
+  cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+  # ccg and ccl scenarios
+  cell_schedule_f[, schedule := gsub('<cc_plant_day>', (harvest.date + 7),                                                          schedule)]
+  ifelse(scenario_n %in% 'ccg', cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'RYE', schedule)], cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'CLVC',                schedule)])
+  cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult + 1L),                                          schedule)]
+  cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
 
-  # bind header, block
-  fwrite(schedule_table[, schedule], schedule_filename, quote = FALSE, col.names = FALSE)
-  return(schedule_filename)
+  fwrite(list(cell_schedule_f[, schedule]), paste(pkg.env$out_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
+  return(cell_schedule_f)
   }
