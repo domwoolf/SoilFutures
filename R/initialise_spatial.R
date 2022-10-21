@@ -36,9 +36,9 @@ create_cell_data_csu_table = function() {
   names(residue_return) = 'res.rtrn.amt'
 
   # load gridid, irrigation table
-  gridid.dt       = fread(paste(pkg.env$gis_path, 'run_seq_with_pset.csv',          sep='/'))
+  gridid.dt       = fread(paste(pkg.env$gis_path, 'maiz_lu_cohort_id.csv',          sep='/'))
   # add in run_seq which corresponds to the cohort
-  gridid.dt       = gridid.dt[, run_seq := NULL]
+  # gridid.dt       = gridid.dt[, run_seq := NULL]
 
 
   # create a vector of rotated grid cell numbers needed for weather file script

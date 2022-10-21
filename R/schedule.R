@@ -11,16 +11,17 @@
 #' @import data.table
 #'
 #' @param cell_data multiple row data.table providing input data for the simulation.
-#' @param gridid unique cell value to be passed to function.
+#' @param cell unique cell value to be passed to function.
 
-create_crop = function(cell_data, gridid) {
+create_crop = function(cell_data, cell) {
   # get gridid, crop parameter data
-  cell_data[gridid %in% c(gridid), .(dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
-                                     PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)] # update, only need to process 1 row, crop
+  cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
+                                     PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)])
+
   # create parameter vectors
-  param.vector = c("<value_crop>      <crop_name>","<value_RUETB>     RUETB",
-                   "<value_PPDF(1)>   PPDF(1)",    "<value_PPDF(2)>   PPDF(2)",
-                   "<value_PPDF(3)>   PPDF(3)",    "<value_PPDF(4)>   PPDF(4)",
+  param.vector   = c("<value_crop>      <crop_name>","<value_RUETB>     RUETB",
+                   "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
+                   "<value_PPDF3>     PPDF(3)",    "<value_PPDF4>     PPDF(4)",
                    "0.0               BIOFLG",     "1800.0            BIOK5",       "<value_PLTMRF>               PLTMRF",
                    "150.0             FULCAN",     "5                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
                    "0.1               FRTC(2)",    "90.0              FRTC(3)",     "0.1               FRTC(4)",
@@ -67,19 +68,19 @@ create_crop = function(cell_data, gridid) {
 
   # create crop.100 DT, replace values
   crop.100 = data.table(crop.100 = param.vector)
-  crop.100[, crop.100 := gsub('<value_crop>',   dc_cropname, crop.100)] # update all replacement values
-  crop.100[, crop.100 := gsub('<crop_name>',    crop,   crop.100)]
-  crop.100[, crop.100 := gsub('<value_RUETB>',  RUETB, crop.100)]
-  crop.100[, crop.100 := gsub('<value_PPDF(1)', PPDF1, crop.100)]
-  crop.100[, crop.100 := gsub('<value_PPDF(2)', PPDF2, crop.100)]
-  crop.100[, crop.100 := gsub('<value_PPDF(3)', PPDF3, crop.100)]
-  crop.100[, crop.100 := gsub('<value_PPDF(4)', PPDF4, crop.100)]
-  crop.100[, crop.100 := gsub('<value_PLTMRF',  PLTMRF, crop.100)]
-  crop.100[, crop.100 := gsub('<value_FRTC1',   FRTC1,  crop.100)]
-  crop.100[, crop.100 := gsub('<value_DDBASE',  DDBASE, crop.100)]
-  crop.100[, crop.100 := gsub('<value_KLIGHT',  KLIGHT, crop.100)]
-  crop.100[, crop.100 := gsub('<value_SLA',     SLA,    crop.100)]
-  crop.100[, crop.100 := gsub('<value_DDLAIMX', PPDF4,  crop.100)]
+  crop.100[, crop.100 := gsub('<value_crop>',   cell_crop_data[,dc_cropname], crop.100)]
+  crop.100[, crop.100 := gsub('<crop_name>',    cell_crop_data[,crop],        crop.100)]
+  crop.100[, crop.100 := gsub('<value_RUETB>',  cell_crop_data[,RUETB],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF1>',  cell_crop_data[,PPDF1],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF2>',  cell_crop_data[,PPDF2],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF3>',  cell_crop_data[,PPDF3],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPDF4>',  cell_crop_data[,PPDF4],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_PLTMRF>', cell_crop_data[,PLTMRF],      crop.100)]
+  crop.100[, crop.100 := gsub('<value_FRTC1>',  cell_crop_data[,FRTC1],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_DDBASE>', cell_crop_data[,DDBASE],      crop.100)]
+  crop.100[, crop.100 := gsub('<value_KLIGHT>', cell_crop_data[,KLIGHT],      crop.100)]
+  crop.100[, crop.100 := gsub('<value_SLA>',    cell_crop_data[,SLA],         crop.100)]
+  crop.100[, crop.100 := gsub('<value_DDLAIMX>',cell_crop_data[,PPDF4],       crop.100)]
 
   fwrite(crop.100, paste(pkg.env$out_path, '/crop.100', sep = ''), quote = FALSE, col.names = FALSE)
   return(crop.100)
@@ -97,31 +98,31 @@ create_crop = function(cell_data, gridid) {
 #'@param omad.100 DayCent input file with organic matter events
 #'@param cell_data multiple row data.table providing input data for the simulation.
 
-# for testing, delete below later
-cell_data = fread(paste(pkg.env$out_path, "cell_data_table.csv", sep = "/")) # for testing
-omad.100 = fread('/home/shelby/Documents/daycent/dev_30cmLAI4RriceGrass/input_files/omad.100', sep = "", header = FALSE)
+create_omad = function(cell_data, cell){
+  # get gridid, omad data
+  cell_omad_data = unique(cell_data[gridid == cell, .(gridid, crop, orgN.amt, orgCN.ratio)])
 
-create_omad = function(omad.100, cell_data){
-  start_year     = 2015
-  omad.cell      = paste(cell,'_mn', sep='')     # name of omad event for cell
-  cell_data      = cell_data[cell %in% c(cell),] # we only process a single cell's data
+  # create parameter vectors
+  param.vector     = c("<value_name>    CELL-EVENT",
+                        "1               'OMADTYP'",
+                        "<value_ASTGC>   'ASTGC'",
+                        "0.0             'ASTLBL'",
+                        "0.13            'ASTLIG'",
+                        "<value_ASTREC1> 'ASTREC(1)'",
+                        "300.0           'ASTREC(2)'",
+                        "300.0           'ASTREC(3)'")
+  if(cell_omad_data[,orgCN.ratio] > 0) {
+    # create omad.100 DT, replace values
+    omad.100 = data.table(omad.100 = param.vector)
+    omad.100[, omad.100 := gsub('<value_name>',   cell_omad_data[,gridid],                                  omad.100)]
+    omad.100[, omad.100 := gsub('<value_ASTREC1>',cell_omad_data[,orgCN.ratio],                             omad.100)]
+    omad.100[, omad.100 := gsub('<value_ASTGC>',  (cell_omad_data[,orgCN.ratio]*cell_omad_data[,orgN.amt]), omad.100)]
 
-  #extract cell data
-  manureN.cell   = round(cell_data[variable %in% start_year, value]/10, digits = 1) #g m-2 conversion
-  ASTREC1.cell   = round(cell_data[variable %in% 'weighted_C.N', value], digits = 1)
-  ASTGC.cell     = round(manureN.cell*ASTREC1.cell, digits = 1)
-  # add NA check here?
-
-  omad_event     = omad.100[1:8,] # copy event structure
-  omad_event[, V1 := gsub('^M',           omad.cell,    omad_event$V1)]
-  omad_event[, V1 := gsub('STRAW-MANURE', 'CELL-EVENT', omad_event$V1)]
-  omad_event[, V1 := gsub('100.0',        ASTGC.cell,   omad_event$V1)]
-  omad_event[, V1 := gsub('30.0',         ASTREC1.cell, omad_event$V1)]
-
-  omad.100.cell  = rbind(omad_event, omad.100)
-
-  fwrite(omad.100.cell, paste(pkg.env$out_path, '/omad.100', sep = ''), quote = FALSE, col.names = FALSE)
-  return(omad.100.cell)
+    fwrite(omad.100, paste(pkg.env$out_path, '/omad.100', sep = ''), quote = FALSE, col.names = FALSE)
+    return(omad.100)
+  } else {
+    print("No omad.100 returned because C:N reported as 0.")
+  }
 }
 
 #' Create a DayCent Schedule file
@@ -143,15 +144,8 @@ create_omad = function(omad.100, cell_data){
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
-
-# for testing, delete below later
-cell_data = fread(paste(pkg.env$out_path, "cell_data_table.csv", sep = "/")) # for testing
-schedule_table = fread(paste(pkg.env$out_path, "SoilFutures","data-raw", "schedule_template.csv", sep = "/"))
-
-create_sched = function(cell_data, schedule_table = copy(schedule_template), ssp, gcm, crop, scenario, weather_filename) {
+create_sched = function(cell_data, schedule_table = copy(schedule_template), cell, ssp, gcm, crop, scenario, start.yr, end.yr, weather_filename) {
   # variable definition
-  start_year          = 2015
-  end_year            = 2100
   cell_data           = cell_data[cell %in% c(cell),] # we only process a single cell's data
   schedule_path       = paste(pkg.env$out_path,'/', ssp,'_', gcm, sep = "")
   schedule_filename   = cell_data[1, paste(scenario, '_', crop, '_', cell, '.sch', sep = "")]
