@@ -72,7 +72,7 @@ load_climate = function(ssp, gcm) {
 #' from a daily climate rast that uses a different calendar. Usually created using initialize_weather()
 #' @importFrom terra rast extract
 #' @export
-make_weather_file = function(climate, cell, .gcm, ssp, weather) {
+make_weather_file = function(climate, cell, .gcm, ssp, weather, cmip6_calendars = copy(cmip6_calendars)) {
   calendars    = c('proleptic_gregorian', '365_day', 'standard',      '360_day')
   calendar_idx = c('idx_gregorian',       'idx_365', 'idx_gregorian', 'idx_360')
   calendar = cmip6_calendars[gcm == .gcm, calendar]
