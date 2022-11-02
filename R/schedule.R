@@ -7,14 +7,14 @@
 #' Used for writing a crop.100 file based on Yang et al. (2022) ERL
 #'
 #' This function accepts parameter values from a csv file and creates a crop.100 for
-#' all simulations for a crop type in a cell.
+#' all simulations for a crop type in a cell. N.B. crop.100 written with FRTCINX at 7 (forced harvest).
 #' @import data.table
 #'
 #' @param cell_data multiple row data.table providing input data for the simulation.
 #' @param cell unique cell value to be passed to function.
 #' @param cover_crop table template of cover crop parameters to include in the crop.100.
 
-create_crop = function(cell_data, cell, cover_crop, out_path) { # change out_path, add back cover_crop = copy(cover_crop_template)
+create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cover_crop_template)) {
   # get gridid, crop parameter data
   cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
                                      PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)])
@@ -24,7 +24,7 @@ create_crop = function(cell_data, cell, cover_crop, out_path) { # change out_pat
                    "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
                    "<value_PPDF3>     PPDF(3)",    "<value_PPDF4>     PPDF(4)",
                    "0.0               BIOFLG",     "1800.0            BIOK5",       "<value_PLTMRF>               PLTMRF",
-                   "150.0             FULCAN",     "5                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
+                   "150.0             FULCAN",     "7.0                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
                    "0.1               FRTC(2)",    "90.0              FRTC(3)",     "0.1               FRTC(4)",
                    "0.1               FRTC(5)",    "0.3               CFRTCN(1)",   "0.25              CFRTCN(2)",
                    "0.5               CFRTCW(1)",  "0.1               CFRTCW(2)",   "700.0             BIOMAX",
@@ -87,7 +87,7 @@ create_crop = function(cell_data, cell, cover_crop, out_path) { # change out_pat
   colnames(cover_crop) = 'crop.100'
   crop.100             = rbind(crop.100, cover_crop)
 
-  fwrite(crop.100, paste(out_path, '/crop.100', sep = ''), quote = FALSE, col.names = FALSE)
+  fwrite(crop.100, paste(pkg.env$tmp_path, '/crop.100', sep = ''), quote = FALSE, col.names = FALSE)
   return(crop.100)
 }
 #
@@ -103,7 +103,7 @@ create_crop = function(cell_data, cell, cover_crop, out_path) { # change out_pat
 #'@param cell_data multiple row data.table providing input data for the simulation.
 #'@param cell unique cell value to be passed to function.
 
-create_omad = function(cell_data, cell, out_path){
+create_omad = function(cell_data = copy(cell_data), cell){
   # get gridid, omad data
   cell_omad_data = unique(cell_data[gridid == cell, .(gridid, crop, orgN.amt, orgCN.ratio)])
 
@@ -122,7 +122,7 @@ create_omad = function(cell_data, cell, out_path){
     omad.100[, omad.100 := gsub('<value_ASTREC1>',cell_omad_data[,orgCN.ratio],                             omad.100)]
     omad.100[, omad.100 := gsub('<value_ASTGC>',  (cell_omad_data[,orgCN.ratio]*cell_omad_data[,orgN.amt]), omad.100)]
 
-    fwrite(omad.100, paste(out_path, '/omad.100', sep = ''), quote = FALSE, col.names = FALSE)
+    fwrite(omad.100, paste(pkg.env$tmp_path, '/omad.100', sep = ''), quote = FALSE, col.names = FALSE)
     return(omad.100)
 }
 
@@ -150,7 +150,7 @@ create_omad = function(cell_data, cell, out_path){
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
-create_csu_sched = function(cell_data, schedule_table, .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, out_path) { #schedule_table = copy(schedule_template)
+create_csu_sched = function(cell_data = copy(cell_data), schedule_table, .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, out_path) { #schedule_table = copy(schedule_template)
   # variable definition
   cell_sch_data       = cell_data[gridid %in% .gridid &
                                     scenario %in% .scenario &
@@ -182,7 +182,7 @@ create_csu_sched = function(cell_data, schedule_table, .gridid, .ssp, .gcm, .cro
   cell_schedule_f[, schedule := gsub('<start_year>',   start_year,                                                                  schedule)]
   cell_schedule_f[, schedule := gsub('<end_year>',     end_year,                                                                    schedule)]
   cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,                                                               schedule)]
-  cell_schedule_f[, schedule := gsub('<co2_option>',   gsub('ssp','',.ssp),                                                          schedule)]
+  ifelse(.ssp %in% 'historical', cell_schedule_f[, schedule := gsub('<co2_option>', -1L, schedule)], cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
   # create .sch block
   cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,                                                                  schedule)]
   cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,                                                                schedule)]
