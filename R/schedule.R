@@ -150,7 +150,7 @@ create_omad = function(cell_data = copy(cell_data), cell){
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
-create_csu_sched = function(cell_data = copy(cell_data), schedule_table, .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, out_path) { #schedule_table = copy(schedule_template)
+create_csu_sched = function(cell_data = copy(cell_data), schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, out_path) {
   # variable definition
   cell_sch_data       = cell_data[gridid %in% .gridid &
                                     scenario %in% .scenario &
@@ -169,6 +169,7 @@ create_csu_sched = function(cell_data = copy(cell_data), schedule_table, .gridid
   pre.harv.cult       = 14
   post.harv.cult      = 30
   post.harv.cc.cult   = 1L
+  pre.crop.cult       = 1L
 
   # read in schedule template from file
   crop.index          = match(.crop, pkg.env$crop_types)
@@ -187,6 +188,7 @@ create_csu_sched = function(cell_data = copy(cell_data), schedule_table, .gridid
   cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,                                                                  schedule)]
   cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,                                                                schedule)]
   cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult),                                        schedule)]
+  cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),                                        schedule)]
   # cover crop check for post-harv cult
   ifelse(.scenario %in% 'conv'| .scenario %in% 'res'| .scenario %in% 'ntill', cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)],
         cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cc.cult), schedule)])

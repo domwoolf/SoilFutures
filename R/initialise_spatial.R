@@ -16,6 +16,7 @@ create_cell_data_csu_table = function() {
   org_N          = rast(paste(pkg.env$gis_path, 'manure-n_cropland.tif',             sep='/'))
   org_CN         = rast(paste(pkg.env$gis_path, 'global_manure_weighted_CN_agg.tif', sep='/'))
   residue_return = rast(paste(pkg.env$gis_path, 'wirsenius_global_res_rtrn_agg.tif', sep='/'))
+  ipcc_clim      = rast(paste(pkg.env$gis_path, 'ipcc_climate_agg.tif',              sep='/'))
 
   # tidy variables, names, and subset for maize-only
   crop_calendar        = crop_calendar['Maize']
@@ -37,9 +38,6 @@ create_cell_data_csu_table = function() {
 
   # load gridid, irrigation table
   gridid.dt       = fread(paste(pkg.env$gis_path, 'maiz_lu_cohort_id.csv',          sep='/'))
-  # add in run_seq which corresponds to the cohort
-  # gridid.dt       = gridid.dt[, run_seq := NULL]
-
 
   # create a vector of rotated grid cell numbers needed for weather file script
   gridid.xy       = setDT(as.data.frame(xyFromCell(org_CN, gridid.dt[,gridid])))
@@ -68,7 +66,7 @@ create_cell_data_csu_table = function() {
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'crop', 'irr','scenario','pset_id'))
 
   # merge rasters and create data.table filtered for gridid
-  all_raster      = c(crop_calendar, min_N, org_N, org_CN, residue_return)
+  all_raster      = c(crop_calendar, min_N, org_N, org_CN, residue_return, ipcc_clim)
   raster_table    = as.data.frame(all_raster, xy = TRUE, cells = TRUE, na.rm = FALSE)
   raster_table    = setDT(raster_table)
   unique.gridid   = sort(unique(gridid.dt$gridid))
@@ -87,6 +85,10 @@ create_cell_data_csu_table = function() {
   main_table   = gridid.dt[raster_table, on = .(gridid = cell)]
   setcolorder(main_table, c('gridid', 'gridid.rotated', 'x', 'y','regionid', 'crop', 'irr','scenario','pset_id'))
   setorder(main_table, gridid, scenario)
+
+  # remove any plant/harv dates == 0
+  main_table = main_table[plant.date !=0,]
+  main_table = main_table[harvest.date !=0,]
 
   return(main_table)
   fwrite(main_table, paste(pkg.env$out_path,"cell_data_table_csu.csv", sep = "/")) #csv

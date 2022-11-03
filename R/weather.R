@@ -108,29 +108,99 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather, cmip6_c
     fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
 
     # summary statistics
-    blocks = c('2016-2020', '2021-2025','2026-2030', '2031-2035',
-               '2036-2040', '2041-2045', '2046-2050', '2051-2055',
-               '2056-2060', '2061-2065', '2066-2070', '2071-2075',
-               '2076-2080', '2081-2085', '2086-2090', '2091-2095',
-               '2096-2100')
     w_calc = copy(w)[, sum_pr := sum(pr), by = y]
-    # w_calc[, .SD[y %in% 2016:2020], by = y]
-    # w_calc[y %in% 2016:2020, `:=` (tasmax_mean = mean(tasmax), tasmax_sd = sd(tasmax), tasmax_q10 = quantile(tasmax, probs = (0.1)),
-                                   # tasmax_q25 = quantile(tasmax, probs = (0.25)), tasmax_q50 = quantile(tasmax, probs = (0.5)),
-                                   # tasmax_q75 = quantile(tasmax, probs = (0.75)), tasmax_q90 = quantile(tasmax, probs = (0.9)),
-                                   # tasmin_mean = mean(tasmin),tasmin_sd = sd(tasmin), tasmin_q10 = quantile(tasmin, probs = (0.1)),
-                                   # tasmin_q25 = quantile(tasmin, probs = (0.25)), tasmin_q50 = quantile(tasmin, probs = (0.5)),
-                                   # tasmin_q75 = quantile(tasmin, probs = (0.75)), tasmin_q90 = quantile(tasmin, probs = (0.9)),
-                                   # MAP = mean(sum_pr), MAP_sd = sd(sum_pr), MAP_q10 = quantile(sum_pr, probs = (0.1)),
-                                   # MAP_q25 = quantile(sum_pr, probs = (0.25)), MAP_q50 = quantile(sum_pr, probs = (0.5)), MAP_q75 = quantile(sum_pr, probs = (0.75)),
-                                   # MAP_q90 = quantile(sum_pr, probs = (0.9)))]
-
+    #divide into 5-year blocks
+    w_calc[, seq_block := (y-2016)%%5]
+    main_block_s = seq(2016, 2100, 5)
+    main_block_e = seq(2015, 2100, 5)
+    main_block_e = main_block_e[-1]
+    w_calc[y %between% c(main_block_s[1], main_block_e[1]), block := paste0(main_block_s[1],'-', main_block_e[1])]
+    w_calc[y %between% c(main_block_s[2], main_block_e[2]), block := paste0(main_block_s[2],'-', main_block_e[2])]
+    w_calc[y %between% c(main_block_s[3], main_block_e[3]), block := paste0(main_block_s[3],'-', main_block_e[3])]
+    w_calc[y %between% c(main_block_s[4], main_block_e[4]), block := paste0(main_block_s[4],'-', main_block_e[4])]
+    w_calc[y %between% c(main_block_s[5], main_block_e[5]), block := paste0(main_block_s[5],'-', main_block_e[5])]
+    w_calc[y %between% c(main_block_s[6], main_block_e[6]), block := paste0(main_block_s[6],'-', main_block_e[6])]
+    w_calc[y %between% c(main_block_s[7], main_block_e[7]), block := paste0(main_block_s[7],'-', main_block_e[7])]
+    w_calc[y %between% c(main_block_s[8], main_block_e[8]), block := paste0(main_block_s[8],'-', main_block_e[8])]
+    w_calc[y %between% c(main_block_s[9], main_block_e[9]), block := paste0(main_block_s[9],'-', main_block_e[9])]
+    w_calc[y %between% c(main_block_s[10], main_block_e[10]), block := paste0(main_block_s[10],'-', main_block_e[10])]
+    w_calc[y %between% c(main_block_s[11], main_block_e[11]), block := paste0(main_block_s[11],'-', main_block_e[11])]
+    w_calc[y %between% c(main_block_s[12], main_block_e[12]), block := paste0(main_block_s[12],'-', main_block_e[12])]
+    w_calc[y %between% c(main_block_s[13], main_block_e[13]), block := paste0(main_block_s[13],'-', main_block_e[13])]
+    w_calc[y %between% c(main_block_s[14], main_block_e[14]), block := paste0(main_block_s[14],'-', main_block_e[14])]
+    w_calc[y %between% c(main_block_s[15], main_block_e[15]), block := paste0(main_block_s[15],'-', main_block_e[15])]
+    w_calc[y %between% c(main_block_s[16], main_block_e[16]), block := paste0(main_block_s[16],'-', main_block_e[16])]
+    w_calc[y %between% c(main_block_s[17], main_block_e[17]), block := paste0(main_block_s[17],'-', main_block_e[17])]
+    #generate quantile summaries
+    prob = seq(0.1,0.9,0.1)
+    w_sum = w_calc[, .(
+      gridid   = .gridid,
+      prob     = prob,
+      qtasmax  = quantile(tasmax, prob),
+      qtasmin  = quantile(tasmax, prob),
+      qpr      = quantile(sum_pr, prob),
+      mtasmax  = mean(tasmax),
+      sdtasmax = sd(tasmax),
+      mtasmin  = mean(tasmin),
+      sdtasmin = sd(tasmin),
+      mpr      = mean(sum_pr),
+      sdmpr    = sd(sum_pr)),
+      by       = .(block)]
+    w_sum = dcast(w_sum, block+gridid~prob, value.var = colnames(w_sum)[-3])
+    w_sum = w_sum[, -3:-20][, gcm := .gcm][, ssp := .ssp]
+    setcolorder(w_sum, c('gridid', 'block', 'gcm', 'ssp'))
+    w_sum_fname = paste0(pkg.env$out_path, '/weather_summary_statistics.csv')
+    fwrite(w_sum, w_sum_fname, append = TRUE)
   } else {
-    # add tas and precip calcs here
     w[, idx := NULL]
     w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
     weather_fname = paste0(pkg.env$tmp_path, '/weather_', ssp, '_', .gcm, '_', cell, '.wth')
     fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
     return(weather_fname)
+
+    # summary statistics
+    w_calc = copy(w)[, sum_pr := sum(pr), by = y]
+    #divide into 5-year blocks
+    w_calc[, seq_block := (y-2016)%%5]
+    main_block_s = seq(2016, 2100, 5)
+    main_block_e = seq(2015, 2100, 5)
+    main_block_e = main_block_e[-1]
+    w_calc[y %between% c(main_block_s[1], main_block_e[1]), block := paste0(main_block_s[1],'-', main_block_e[1])]
+    w_calc[y %between% c(main_block_s[2], main_block_e[2]), block := paste0(main_block_s[2],'-', main_block_e[2])]
+    w_calc[y %between% c(main_block_s[3], main_block_e[3]), block := paste0(main_block_s[3],'-', main_block_e[3])]
+    w_calc[y %between% c(main_block_s[4], main_block_e[4]), block := paste0(main_block_s[4],'-', main_block_e[4])]
+    w_calc[y %between% c(main_block_s[5], main_block_e[5]), block := paste0(main_block_s[5],'-', main_block_e[5])]
+    w_calc[y %between% c(main_block_s[6], main_block_e[6]), block := paste0(main_block_s[6],'-', main_block_e[6])]
+    w_calc[y %between% c(main_block_s[7], main_block_e[7]), block := paste0(main_block_s[7],'-', main_block_e[7])]
+    w_calc[y %between% c(main_block_s[8], main_block_e[8]), block := paste0(main_block_s[8],'-', main_block_e[8])]
+    w_calc[y %between% c(main_block_s[9], main_block_e[9]), block := paste0(main_block_s[9],'-', main_block_e[9])]
+    w_calc[y %between% c(main_block_s[10], main_block_e[10]), block := paste0(main_block_s[10],'-', main_block_e[10])]
+    w_calc[y %between% c(main_block_s[11], main_block_e[11]), block := paste0(main_block_s[11],'-', main_block_e[11])]
+    w_calc[y %between% c(main_block_s[12], main_block_e[12]), block := paste0(main_block_s[12],'-', main_block_e[12])]
+    w_calc[y %between% c(main_block_s[13], main_block_e[13]), block := paste0(main_block_s[13],'-', main_block_e[13])]
+    w_calc[y %between% c(main_block_s[14], main_block_e[14]), block := paste0(main_block_s[14],'-', main_block_e[14])]
+    w_calc[y %between% c(main_block_s[15], main_block_e[15]), block := paste0(main_block_s[15],'-', main_block_e[15])]
+    w_calc[y %between% c(main_block_s[16], main_block_e[16]), block := paste0(main_block_s[16],'-', main_block_e[16])]
+    w_calc[y %between% c(main_block_s[17], main_block_e[17]), block := paste0(main_block_s[17],'-', main_block_e[17])]
+    #generate quantile summaries
+    prob = seq(0.1,0.9,0.1)
+    w_sum = w_calc[, .(
+      gridid   = .gridid,
+      prob     = prob,
+      qtasmax  = quantile(tasmax, prob),
+      qtasmin  = quantile(tasmax, prob),
+      qpr      = quantile(sum_pr, prob),
+      mtasmax  = mean(tasmax),
+      sdtasmax = sd(tasmax),
+      mtasmin  = mean(tasmin),
+      sdtasmin = sd(tasmin),
+      mpr      = mean(sum_pr),
+      sdmpr    = sd(sum_pr)),
+      by       = .(block)]
+    w_sum = dcast(w_sum, block+gridid~prob, value.var = colnames(w_sum)[-3])
+    w_sum = w_sum[, -3:-20][, gcm := .gcm][, ssp := .ssp]
+    setcolorder(w_sum, c('gridid', 'block', 'gcm', 'ssp'))
+    w_sum_fname = paste0(pkg.env$out_path, '/weather_summary_statistics.csv')
+    fwrite(w_sum, w_sum_fname, append = TRUE)
   }
 }

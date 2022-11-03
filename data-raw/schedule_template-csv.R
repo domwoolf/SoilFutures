@@ -1,3 +1,6 @@
-## code to prepare `schedule_template.csv` dataset goes here
+## code to prepare `schedule_template.csv` dataset as .rda goes here
 
-usethis::use_data(schedule_template.csv, overwrite = TRUE)
+library(data.table)
+schedule_template = fread('schedule_template.csv')
+
+usethis::use_data(schedule_template, overwrite = TRUE)

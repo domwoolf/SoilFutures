@@ -7,6 +7,7 @@ pkg.env = NULL
   assign('scenario',     c('conv', 'res', 'ntill', 'ccg', 'ccl', 'rewild'), pkg.env)
   assign('start_year',   c(2016, 1996), pkg.env)
   assign('end_year',     c(2100, 2008), pkg.env)
+  assign('irr',          c(0,1),        pkg.env)
   # cat(paste('SOIL_FUTURES_GIS_PATH =', Sys.getenv('SOIL_FUTURES_GIS_PATH'), '\n))
   assign('gis_path', Sys.getenv('SOIL_FUTURES_GIS_PATH'), pkg.env)
   if (isFALSE(nchar(pkg.env$gis_path))) {

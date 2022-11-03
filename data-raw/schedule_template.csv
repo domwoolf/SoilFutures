@@ -27,6 +27,7 @@ conv,N,0,1,0,0,0,F             Weather choice
 conv,N,0,1,0,0,0,<weather_file>
 conv,N,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 conv,N,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+conv,N,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 conv,N,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,N,0,1,0,0,0,   1   <plant_day>  PLTM
 conv,N,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -64,6 +65,7 @@ conv,N,1,1,0,0,0,<weather_file>
 conv,N,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 conv,N,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 conv,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+conv,N,1,1,1,1,1,   1   <cult_kill_day>  CULT KILL
 conv,N,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,N,1,1,0,0,0,   1   <plant_day>  PLTM
 conv,N,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -103,6 +105,7 @@ conv,S,0,1,0,0,0,   1   <harvest_day>  LAST
 conv,S,0,1,0,0,0,   1   <cult_day_postharvest> CULT K
 conv,S,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 conv,S,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+conv,S,0,1,1,1,1,   1   <cult_kill_day>  CULT KILL
 conv,S,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,S,0,1,0,0,0,   1   <plant_day>  PLTM
 conv,S,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -140,6 +143,7 @@ conv,S,1,1,0,0,0,   1   <cult_day_postharvest> CULT K
 conv,S,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 conv,S,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 conv,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+conv,S,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 conv,S,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,S,1,1,0,0,0,   1   <plant_day>  PLTM
 conv,S,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -173,6 +177,7 @@ res,N,0,1,0,0,0,F             Weather choice
 res,N,0,1,0,0,0,<weather_file>
 res,N,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 res,N,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+res,N,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 res,N,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,N,0,1,0,0,0,   1   <plant_day>  PLTM
 res,N,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -210,6 +215,7 @@ res,N,1,1,0,0,0,<weather_file>
 res,N,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 res,N,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 res,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+res,N,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 res,N,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,N,1,1,0,0,0,   1   <plant_day>  PLTM
 res,N,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -249,6 +255,7 @@ res,S,0,1,0,0,0,   1   <harvest_day>  LAST
 res,S,0,1,0,0,0,   1   <cult_day_postharvest> CULT K
 res,S,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 res,S,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+res,S,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 res,S,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,S,0,1,0,0,0,   1   <plant_day>  PLTM
 res,S,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -286,6 +293,7 @@ res,S,1,1,0,0,0,   1   <cult_day_postharvest> CULT K
 res,S,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 res,S,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 res,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+res,S,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 res,S,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,S,1,1,0,0,0,   1   <plant_day>  PLTM
 res,S,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -318,6 +326,7 @@ ntill,N,0,1,0,0,0,1.0           Output interval
 ntill,N,0,1,0,0,0,F             Weather choice
 ntill,N,0,1,0,0,0,<weather_file>
 ntill,N,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ntill,N,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,N,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,N,0,1,0,0,0,   1   <plant_day>  PLTM
 ntill,N,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -353,6 +362,7 @@ ntill,N,1,1,0,0,0,F             Weather choice
 ntill,N,1,1,0,0,0,<weather_file>
 ntill,N,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ntill,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ntill,N,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,N,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,N,1,1,0,0,0,   1   <plant_day>  PLTM
 ntill,N,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -389,6 +399,7 @@ ntill,S,0,1,0,0,0,<weather_file>
 ntill,S,0,1,0,0,0,   1   <harvest_day>  HARV G
 ntill,S,0,1,0,0,0,   1   <harvest_day>  LAST
 ntill,S,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ntill,S,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,S,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,S,0,1,0,0,0,   1   <plant_day>  PLTM
 ntill,S,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -424,6 +435,7 @@ ntill,S,1,1,0,0,0,   1   <harvest_day>  HARV G
 ntill,S,1,1,0,0,0,   1   <harvest_day>  LAST
 ntill,S,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ntill,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ntill,S,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,S,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,S,1,1,0,0,0,   1   <plant_day>  PLTM
 ntill,S,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -460,6 +472,7 @@ ccg,N,0,1,0,0,0,   1    <cc_harvest_day> HARV CC
 ccg,N,0,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,N,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccg,N,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccg,N,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,N,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,N,0,1,0,0,0,   1   <plant_day>  PLTM
 ccg,N,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -503,6 +516,7 @@ ccg,N,1,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,N,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccg,N,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccg,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccg,N,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,N,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,N,1,1,0,0,0,   1   <plant_day>  PLTM
 ccg,N,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -551,6 +565,7 @@ ccg,S,0,1,0,0,0,   1    <cc_harvest_day> HARV CC
 ccg,S,0,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,S,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccg,S,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccg,S,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,S,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,S,0,1,0,0,0,   1   <plant_day>  PLTM
 ccg,S,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -594,6 +609,7 @@ ccg,S,1,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,S,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccg,S,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccg,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccg,S,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,S,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,S,1,1,0,0,0,   1   <plant_day>  PLTM
 ccg,S,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -630,6 +646,7 @@ ccl,N,0,1,0,0,0,   1    <cc_harvest_day> HARV CC
 ccl,N,0,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,N,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccl,N,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccl,N,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,N,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,N,0,1,0,0,0,   1   <plant_day>  PLTM
 ccl,N,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -673,6 +690,7 @@ ccl,N,1,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,N,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccl,N,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccl,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccl,N,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,N,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,N,1,1,0,0,0,   1   <plant_day>  PLTM
 ccl,N,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -721,6 +739,7 @@ ccl,S,0,1,0,0,0,   1    <cc_harvest_day> HARV CC
 ccl,S,0,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,S,0,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccl,S,0,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccl,S,0,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,S,0,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,S,0,1,0,0,0,   1   <plant_day>  PLTM
 ccl,S,0,1,0,0,0,   1   <plant_day>  CULT B
@@ -764,6 +783,7 @@ ccl,S,1,1,0,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,S,1,1,0,0,0,   1   <cult_day_preharvest> CULT K
 ccl,S,1,1,0,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccl,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccl,S,1,1,0,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,S,1,1,0,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,S,1,1,0,0,0,   1   <plant_day>  PLTM
 ccl,S,1,1,0,0,0,   1   <plant_day>  CULT B
@@ -797,6 +817,7 @@ conv,N,0,0,1,0,0,F             Weather choice
 conv,N,0,0,1,0,0,<weather_file>
 conv,N,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 conv,N,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+conv,N,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 conv,N,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,N,0,0,1,0,0,   1   <plant_day>  PLTM
 conv,N,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -834,6 +855,7 @@ conv,N,1,0,1,0,0,<weather_file>
 conv,N,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 conv,N,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 conv,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+conv,N,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 conv,N,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,N,1,0,1,0,0,   1   <plant_day>  PLTM
 conv,N,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -873,6 +895,7 @@ conv,S,0,0,1,0,0,   1   <harvest_day>  LAST
 conv,S,0,0,1,0,0,   1   <cult_day_postharvest> CULT K
 conv,S,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 conv,S,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+conv,S,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 conv,S,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,S,0,0,1,0,0,   1   <plant_day>  PLTM
 conv,S,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -910,6 +933,7 @@ conv,S,1,0,1,0,0,   1   <cult_day_postharvest> CULT K
 conv,S,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 conv,S,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 conv,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+conv,S,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 conv,S,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 conv,S,1,0,1,0,0,   1   <plant_day>  PLTM
 conv,S,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -943,6 +967,7 @@ res,N,0,0,1,0,0,F             Weather choice
 res,N,0,0,1,0,0,<weather_file>
 res,N,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 res,N,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+res,N,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 res,N,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,N,0,0,1,0,0,   1   <plant_day>  PLTM
 res,N,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -980,6 +1005,7 @@ res,N,1,0,1,0,0,<weather_file>
 res,N,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 res,N,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 res,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+res,N,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 res,N,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,N,1,0,1,0,0,   1   <plant_day>  PLTM
 res,N,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -1019,6 +1045,7 @@ res,S,0,0,1,0,0,   1   <harvest_day>  LAST
 res,S,0,0,1,0,0,   1   <cult_day_postharvest> CULT K
 res,S,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 res,S,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+res,S,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 res,S,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,S,0,0,1,0,0,   1   <plant_day>  PLTM
 res,S,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -1056,6 +1083,7 @@ res,S,1,0,1,0,0,   1   <cult_day_postharvest> CULT K
 res,S,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 res,S,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 res,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+res,S,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 res,S,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 res,S,1,0,1,0,0,   1   <plant_day>  PLTM
 res,S,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -1088,6 +1116,7 @@ ntill,N,0,0,1,0,0,1.0           Output interval
 ntill,N,0,0,1,0,0,F             Weather choice
 ntill,N,0,0,1,0,0,<weather_file>
 ntill,N,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ntill,N,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,N,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,N,0,0,1,0,0,   1   <plant_day>  PLTM
 ntill,N,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -1123,6 +1152,7 @@ ntill,N,1,0,1,0,0,F             Weather choice
 ntill,N,1,0,1,0,0,<weather_file>
 ntill,N,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ntill,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ntill,N,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,N,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,N,1,0,1,0,0,   1   <plant_day>  PLTM
 ntill,N,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -1159,6 +1189,7 @@ ntill,S,0,0,1,0,0,<weather_file>
 ntill,S,0,0,1,0,0,   1   <harvest_day>  HARV G
 ntill,S,0,0,1,0,0,   1   <harvest_day>  LAST
 ntill,S,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ntill,S,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,S,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,S,0,0,1,0,0,   1   <plant_day>  PLTM
 ntill,S,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -1194,6 +1225,7 @@ ntill,S,1,0,1,0,0,   1   <harvest_day>  HARV G
 ntill,S,1,0,1,0,0,   1   <harvest_day>  LAST
 ntill,S,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ntill,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ntill,S,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ntill,S,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ntill,S,1,0,1,0,0,   1   <plant_day>  PLTM
 ntill,S,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -1230,6 +1262,7 @@ ccg,N,0,0,1,0,0,   1    <cc_harvest_day> HARV CC
 ccg,N,0,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,N,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccg,N,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccg,N,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,N,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,N,0,0,1,0,0,   1   <plant_day>  PLTM
 ccg,N,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -1273,6 +1306,7 @@ ccg,N,1,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,N,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccg,N,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccg,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccg,N,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,N,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,N,1,0,1,0,0,   1   <plant_day>  PLTM
 ccg,N,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -1321,6 +1355,7 @@ ccg,S,0,0,1,0,0,   1    <cc_harvest_day> HARV CC
 ccg,S,0,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,S,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccg,S,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccg,S,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,S,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,S,0,0,1,0,0,   1   <plant_day>  PLTM
 ccg,S,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -1364,6 +1399,7 @@ ccg,S,1,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccg,S,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccg,S,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccg,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccg,S,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccg,S,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccg,S,1,0,1,0,0,   1   <plant_day>  PLTM
 ccg,S,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -1400,6 +1436,7 @@ ccl,N,0,0,1,0,0,   1    <cc_harvest_day> HARV CC
 ccl,N,0,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,N,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccl,N,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccl,N,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,N,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,N,0,0,1,0,0,   1   <plant_day>  PLTM
 ccl,N,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -1443,6 +1480,7 @@ ccl,N,1,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,N,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccl,N,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccl,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccl,N,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,N,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,N,1,0,1,0,0,   1   <plant_day>  PLTM
 ccl,N,1,0,1,0,0,   1   <plant_day>  CULT B
@@ -1491,6 +1529,7 @@ ccl,S,0,0,1,0,0,   1    <cc_harvest_day> HARV CC
 ccl,S,0,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,S,0,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccl,S,0,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
+ccl,S,0,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,S,0,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,S,0,0,1,0,0,   1   <plant_day>  PLTM
 ccl,S,0,0,1,0,0,   1   <plant_day>  CULT B
@@ -1534,6 +1573,7 @@ ccl,S,1,0,1,0,0,   1    <cc_harv-cult_day> CULT HERB
 ccl,S,1,0,1,0,0,   1   <cult_day_preharvest> CULT K
 ccl,S,1,0,1,0,0,   1   <cult_day_preharvest> OMAD <manure>
 ccl,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
+ccl,S,1,0,1,0,0,   1   <cult_kill_day>  CULT KILL
 ccl,S,1,0,1,0,0,   1   <plant_day>  CROP <crop_cultivar>
 ccl,S,1,0,1,0,0,   1   <plant_day>  PLTM
 ccl,S,1,0,1,0,0,   1   <plant_day>  CULT B
