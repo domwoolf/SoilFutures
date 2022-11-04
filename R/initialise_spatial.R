@@ -90,9 +90,9 @@ create_cell_data_csu_table = function() {
   main_table = main_table[plant.date !=0,]
   main_table = main_table[harvest.date !=0,]
 
-  return(main_table)
   fwrite(main_table, paste(pkg.env$out_path,"cell_data_table_csu.csv", sep = "/")) #csv
   save(main_table, file = paste(pkg.env$out_path,"cell_data_table_csu.RData", sep = "/")) #rda
+  return(main_table)
 }
 
 # #' Create a data.table containing all variables required to run a DayCent simulation
