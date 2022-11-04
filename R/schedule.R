@@ -103,7 +103,7 @@ create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cove
 #'@param cell_data multiple row data.table providing input data for the simulation.
 #'@param cell unique cell value to be passed to function.
 
-create_omad = function(cell_data = copy(cell_data), cell){
+create_omad = function(cell_data = cell_data, cell){
   # get gridid, omad data
   cell_omad_data = unique(cell_data[gridid == cell, .(gridid, crop, orgN.amt, orgCN.ratio)])
 
