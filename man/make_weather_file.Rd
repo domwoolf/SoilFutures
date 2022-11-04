@@ -2,9 +2,17 @@
 % Please edit documentation in R/weather.R
 \name{make_weather_file}
 \alias{make_weather_file}
-\title{#' Create a weather file}
+\title{Create a weather file}
 \usage{
-make_weather_file(climate, cell, .gcm, ssp, weather)
+make_weather_file(
+  climate,
+  .gridid,
+  cell,
+  .gcm,
+  ssp,
+  weather = pkg.env$weather_data,
+  cmip6_calendars = cmip6_calendars
+)
 }
 \arguments{
 \item{climate}{list of spatial rast objects.

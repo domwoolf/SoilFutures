@@ -4,7 +4,7 @@
 \alias{load_climate}
 \title{Loads climate data}
 \usage{
-load_climate(ssp, gcm)
+load_climate(ssp, gcm, start_year, end_year)
 }
 \arguments{
 \item{ssp}{Chareacter secifying the ssp.}
@@ -17,5 +17,5 @@ list of rasters (see details)
 \description{
 For specified gcm and ssp, creates a list of global daily rasters.  Each element of the list corresponds to a specific climate variable.
 These are mean daily temperature (tas), minimum daily temperature (tasmin), maximum daily temperature (tasmax),
-and precipitation (pr).  Each layer of the rasters corresponds to a day from 2015 to 2100 (using the gcms calendar)
+and precipitation (pr).  Each layer of the rasters corresponds to a day from a specified start year to end year (using the gcms calendar)
 }

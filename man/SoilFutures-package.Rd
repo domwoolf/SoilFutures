@@ -4,8 +4,8 @@
 \name{SoilFutures-package}
 \alias{SoilFutures}
 \alias{SoilFutures-package}
-\title{SoilFutures: What the Package Does (Title Case)}
+\title{SoilFutures: Runs DayCent Model Globally Under Changing Climate}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Data and functions to automate spatial DayCent simulations
 }
 \keyword{internal}
