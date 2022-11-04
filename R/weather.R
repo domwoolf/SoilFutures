@@ -1,12 +1,11 @@
 # Dominic Woolf 17/9/22
 
 #' @import data.table
-# #' @importFrom lubridate leap_year
 #' @param start_year Character, specifying the start year of the simulation.
 #' @param end_year Character, specifying the end year of the simulation.
 #' @export
 initialize_weather = function(start_year, end_year) {
-  weather_data = data.table(.date = seq.Date(ymd(paste0(start_year,"-01-01")),ymd(paste0(end_year,"-12-31")), 1))
+  weather_data = data.table(.date = seq.Date(as.Date(paste0(start_year,"-01-01")), as.Date(paste0(end_year,"-12-31")), 1))
   weather_data[, dom := mday(.date)] # day of month
   weather_data[, m   := month(.date)]
   weather_data[, y   := year(.date)]
@@ -24,18 +23,20 @@ initialize_weather = function(start_year, end_year) {
   shift_days = weather_data[, last(doy_365), by=y][, .(y, shift_365 = data.table::shift(cumsum(V1), fill=0))]
   weather_data = weather_data[shift_days]
   weather_data[, idx_365 := doy_365 + shift_365][, shift_365 := NULL]
-  weather_data[, idx_gregorian := .I]
-  assign('weather_data', weather_data, pkg.env)
-  return(invisible(weather_data))
+  weather_data[, idx_gregorian  := .I]
+  historical_days = seq_len(as.Date(paste0(pkg.env$end_year[2], "-12-31")) - as.Date(paste0(pkg.env$start_year[2], "-01-01")))
+  weather_data[, idx_historical := rep_len(historical_days, .N)]
+  assign('weather_data', weather_data, pkg.env)  ## !!! Why this??? we return the dt from this function - why not just use that?
+  return(weather_data)
 }
 
 #' @importFrom terra rast
 load_climate_vbl = function(vbl, path, start_year, end_year) {
-  clim_files = list.files(path = path, pattern = paste0(vbl, '.+tif$'), full.names = TRUE)
-  clim_files = sort(clim_files)
+  clim_files   = list.files(path = path, pattern = paste0(vbl, '.+tif$'), full.names = TRUE)
+  clim_files   = sort(clim_files)
   clim_files_s = grep(start_year, clim_files)
   clim_files_e = grep(end_year, clim_files)
-  clim_files = clim_files[clim_files_s:clim_files_e]
+  clim_files   = clim_files[clim_files_s:clim_files_e]
   return(rast(clim_files))
 }
 
@@ -54,7 +55,15 @@ load_climate = function(ssp, gcm, start_year, end_year) {
   sapply(pkg.env$climate_vbls, load_climate_vbl, climate_path, start_year, end_year, USE.NAMES = TRUE)
 }
 
-#' #' Create a weather file
+
+#' Split vector into equal sized chunks
+#'
+make_blocks = function(x, n = 5) {
+  x[(floor((seq_along(x) - 1) / n)) *n + 1L]
+}
+
+
+#' Create a weather file
 #'
 #' Used for side effect of writing a weather file based on location.
 #' Location is specified as a raster cell number.
@@ -75,12 +84,11 @@ load_climate = function(ssp, gcm, start_year, end_year) {
 #' @param .gcm character (length one) giving name of the cmip6 model the climate is from
 #' @param weather data.table containing gregorian calendar and index numbers to extract gregorian values
 #' from a daily climate rast that uses a different calendar. Usually created using initialize_weather()
-#' @import lubridate
 #' @importFrom terra rast extract
 #' @export
-make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather, cmip6_calendars = copy(cmip6_calendars)) {
-  calendars    = c('proleptic_gregorian', '365_day', 'standard',      '360_day')
-  calendar_idx = c('idx_gregorian',       'idx_365', 'idx_gregorian', 'idx_360')
+make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.env$weather_data, cmip6_calendars = cmip6_calendars) {
+  calendars    = c('proleptic_gregorian', '365_day', 'standard',      '360_day', 'historical')
+  calendar_idx = c('idx_gregorian',       'idx_365', 'idx_gregorian', 'idx_360', 'idx_historical')
   calendar = cmip6_calendars[gcm == .gcm, calendar]
   # Daycent column order: day of month, month, calendar year, day of year, maximum air temperature (°C), minimum air temperature (°C), and precipitation (cm).
   .SDcols = c('dom', 'm', 'y', 'doy')
@@ -94,113 +102,31 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather, cmip6_c
   w[, tasmax := daily_tasmax[idx]/10]
   w[, tasmin := daily_tasmin[idx]/10]
   w[, pr     := daily_pr[idx]]
-  # apply historical or cmip6 wth file construction
-  if(ssp == 'historical') {
-    w_block = w[y != 1996,]
-    w_2100  = w[y == 1997,]
-    w       = rbind(w, w_block, w_block, w_block, w_block, w_block, w_block[y != 2008,], w_2100)
-    w_y = data.table(.date = seq.Date(ymd("2016-01-01"),ymd("2100-12-31"), 1))
-    w_y[, y   := year(.date)]
-    w[, y:= w_y$y]
-    w[, idx := NULL]
-    w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2]
-    weather_fname = paste0(pkg.env$tmp_path, '/weather_', ssp, '_', .gcm, '_', cell, '.wth')
-    fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
+  w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
+  weather_fname = paste0(pkg.env$tmp_path, '/weather_', ssp, '_', .gcm, '_', cell, '.wth')
+  fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
 
-    # summary statistics
-    w_calc = copy(w)[, sum_pr := sum(pr), by = y]
-    #divide into 5-year blocks
-    w_calc[, seq_block := (y-2016)%%5]
-    main_block_s = seq(2016, 2100, 5)
-    main_block_e = seq(2015, 2100, 5)
-    main_block_e = main_block_e[-1]
-    w_calc[y %between% c(main_block_s[1], main_block_e[1]), block := paste0(main_block_s[1],'-', main_block_e[1])]
-    w_calc[y %between% c(main_block_s[2], main_block_e[2]), block := paste0(main_block_s[2],'-', main_block_e[2])]
-    w_calc[y %between% c(main_block_s[3], main_block_e[3]), block := paste0(main_block_s[3],'-', main_block_e[3])]
-    w_calc[y %between% c(main_block_s[4], main_block_e[4]), block := paste0(main_block_s[4],'-', main_block_e[4])]
-    w_calc[y %between% c(main_block_s[5], main_block_e[5]), block := paste0(main_block_s[5],'-', main_block_e[5])]
-    w_calc[y %between% c(main_block_s[6], main_block_e[6]), block := paste0(main_block_s[6],'-', main_block_e[6])]
-    w_calc[y %between% c(main_block_s[7], main_block_e[7]), block := paste0(main_block_s[7],'-', main_block_e[7])]
-    w_calc[y %between% c(main_block_s[8], main_block_e[8]), block := paste0(main_block_s[8],'-', main_block_e[8])]
-    w_calc[y %between% c(main_block_s[9], main_block_e[9]), block := paste0(main_block_s[9],'-', main_block_e[9])]
-    w_calc[y %between% c(main_block_s[10], main_block_e[10]), block := paste0(main_block_s[10],'-', main_block_e[10])]
-    w_calc[y %between% c(main_block_s[11], main_block_e[11]), block := paste0(main_block_s[11],'-', main_block_e[11])]
-    w_calc[y %between% c(main_block_s[12], main_block_e[12]), block := paste0(main_block_s[12],'-', main_block_e[12])]
-    w_calc[y %between% c(main_block_s[13], main_block_e[13]), block := paste0(main_block_s[13],'-', main_block_e[13])]
-    w_calc[y %between% c(main_block_s[14], main_block_e[14]), block := paste0(main_block_s[14],'-', main_block_e[14])]
-    w_calc[y %between% c(main_block_s[15], main_block_e[15]), block := paste0(main_block_s[15],'-', main_block_e[15])]
-    w_calc[y %between% c(main_block_s[16], main_block_e[16]), block := paste0(main_block_s[16],'-', main_block_e[16])]
-    w_calc[y %between% c(main_block_s[17], main_block_e[17]), block := paste0(main_block_s[17],'-', main_block_e[17])]
-    #generate quantile summaries
-    prob = seq(0.1,0.9,0.1)
-    w_sum = w_calc[, .(
-      gridid   = .gridid,
-      prob     = prob,
-      qtasmax  = quantile(tasmax, prob),
-      qtasmin  = quantile(tasmax, prob),
-      qpr      = quantile(sum_pr, prob),
-      mtasmax  = mean(tasmax),
-      sdtasmax = sd(tasmax),
-      mtasmin  = mean(tasmin),
-      sdtasmin = sd(tasmin),
-      mpr      = mean(sum_pr),
-      sdmpr    = sd(sum_pr)),
-      by       = .(block)]
-    w_sum = dcast(w_sum, block+gridid~prob, value.var = colnames(w_sum)[-3])
-    w_sum = w_sum[, -3:-20][, gcm := .gcm][, ssp := .ssp]
-    setcolorder(w_sum, c('gridid', 'block', 'gcm', 'ssp'))
-    w_sum_fname = paste0(pkg.env$out_path, '/weather_summary_statistics.csv')
-    fwrite(w_sum, w_sum_fname, append = TRUE)
-  } else {
-    w[, idx := NULL]
-    w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
-    weather_fname = paste0(pkg.env$tmp_path, '/weather_', ssp, '_', .gcm, '_', cell, '.wth')
-    fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
-    return(weather_fname)
-
-    # summary statistics
-    w_calc = copy(w)[, sum_pr := sum(pr), by = y]
-    #divide into 5-year blocks
-    w_calc[, seq_block := (y-2016)%%5]
-    main_block_s = seq(2016, 2100, 5)
-    main_block_e = seq(2015, 2100, 5)
-    main_block_e = main_block_e[-1]
-    w_calc[y %between% c(main_block_s[1], main_block_e[1]), block := paste0(main_block_s[1],'-', main_block_e[1])]
-    w_calc[y %between% c(main_block_s[2], main_block_e[2]), block := paste0(main_block_s[2],'-', main_block_e[2])]
-    w_calc[y %between% c(main_block_s[3], main_block_e[3]), block := paste0(main_block_s[3],'-', main_block_e[3])]
-    w_calc[y %between% c(main_block_s[4], main_block_e[4]), block := paste0(main_block_s[4],'-', main_block_e[4])]
-    w_calc[y %between% c(main_block_s[5], main_block_e[5]), block := paste0(main_block_s[5],'-', main_block_e[5])]
-    w_calc[y %between% c(main_block_s[6], main_block_e[6]), block := paste0(main_block_s[6],'-', main_block_e[6])]
-    w_calc[y %between% c(main_block_s[7], main_block_e[7]), block := paste0(main_block_s[7],'-', main_block_e[7])]
-    w_calc[y %between% c(main_block_s[8], main_block_e[8]), block := paste0(main_block_s[8],'-', main_block_e[8])]
-    w_calc[y %between% c(main_block_s[9], main_block_e[9]), block := paste0(main_block_s[9],'-', main_block_e[9])]
-    w_calc[y %between% c(main_block_s[10], main_block_e[10]), block := paste0(main_block_s[10],'-', main_block_e[10])]
-    w_calc[y %between% c(main_block_s[11], main_block_e[11]), block := paste0(main_block_s[11],'-', main_block_e[11])]
-    w_calc[y %between% c(main_block_s[12], main_block_e[12]), block := paste0(main_block_s[12],'-', main_block_e[12])]
-    w_calc[y %between% c(main_block_s[13], main_block_e[13]), block := paste0(main_block_s[13],'-', main_block_e[13])]
-    w_calc[y %between% c(main_block_s[14], main_block_e[14]), block := paste0(main_block_s[14],'-', main_block_e[14])]
-    w_calc[y %between% c(main_block_s[15], main_block_e[15]), block := paste0(main_block_s[15],'-', main_block_e[15])]
-    w_calc[y %between% c(main_block_s[16], main_block_e[16]), block := paste0(main_block_s[16],'-', main_block_e[16])]
-    w_calc[y %between% c(main_block_s[17], main_block_e[17]), block := paste0(main_block_s[17],'-', main_block_e[17])]
-    #generate quantile summaries
-    prob = seq(0.1,0.9,0.1)
-    w_sum = w_calc[, .(
-      gridid   = .gridid,
-      prob     = prob,
-      qtasmax  = quantile(tasmax, prob),
-      qtasmin  = quantile(tasmax, prob),
-      qpr      = quantile(sum_pr, prob),
-      mtasmax  = mean(tasmax),
-      sdtasmax = sd(tasmax),
-      mtasmin  = mean(tasmin),
-      sdtasmin = sd(tasmin),
-      mpr      = mean(sum_pr),
-      sdmpr    = sd(sum_pr)),
-      by       = .(block)]
-    w_sum = dcast(w_sum, block+gridid~prob, value.var = colnames(w_sum)[-3])
-    w_sum = w_sum[, -3:-20][, gcm := .gcm][, ssp := .ssp]
-    setcolorder(w_sum, c('gridid', 'block', 'gcm', 'ssp'))
-    w_sum_fname = paste0(pkg.env$out_path, '/weather_summary_statistics.csv')
-    fwrite(w_sum, w_sum_fname, append = TRUE)
-  }
+  # summary statistics
+  prob = seq(0.1, 0.9, 0.1) # quantile probabilities for summary stats
+  w_summary = w[, .(
+                    prob     = prob,
+                    qtasmax  = quantile(tasmax, prob),
+                    qtasmin  = quantile(tasmax, prob),
+                    qpr      = quantile(sum_pr, prob)
+                    ),
+                  by = .(y = make_blocks(y))]
+  w_summary = dcast(w_sum, y ~ prob, value.var = colnames(w_summary)[-3])
+  (w_summary
+    [, gridid   := .gridid]
+    [, mtasmax  := mean(tasmax)]
+    [, sdtasmax := sd(tasmax)]
+    [, mtasmin  := mean(tasmin)]
+    [, sdtasmin := sd(tasmin)]
+    [, mpr      := mean(sum_pr)]
+    [, sdmpr    := sd(sum_pr)]
+  )
+  setcolorder(w_summary, c('gridid', 'y', 'gcm', 'ssp'))
+  w_sum_fname = paste0(pkg.env$out_path, '/weather_summary_statistics.csv')
+  fwrite(w_sum, w_sum_fname, append = TRUE)
+  return(weather_fname)
 }
