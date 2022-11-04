@@ -150,12 +150,12 @@ create_omad = function(cell_data = copy(cell_data), cell){
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
-create_csu_sched = function(cell_data = copy(cell_data), schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, out_path) {
+create_csu_sched = function(cell_data = copy(cell_data), schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, tmp_path) {
   # variable definition
   cell_sch_data       = cell_data[gridid %in% .gridid &
                                     scenario %in% .scenario &
                                     irr %in% .irr,] # we only process a single cell's data
-  schedule_path       = out_path # paste(pkg.env$out_path,'/', ssp,'_', gcm, sep = "")
+  schedule_path       = tmp_path
   schedule_filename   = cell_sch_data[1, paste(scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
   block_name          = cell_sch_data[1, paste(scenario, '_', .crop, '_',.irr, sep = "")]
   crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]
