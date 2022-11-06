@@ -183,7 +183,7 @@ create_csu_sched = function(cell_data = copy(cell_data), schedule_table = copy(s
   cell_schedule_f[, schedule := gsub('<start_year>',   start_year,                                                                  schedule)]
   cell_schedule_f[, schedule := gsub('<end_year>',     end_year,                                                                    schedule)]
   cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,                                                               schedule)]
-  ifelse(.ssp %in% 'historical', cell_schedule_f[, schedule := gsub('<co2_option>', -1L, schedule)], cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
+  ifelse(.ssp %in% 'historical', cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)], cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
   # create .sch block
   cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,                                                                  schedule)]
   cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,                                                                schedule)]
