@@ -138,15 +138,16 @@ create_omad = function(cell_data = cell_data, cell){
 #'
 #' @param cell_data multiple row data.table providing input data for the simulation.
 #' @param schedule_table data.table providing template of schedule file.
-#' @param cell unique cell value to be passed to function.
-#' @param ssp character, specifies scenario
-#' @param gcm character, specifies scenario
-#' @param crop character, one of 'maiz', 'wwheat', 'swheat', 'soy'
+#' @param .gridid unique cell value to be passed to function.
+#' @param .ssp character, specifies scenario
+#' @param .gcm character, specifies scenario
+#' @param .crop character, one of 'maiz', 'wwheat', 'swheat', 'soy'
 #' @param .scenario character, specifies scenario
 #' @param .irr binary, specifies irrigation level
 #' @param start_yr integer, specifies start year of simulation
 #' @param end_year integer, specifies end year of simulation
 #' @param weather_fname name of input weather file
+#' @param tmp_path name of tmp directory
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
@@ -154,8 +155,8 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   # variable definition
   cell_sch_data       = cell_data
   schedule_path       = tmp_path
-  schedule_filename   = cell_sch_data[1, paste(scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
-  block_name          = cell_sch_data[1, paste(scenario, '_', .crop, '_',.irr, sep = "")]
+  schedule_filename   = cell_sch_data[1, paste(.scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
+  block_name          = cell_sch_data[1, paste(.scenario, '_', .crop, '_',.irr, sep = "")]
   crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]
 
   # cropping hemisphere (by planting and harvest date in Gregorian calendar)
