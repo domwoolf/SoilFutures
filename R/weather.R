@@ -31,6 +31,7 @@ initialize_weather = function(start_year, end_year) {
 }
 
 #' @importFrom terra rast
+#' @export
 load_climate_vbl = function(vbl, path, start_year, end_year) {
   clim_files   = list.files(path = path, pattern = paste0(vbl, '.+tif$'), full.names = TRUE)
   clim_files   = sort(clim_files)
@@ -57,7 +58,7 @@ load_climate = function(ssp, gcm, start_year, end_year) {
 
 
 #' Split vector into equal sized chunks
-#'
+#' @export
 make_blocks = function(x, n = 5) {
   x[(floor((seq_along(x) - 1) / n)) *n + 1L]
 }

@@ -13,7 +13,7 @@
 #' @param cell_data multiple row data.table providing input data for the simulation.
 #' @param cell unique cell value to be passed to function.
 #' @param cover_crop table template of cover crop parameters to include in the crop.100.
-
+#' @export
 create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cover_crop_template)) {
   # get gridid, crop parameter data
   cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
@@ -102,7 +102,7 @@ create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cove
 #'
 #'@param cell_data multiple row data.table providing input data for the simulation.
 #'@param cell unique cell value to be passed to function.
-
+#'@export
 create_omad = function(cell_data = cell_data, cell){
   # get gridid, omad data
   cell_omad_data = unique(cell_data[gridid == cell, .(gridid, crop, orgN.amt, orgCN.ratio)])
