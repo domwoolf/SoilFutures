@@ -1,5 +1,6 @@
 # Dominic Woolf 17/9/22
 
+#' Create a data table with structure for wth file
 #' @import data.table
 #' @param start_year Character, specifying the start year of the simulation.
 #' @param end_year Character, specifying the end year of the simulation.
