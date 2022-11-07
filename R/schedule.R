@@ -174,24 +174,27 @@ create_csu_sched = function(cell_data = copy(cell_data), schedule_table = copy(s
   # read in schedule template from file
   crop.index          = match(.crop, pkg.env$crop_types)
   cell_schedule_f     = schedule_table[scenario       %in% .scenario &
-                                         N_or_S       %in% crop_hemi  &
+                                         N_or_S       %in% crop_hemi &
                                          irr          %in% .irr      &
                                          get(crop)    %in% crop.index ]
-  cell_schedule_f[, schedule := gsub('<fname>',        paste(cell_sch_data[,gridid],cell_sch_data[,run_seq],'site.100', sep = '_'), schedule)]
-  cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,                                                               schedule)]
-  cell_schedule_f[, schedule := gsub('<block_name>',   block_name,                                                                  schedule)]
-  cell_schedule_f[, schedule := gsub('<start_year>',   start_year,                                                                  schedule)]
-  cell_schedule_f[, schedule := gsub('<end_year>',     end_year,                                                                    schedule)]
-  cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,                                                               schedule)]
-  ifelse(.ssp %in% 'historical', cell_schedule_f[, schedule := gsub('<co2_option>', -1L, schedule)], cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
+  cell_schedule_f[, schedule := gsub('<fname>',        paste(cell_sch_data[, c(gridid, run_seq)], 'site.100', sep = '_'), schedule)]
+  cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
+  cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
+  cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
+  cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
+  cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,   schedule)]
+  ifelse(.ssp %in% 'historical',
+         cell_schedule_f[, schedule := gsub('<co2_option>', -1L, schedule)],
+         cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
   # create .sch block
-  cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,                                                                  schedule)]
-  cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,                                                                schedule)]
-  cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult),                                        schedule)]
-  cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),                                        schedule)]
+  cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
+  cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,    schedule)]
+  cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult),  schedule)]
+  cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
   # cover crop check for post-harv cult
-  ifelse(.scenario %in% 'conv'| .scenario %in% 'res'| .scenario %in% 'ntill', cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)],
-        cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cc.cult), schedule)])
+  ifelse(.scenario %in% 'conv'| .scenario %in% 'res'| .scenario %in% 'ntill',
+         cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)],
+         cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cc.cult), schedule)])
   cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
   cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
   cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
