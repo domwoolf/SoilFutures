@@ -9,7 +9,7 @@
 #' @import data.table
 #' @import terra
 #' @export
-create_cell_data_csu_table = function() {
+create_cell_data_csu_table = function(cmip6_calendars) {
   # create rasters
   crop_calendar  = rast(paste(pkg.env$gis_path, 'crop_calendar.tif',                 sep='/'))
   min_N          = rast(paste(pkg.env$gis_path, 'fertilizer-n_by_crop.tif',          sep='/'))
@@ -58,12 +58,21 @@ create_cell_data_csu_table = function() {
   setorder(gridid.dt, gridid)
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'crop', 'irr', 'pset_id'))
 
+  # add ssp and gcm
+  gcm.col        = gridid.dt[, .(gcm = rep(cmip6_calendars$gcm)), by = .(gridid, irr)]
+  gcm.ssp.col    = gcm.col[gcm != 'historical', .(ssp = rep(c('ssp126', 'ssp370'))), by = .(gridid, irr, gcm)]
+  hist.hist.col  = gcm.col[gcm %in% 'historical', .(ssp = rep(c('historical'))), by = .(gridid, irr, gcm)]
+  gcm.ssp.hist   = rbind(gcm.ssp.col, hist.hist.col)
+  setorder(gcm.ssp.hist, gridid)
+
   # add scenario column, filter, and order
-  scenario.col = gridid.dt[, .('scenario' = rep(c('conv','res','ntill','ccg','ccl','rewild'))), by = irr]
-  gridid.dt = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv','res','ntill','ccg','ccl','rewild'))), by = irr]
+  gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
+  gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  gridid.dt = gridid.dt[irr != 1 | scenario != 'rewild',]
-  setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'crop', 'irr','scenario','pset_id'))
+  gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
+  setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
+  setorder(gridid.dt, gridid, ssp, gcm, irr)
 
   # merge rasters and create data.table filtered for gridid
   all_raster      = c(crop_calendar, min_N, org_N, org_CN, residue_return, ipcc_clim)
@@ -83,8 +92,7 @@ create_cell_data_csu_table = function() {
 
   # join DT
   main_table   = gridid.dt[raster_table, on = .(gridid = cell)]
-  setcolorder(main_table, c('gridid', 'gridid.rotated', 'x', 'y','regionid', 'crop', 'irr','scenario','pset_id'))
-  setorder(main_table, gridid, scenario)
+  setcolorder(main_table, c('gridid', 'gridid.rotated', 'x', 'y','regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
 
   # remove any plant/harv dates == 0
   main_table = main_table[plant.date !=0,]
