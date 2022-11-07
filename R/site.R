@@ -12,7 +12,8 @@
 #' @param cell Integer, grid cell ID number
 #' @param .irr Integer, irrigation level
 #' @param cell_data Data table, contains spatial data associated with each cell and site.100 file
-create_site = function(cell, .irr, cell_data = copy(cell_data), cell_data_site = copy(cell_data_site)){
+#' @export
+create_site = function(cell, .irr, cell_data, cell_data_site = copy(cell_data_site)){
   site.file     = paste(.gridid, unique(cell_data[gridid %in% .gridid & irr %in% .irr, run_seq]), 'site.100', sep = '_')
   site.100      = cell_data_site[gridid %in% .gridid &
                                    irr    %in% .irr, site100]
