@@ -175,15 +175,15 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   cell_schedule_f     = schedule_table[scenario       %in% .scenario &
                                          N_or_S       %in% crop_hemi &
                                          irr          %in% .irr      &
-                                         get(crop)    %in% crop.index ]
-  cell_schedule_f[, schedule := gsub('<fname>',        paste(cell_sch_data[, c(gridid, run_seq)], 'site.100', sep = '_'), schedule)]
+                                         get(.crop)   %in% crop.index ]
+  cell_schedule_f[, schedule := gsub('<fname>',        paste(cell_sch_data[,gridid],cell_sch_data[,run_seq],'site.100', sep = '_'), schedule)]
   cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
   cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
   cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
   cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
   cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,   schedule)]
   ifelse(.ssp %in% 'historical',
-         cell_schedule_f[, schedule := gsub('<co2_option>', -1L, schedule)],
+         cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
          cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
   # create .sch block
   cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
