@@ -111,6 +111,8 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.en
   # summary statistics
   prob = seq(0.1, 0.9, 0.1) # quantile probabilities for summary stats
   w[, sum_pr := sum(pr), by = y]
+  weather_tname = paste0(pkg.env$tmp_path, '/weather_test', '.wth')
+  fwrite(w, weather_tname, sep = ' ', col.names = FALSE)
   w_summary = w[, .(
                     prob     = prob,
                     qtasmax  = quantile(tasmax, prob),
