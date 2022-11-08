@@ -118,7 +118,7 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.en
                     qpr      = quantile(sum_pr, prob)
                     ),
                   by = .(y = make_blocks(y))]
-  w_summary = dcast(w_sum, y ~ prob, value.var = colnames(w_summary)[-3])
+  w_summary = dcast(w_summary, y ~ prob, value.var = colnames(w_summary)[-3])
   (w_summary
     [, gridid   := .gridid]
     [, mtasmax  := mean(tasmax)]
