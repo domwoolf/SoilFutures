@@ -9,9 +9,11 @@ make_weather_file(
   .gridid,
   cell,
   .gcm,
-  ssp,
+  .ssp,
   weather = pkg.env$weather_data,
-  cmip6_calendars = cmip6_calendars
+  cmip6_calendars = cmip6_calendars,
+  tmp.dir,
+  out.dir
 )
 }
 \arguments{
@@ -26,6 +28,10 @@ Note that climate rasters are in rotated (0-360 degree longitude) coordinates.}
 
 \item{weather}{data.table containing gregorian calendar and index numbers to extract gregorian values
 from a daily climate rast that uses a different calendar. Usually created using initialize_weather()}
+
+\item{tmp.dir}{directory to create in tmp.path, set with arg[1]}
+
+\item{out.dir}{directory to create in out.path, set with arg[2]}
 }
 \description{
 Used for side effect of writing a weather file based on location.
