@@ -207,7 +207,6 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
   cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
 
-  if(!dir.exists(schedule_path)){dir.create(schedule_path)}
   fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
   return(schedule_filename)
   }

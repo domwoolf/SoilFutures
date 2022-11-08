@@ -113,8 +113,8 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   w[, pr     := daily_pr[idx]]
   w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
   w[, idx    := NULL]
-  weather_fname = paste0(pkg.env$tmp_path, '/', tmp.dir,'/weather_', .ssp, '_', .gcm, '_', .gridid, '.wth')
-  fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
+  weather_fname = paste0('weather_', .ssp, '_', .gcm, '_', .gridid, '.wth')
+  fwrite(w, paste0(pkg.env$tmp_path, '/', tmp.dir, '/', weather_fname), sep = ' ', col.names = FALSE)
 
   # summary statistics, daily
   prob = seq(0.1, 0.9, 0.1) # quantile probabilities for summary stats
