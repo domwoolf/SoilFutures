@@ -107,7 +107,7 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   w[, tasmin := daily_tasmin[idx]/10]
   w[, pr     := daily_pr[idx]]
   w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
-  weather_fname = paste0(pkg.env$tmp_path, '/', tmp.dir,'/weather_', ssp, '_', .gcm, '_', .gridid, '.wth')
+  weather_fname = paste0(pkg.env$tmp_path, '/', tmp.dir,'/weather_', .ssp, '_', .gcm, '_', .gridid, '.wth')
   fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
 
   # summary statistics
@@ -120,18 +120,32 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
     sdtasmin = sd(tasmin),
     mpr      = mean(sum_pr),
     sdpr     = sd(sum_pr)),
-    by = .(y = make_blocks(unique(y)))]
+    by = .(y)]
+  w_mean.sd[, .( # mean, sd for every block
+    mtasmax  = mean(tasmax),
+    sdtasmax = sd(tasmax),
+    mtasmin  = mean(tasmin),
+    sdtasmin = sd(tasmin),
+    mpr      = mean(sum_pr),
+    sdpr     = sd(sum_pr)),
+    by = .(y_block = make_blocks(y))]
   w_summary = w[, .( # quantile for every year
                     prob     = prob,
                     qtasmax  = quantile(tasmax, prob),
                     qtasmin  = quantile(tasmin, prob),
                     qpr      = quantile(sum_pr, prob)
                     ),
-                  by = .(y = make_blocks(unique(y)))]
-  w_sum = dcast(w_summary, y ~ prob, value.var = colnames(w_summary)[-3])
-  w_sum = w_sum[w_mean.sd, on = .(y = y)]
+                  by = .(y)]
+  w_summary[, .(# quantile for every block
+    prob     = prob,
+    qtasmax  = quantile(tasmax, prob),
+    qtasmin  = quantile(tasmin, prob),
+    qpr      = quantile(sum_pr, prob)),
+    by = .(y_block = make_blocks(y))]
+  w_sum = dcast(w_summary, y_block ~ prob, value.var = colnames(w_summary)[-3])
+  w_sum = w_sum[w_mean.sd, on = .(y_block = y_block)]
   w_sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
-  setcolorder(w_sum, c('gridid', 'y', 'gcm', 'ssp'))
+  setcolorder(w_sum, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_sum[, -5:-22]
   w_sum_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_summary_statistics.csv')
   fwrite(w_sum, w_sum_fname, append = TRUE)
