@@ -121,14 +121,14 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
     mpr      = mean(sum_pr),
     sdpr     = sd(sum_pr)),
     by = .(y)]
-  w_mean.sd[, .( # mean, sd for every block
-    mtasmax  = mean(tasmax),
-    sdtasmax = sd(tasmax),
-    mtasmin  = mean(tasmin),
-    sdtasmin = sd(tasmin),
-    mpr      = mean(sum_pr),
-    sdpr     = sd(sum_pr)),
-    by = .(y_block = make_blocks(y))]
+  # w_mean.sd[, .( # mean, sd for every block
+  #   mtasmax  = mean(tasmax),
+  #   sdtasmax = sd(tasmax),
+  #   mtasmin  = mean(tasmin),
+  #   sdtasmin = sd(tasmin),
+  #   mpr      = mean(sum_pr),
+  #   sdpr     = sd(sum_pr)),
+  #   by = .(y_block = make_blocks(y))]
   w_summary = w[, .( # quantile for every year
                     prob     = prob,
                     qtasmax  = quantile(tasmax, prob),
@@ -136,12 +136,12 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
                     qpr      = quantile(sum_pr, prob)
                     ),
                   by = .(y)]
-  w_summary[, .(# quantile for every block
-    prob     = prob,
-    qtasmax  = quantile(tasmax, prob),
-    qtasmin  = quantile(tasmin, prob),
-    qpr      = quantile(sum_pr, prob)),
-    by = .(y_block = make_blocks(y))]
+  # w_summary[, .(# quantile for every block
+  #   prob     = prob,
+  #   qtasmax  = quantile(tasmax, prob),
+  #   qtasmin  = quantile(tasmin, prob),
+  #   qpr      = quantile(sum_pr, prob)),
+  #   by = .(y_block = make_blocks(y))]
   w_sum = dcast(w_summary, y_block ~ prob, value.var = colnames(w_summary)[-3])
   w_sum = w_sum[w_mean.sd, on = .(y_block = y_block)]
   w_sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
