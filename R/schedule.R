@@ -209,5 +209,5 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
 
   if(!dir.exists(schedule_path)){dir.create(schedule_path)}
   fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
-  return(cell_schedule_f)
+  return(schedule_filename)
   }
