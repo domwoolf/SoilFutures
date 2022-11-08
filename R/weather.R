@@ -118,8 +118,8 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.en
                     qpr      = quantile(sum_pr, prob)
                     ),
                   by = .(y = make_blocks(y))]
-  w_summary = dcast(w_summary, y ~ prob, value.var = colnames(w_summary)[-3])
-  (w_summary
+  w_sum = dcast(w_summary, y ~ prob, value.var = colnames(w_summary)[-3])
+  (w_sum
     [, gridid   := .gridid]
     [, mtasmax  := mean(tasmax)]
     [, sdtasmax := sd(tasmax)]
@@ -128,7 +128,7 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.en
     [, mpr      := mean(sum_pr)]
     [, sdmpr    := sd(sum_pr)]
   )
-  setcolorder(w_summary, c('gridid', 'y', 'gcm', 'ssp'))
+  setcolorder(w_sum, c('gridid', 'y', 'gcm', 'ssp'))
   w_sum_fname = paste0(pkg.env$out_path, '/weather_summary_statistics.csv')
   fwrite(w_sum, w_sum_fname, append = TRUE)
   return(weather_fname)
