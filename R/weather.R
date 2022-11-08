@@ -90,7 +90,7 @@ make_blocks = function(x, n = 5) {
 #' @param out.dir directory to create in out.path, set with arg[2]
 #' @importFrom terra rast extract
 #' @export
-make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.env$weather_data, cmip6_calendars = cmip6_calendars, tmp.dir, out.dir) {
+make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.env$weather_data, cmip6_calendars = cmip6_calendars, tmp.dir, out.dir) {
   calendars    = c('proleptic_gregorian', '365_day', 'standard',      '360_day', 'historical')
   calendar_idx = c('idx_gregorian',       'idx_365', 'idx_gregorian', 'idx_360', 'idx_historical')
   calendar = cmip6_calendars[gcm == .gcm, calendar]
@@ -120,18 +120,19 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.en
     sdtasmin = sd(tasmin),
     mpr      = mean(sum_pr),
     sdpr     = sd(sum_pr)),
-    by = .(y = make_blocks(y))]
+    by = .(y = make_blocks(unique(y)))]
   w_summary = w[, .( # quantile for every year
                     prob     = prob,
                     qtasmax  = quantile(tasmax, prob),
                     qtasmin  = quantile(tasmin, prob),
                     qpr      = quantile(sum_pr, prob)
                     ),
-                  by = .(y = make_blocks(y))]
+                  by = .(y = make_blocks(unique(y)))]
   w_sum = dcast(w_summary, y ~ prob, value.var = colnames(w_summary)[-3])
   w_sum = w_sum[w_mean.sd, on = .(y = y)]
   w_sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(w_sum, c('gridid', 'y', 'gcm', 'ssp'))
+  w_sum[, -5:-22]
   w_sum_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_summary_statistics.csv')
   fwrite(w_sum, w_sum_fname, append = TRUE)
   return(weather_fname)
