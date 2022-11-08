@@ -13,8 +13,9 @@
 #' @param cell_data multiple row data.table providing input data for the simulation.
 #' @param cell unique cell value to be passed to function.
 #' @param cover_crop table template of cover crop parameters to include in the crop.100.
+#' @param tmp.dir directory to create in tmp.path, set with arg[1]
 #' @export
-create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cover_crop_template)) {
+create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cover_crop_template), tmp.dir) {
   # get gridid, crop parameter data
   cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
                                      PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)])
@@ -87,7 +88,7 @@ create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cove
   colnames(cover_crop) = 'crop.100'
   crop.100             = rbind(crop.100, cover_crop)
 
-  fwrite(crop.100, paste(pkg.env$tmp_path, '/crop.100', sep = ''), quote = FALSE, col.names = FALSE)
+  fwrite(crop.100, paste(pkg.env$tmp_path, tmp.dir,'crop.100', sep = '/'), quote = FALSE, col.names = FALSE)
   return(crop.100)
 }
 #
@@ -102,8 +103,9 @@ create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cove
 #'
 #'@param cell_data multiple row data.table providing input data for the simulation.
 #'@param cell unique cell value to be passed to function.
+#'@param tmp.dir directory to create in tmp.path, set with arg[1]
 #'@export
-create_omad = function(cell_data = cell_data, cell){
+create_omad = function(cell_data = cell_data, cell, tmp.dir){
   # get gridid, omad data
   cell_omad_data = unique(cell_data[gridid == cell, .(gridid, crop, orgN.amt, orgCN.ratio)])
 
@@ -122,7 +124,7 @@ create_omad = function(cell_data = cell_data, cell){
     omad.100[, omad.100 := gsub('<value_ASTREC1>',cell_omad_data[,orgCN.ratio],                             omad.100)]
     omad.100[, omad.100 := gsub('<value_ASTGC>',  (cell_omad_data[,orgCN.ratio]*cell_omad_data[,orgN.amt]), omad.100)]
 
-    fwrite(omad.100, paste(pkg.env$tmp_path, '/omad.100', sep = ''), quote = FALSE, col.names = FALSE)
+    fwrite(omad.100, paste(pkg.env$tmp_path, tmp.dir,'omad.100', sep = '/'), quote = FALSE, col.names = FALSE)
     return(omad.100)
 }
 
@@ -147,14 +149,14 @@ create_omad = function(cell_data = cell_data, cell){
 #' @param start_yr integer, specifies start year of simulation
 #' @param end_year integer, specifies end year of simulation
 #' @param weather_fname name of input weather file
-#' @param tmp_path name of tmp directory
+#' @param tmp.dir directory to create in tmp.path, set with arg[1]
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
-create_csu_sched = function(cell_data, schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, tmp_path) {
+create_csu_sched = function(cell_data, schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, tmp.dir) {
   # variable definition
   cell_sch_data       = cell_data
-  schedule_path       = tmp_path
+  schedule_path       = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
   schedule_filename   = cell_sch_data[1, paste(.scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
   block_name          = cell_sch_data[1, paste(.scenario, '_', .crop, '_',.irr, sep = "")]
   crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]

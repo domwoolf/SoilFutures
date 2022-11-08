@@ -86,9 +86,11 @@ make_blocks = function(x, n = 5) {
 #' @param .gcm character (length one) giving name of the cmip6 model the climate is from
 #' @param weather data.table containing gregorian calendar and index numbers to extract gregorian values
 #' from a daily climate rast that uses a different calendar. Usually created using initialize_weather()
+#' @param tmp.dir directory to create in tmp.path, set with arg[1]
+#' @param out.dir directory to create in out.path, set with arg[2]
 #' @importFrom terra rast extract
 #' @export
-make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.env$weather_data, cmip6_calendars = cmip6_calendars) {
+make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.env$weather_data, cmip6_calendars = cmip6_calendars, tmp.dir, out.dir) {
   calendars    = c('proleptic_gregorian', '365_day', 'standard',      '360_day', 'historical')
   calendar_idx = c('idx_gregorian',       'idx_365', 'idx_gregorian', 'idx_360', 'idx_historical')
   calendar = cmip6_calendars[gcm == .gcm, calendar]
@@ -105,31 +107,32 @@ make_weather_file = function(climate, .gridid, cell, .gcm, ssp, weather = pkg.en
   w[, tasmin := daily_tasmin[idx]/10]
   w[, pr     := daily_pr[idx]]
   w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
-  weather_fname = paste0(pkg.env$tmp_path, '/weather_', ssp, '_', .gcm, '_', .gridid, '.wth')
+  weather_fname = paste0(pkg.env$tmp_path, '/', tmp.dir,'/weather_', ssp, '_', .gcm, '_', .gridid, '.wth')
   fwrite(w, weather_fname, sep = ' ', col.names = FALSE)
 
   # summary statistics
   prob = seq(0.1, 0.9, 0.1) # quantile probabilities for summary stats
   w[, sum_pr := sum(pr), by = y]
-  w_summary = w[, .(
+  w_mean.sd  = w[, .( # mean, sd for every year
+    mtasmax  = mean(tasmax),
+    sdtasmax = sd(tasmax),
+    mtasmin  = mean(tasmin),
+    sdtasmin = sd(tasmin),
+    mpr      = mean(sum_pr),
+    sdpr     = sd(sum_pr)),
+    by = .(y = make_blocks(y))]
+  w_summary = w[, .( # quantile for every year
                     prob     = prob,
                     qtasmax  = quantile(tasmax, prob),
                     qtasmin  = quantile(tasmin, prob),
                     qpr      = quantile(sum_pr, prob)
                     ),
-                  by = .(yrs = make_blocks(y))]
-  w_sum = dcast(w_summary, yrs ~ prob, value.var = colnames(w_summary)[-3])
-  (w_sum
-    [, gridid   := .gridid]
-    [, mtasmax  := mean(tasmax)]
-    [, sdtasmax := sd(tasmax)]
-    [, mtasmin  := mean(tasmin)]
-    [, sdtasmin := sd(tasmin)]
-    [, mpr      := mean(sum_pr)]
-    [, sdmpr    := sd(sum_pr)]
-  )
-  setcolorder(w_sum, c('gridid', 'yrs', 'gcm', 'ssp'))
-  w_sum_fname = paste0(pkg.env$out_path, '/weather_summary_statistics.csv')
+                  by = .(y = make_blocks(y))]
+  w_sum = dcast(w_summary, y ~ prob, value.var = colnames(w_summary)[-3])
+  w_sum = w_sum[w_mean.sd, on = .(y = y)]
+  w_sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
+  setcolorder(w_sum, c('gridid', 'y', 'gcm', 'ssp'))
+  w_sum_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_summary_statistics.csv')
   fwrite(w_sum, w_sum_fname, append = TRUE)
   return(weather_fname)
 }
