@@ -171,6 +171,6 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   setcolorder(w_sum.yr, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_sum.yr = w_sum.yr[, c(-5:-22)]
   w_sum_yr_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_annual_summary_statistics.csv')
-  fwrite(w_sum, w_sum_yr_fname, append = TRUE)
+  fwrite(w_sum.yr, w_sum_yr_fname, append = TRUE)
   return(weather_fname)
 }
