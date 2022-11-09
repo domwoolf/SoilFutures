@@ -144,7 +144,8 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   fwrite(w_sum, w_sum_fname, append = TRUE)
 
   #summary statistics, annual
-  w_yearly = copy(w)[, `:=`
+  w_yearly = copy(w)
+  w_yearly[, `:=`
                      (sum_pr  = sum(pr),
                       mtasmax = mean(tasmax),
                       mtasmin = mean(tasmin)), by = y]
