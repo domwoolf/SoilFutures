@@ -108,9 +108,9 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   daily_pr     = unname(unlist(extract(climate$pr,     cell)))
   daily_tasmin = unname(unlist(extract(climate$tasmin, cell)))
   daily_tasmax = unname(unlist(extract(climate$tasmax, cell)))
-  w[, tasmax := daily_tasmax[idx]/10]
-  w[, tasmin := daily_tasmin[idx]/10]
-  w[, pr     := daily_pr[idx]]
+  w[, tasmax := round(daily_tasmax[idx]/10, 1)]
+  w[, tasmin := round(daily_tasmin[idx]/10, 1)]
+  w[, pr     := round(daily_pr[idx], 1)]
   w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
   w[, idx    := NULL]
   weather_fname = paste0('weather_', .ssp, '_', .gcm, '_', .gridid, '.wth')
