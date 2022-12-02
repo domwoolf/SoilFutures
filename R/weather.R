@@ -117,60 +117,60 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   fwrite(w, paste0(pkg.env$tmp_path, '/', tmp.dir, '/', weather_fname), sep = ' ', col.names = FALSE)
 
   # summary statistics, daily
-  prob = seq(0.1, 0.9, 0.1) # quantile probabilities for summary stats
-  w_daily = copy(w)
-  w_daily[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
-  w_mean.sd  = w_daily[, .( # mean, sd for every block
-    mtasmax  = mean(tasmax),
-    sdtasmax = sd(tasmax),
-    mtasmin  = mean(tasmin),
-    sdtasmin = sd(tasmin),
-    mpr      = mean(pr),
-    sdpr     = sd(pr)),
-    by = .(y_block)]
-  w_summary = w_daily[, .( # quantile for every year
-                    prob     = prob,
-                    qtasmax  = quantile(tasmax, prob),
-                    qtasmin  = quantile(tasmin, prob),
-                    qpr      = quantile(pr, prob)
-                    ),
-                  by = .(y_block)]
-  w_sum = dcast(w_summary, y_block ~ prob, value.var = colnames(w_summary)[-3])
-  w_sum = w_sum[w_mean.sd, on = .(y_block = y_block)]
-  w_sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
-  setcolorder(w_sum, c('gridid', 'y_block', 'gcm', 'ssp'))
-  w_sum = w_sum[, c(-5:-22)]
-  w_sum_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_daily_summary_statistics.csv')
-  fwrite(w_sum, w_sum_fname, append = TRUE)
-
-  #summary statistics, annual
-  w_yearly = copy(w)
-  w_yearly[, `:=`
-                     (sum_pr  = sum(pr),
-                      mtasmax = mean(tasmax),
-                      mtasmin = mean(tasmin)), by = y]
-  w_yearly[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
-  w_yearly.mean.sd  = w_yearly[, .( # mean, sd for every block
-    ann.mtasmax  = mean(mtasmax),
-    ann.sdtasmax = sd(mtasmax),
-    ann.mtasmin  = mean(mtasmin),
-    ann.sdtasmin = sd(mtasmin),
-    ann.mpr      = mean(sum_pr),
-    ann.sdpr     = sd(sum_pr)),
-    by = .(y_block)]
-  w_summary.yr = w_yearly[, .( # quantile for every year
-    prob     = prob,
-    q_ann.mtasmax  = quantile(mtasmax, prob),
-    q_ann.mtasmin  = quantile(mtasmin, prob),
-    q_ann.mpr      = quantile(sum_pr, prob)
-  ),
-  by = .(y_block)]
-  w_sum.yr = dcast(w_summary.yr, y_block ~ prob, value.var = colnames(w_summary.yr)[-3])
-  w_sum.yr = w_sum.yr[w_yearly.mean.sd, on = .(y_block = y_block)]
-  w_sum.yr[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
-  setcolorder(w_sum.yr, c('gridid', 'y_block', 'gcm', 'ssp'))
-  w_sum.yr = w_sum.yr[, c(-5:-22)]
-  w_sum_yr_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_annual_summary_statistics.csv')
-  fwrite(w_sum.yr, w_sum_yr_fname, append = TRUE)
+  # prob = seq(0.1, 0.9, 0.1) # quantile probabilities for summary stats
+  # w_daily = copy(w)
+  # w_daily[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
+  # w_mean.sd  = w_daily[, .( # mean, sd for every block
+  #   mtasmax  = mean(tasmax),
+  #   sdtasmax = sd(tasmax),
+  #   mtasmin  = mean(tasmin),
+  #   sdtasmin = sd(tasmin),
+  #   mpr      = mean(pr),
+  #   sdpr     = sd(pr)),
+  #   by = .(y_block)]
+  # w_summary = w_daily[, .( # quantile for every year
+  #                   prob     = prob,
+  #                   qtasmax  = quantile(tasmax, prob),
+  #                   qtasmin  = quantile(tasmin, prob),
+  #                   qpr      = quantile(pr, prob)
+  #                   ),
+  #                 by = .(y_block)]
+  # w_sum = dcast(w_summary, y_block ~ prob, value.var = colnames(w_summary)[-3])
+  # w_sum = w_sum[w_mean.sd, on = .(y_block = y_block)]
+  # w_sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
+  # setcolorder(w_sum, c('gridid', 'y_block', 'gcm', 'ssp'))
+  # w_sum = w_sum[, c(-5:-22)]
+  # w_sum_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_daily_summary_statistics.csv')
+  # fwrite(w_sum, w_sum_fname, append = TRUE)
+  #
+  # #summary statistics, annual
+  # w_yearly = copy(w)
+  # w_yearly[, `:=`
+  #                    (sum_pr  = sum(pr),
+  #                     mtasmax = mean(tasmax),
+  #                     mtasmin = mean(tasmin)), by = y]
+  # w_yearly[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
+  # w_yearly.mean.sd  = w_yearly[, .( # mean, sd for every block
+  #   ann.mtasmax  = mean(mtasmax),
+  #   ann.sdtasmax = sd(mtasmax),
+  #   ann.mtasmin  = mean(mtasmin),
+  #   ann.sdtasmin = sd(mtasmin),
+  #   ann.mpr      = mean(sum_pr),
+  #   ann.sdpr     = sd(sum_pr)),
+  #   by = .(y_block)]
+  # w_summary.yr = w_yearly[, .( # quantile for every year
+  #   prob     = prob,
+  #   q_ann.mtasmax  = quantile(mtasmax, prob),
+  #   q_ann.mtasmin  = quantile(mtasmin, prob),
+  #   q_ann.mpr      = quantile(sum_pr, prob)
+  # ),
+  # by = .(y_block)]
+  # w_sum.yr = dcast(w_summary.yr, y_block ~ prob, value.var = colnames(w_summary.yr)[-3])
+  # w_sum.yr = w_sum.yr[w_yearly.mean.sd, on = .(y_block = y_block)]
+  # w_sum.yr[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
+  # setcolorder(w_sum.yr, c('gridid', 'y_block', 'gcm', 'ssp'))
+  # w_sum.yr = w_sum.yr[, c(-5:-22)]
+  # w_sum_yr_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_annual_summary_statistics.csv')
+  # fwrite(w_sum.yr, w_sum_yr_fname, append = TRUE)
   return(weather_fname)
 }
