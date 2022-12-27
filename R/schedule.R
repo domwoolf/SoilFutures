@@ -16,6 +16,8 @@
 #' @param tmp.dir directory to create in tmp.path, set with arg[1]
 #' @export
 create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cover_crop_template), tmp.dir) {
+  # need to update for different crops - consider different functions...
+  # be sure to add in rewild crops/trees to template file
   # get gridid, crop parameter data
   cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
                                      PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)])
@@ -69,6 +71,7 @@ create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cove
                    "0.0               CSTGEUPF(3)","0                 CSTGDYS",     "1.0               CSTGA2DRAT")
 
   # create crop.100 DT, replace values
+  # add index matching for crop type
   crop.100 = data.table(crop.100 = param.vector)
   crop.100[, crop.100 := gsub('<value_crop>',   cell_crop_data[,dc_cropname], crop.100)]
   crop.100[, crop.100 := gsub('<crop_name>',    cell_crop_data[,crop],        crop.100)]
@@ -158,13 +161,18 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   cell_sch_data       = cell_data
   schedule_path       = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
   schedule_filename   = cell_sch_data[1, paste(.scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
+
+  # add ifelse here...
+  # look-up separately extracted DT with schl file info based on the crop, scenario, eq_schl_name
+  # rationale is the two sequences of files
+  # need to select proper one and rebuild to match simulation...
   block_name          = cell_sch_data[1, paste(.scenario, '_', .crop, '_',.irr, sep = "")]
   crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]
 
   # cropping hemisphere (by planting and harvest date in Gregorian calendar)
   plant.date          = cell_sch_data[,plant.date]
   harvest.date        = cell_sch_data[,harvest.date]
-  crop_hemi           = fifelse(plant.date > harvest.date, 'S','N')
+  crop_hemi           = fifelse(plant.date > harvest.date, 'S','N') # this should catch imperfect 'N' or 'S' assignments
 
   # event doy
   pre.harv.cult       = 14

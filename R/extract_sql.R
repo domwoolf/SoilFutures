@@ -53,6 +53,6 @@ select.tbl = function(con, cohort) {
 sql.query = function(con, table, run_seq_data) {
   result = dbSendQuery(con, paste('SELECT gridid, irr, run_seq, site100 FROM', table,
                                   'WHERE run_seq = (', run_seq_data,')'))
-  result.dt = fetch(result)
+  result.dt = dbFetch(result, n = -1)
   result.dt = setDT(result.dt)
 }

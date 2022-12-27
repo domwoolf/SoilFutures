@@ -1,7 +1,7 @@
 # NOT TO BE USED IN MAIN PACKAGE #
 
 library(data.table)
-cell_data = fread('data-raw/cell_data_table_csu.csv')
+cell_data = fread('data-raw/cell_data_table_csu-22Dec2022.csv')
 
 # split into gcm x ssp combinations
 gcm       = fread('data-raw/cmip6_calendars.csv')
