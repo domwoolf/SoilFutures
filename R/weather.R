@@ -171,6 +171,7 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
 #' @param .plant_date integer, planting date for crop from cell_data_table.
 #' @param .harv_date integer, harvest data for crop from cell_data_table.
 #' @param out.dir directory to create in out.path, set with arg[2]
+#' @export
 make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .harv_date, out.dir) {
   w         = fread(weather_fname)
   names(w)  = c('dom', 'month', 'y', 'doy', 'tasmax', 'tasmin', 'pr')
