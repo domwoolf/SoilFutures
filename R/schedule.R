@@ -15,62 +15,164 @@
 #' @param cover_crop table template of cover crop parameters to include in the crop.100.
 #' @param tmp.dir directory to create in tmp.path, set with arg[1]
 #' @export
-create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cover_crop_template), tmp.dir) {
-  # need to update for different crops - consider different functions...
-  # be sure to add in rewild crops/trees to template file
+create_crop = function(cell_data = .cell_data, cell, cover_crop = copy(cover_crop_template), tmp.dir) {
   # get gridid, crop parameter data
-  cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1, PPDF2, PPDF3, PPDF4,
-                                     PLTMRF, FRTC1, DDBASE, KLIGHT, SLA, DDLAIMX)])
+  cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1,
+                                                      PPDF2, PPDF3, PPDF4, PLTMRF, FRTC1, DDBASE,
+                                                      KLIGHT, SLA, DDLAIMX, HIMAX, SNFXMX1, RTDTMP,
+                                                      LEAFMX, DDEMERG, DDPPSTART, DDPPEND, PPCRITICAL,
+                                                      PPSNST)])
 
   # create parameter vectors
-  param.vector   = c("<value_crop>      <crop_name>","<value_RUETB>     RUETB",
-                   "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
-                   "<value_PPDF3>     PPDF(3)",    "<value_PPDF4>     PPDF(4)",
-                   "0.0               BIOFLG",     "1800.0            BIOK5",       "<value_PLTMRF>               PLTMRF",
-                   "150.0             FULCAN",     "7.0                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
-                   "0.1               FRTC(2)",    "90.0              FRTC(3)",     "0.1               FRTC(4)",
-                   "0.1               FRTC(5)",    "0.3               CFRTCN(1)",   "0.25              CFRTCN(2)",
-                   "0.5               CFRTCW(1)",  "0.1               CFRTCW(2)",   "700.0             BIOMAX",
-                   "15.0              PRAMN(1,1)", "150.0             PRAMN(2,1)",  "190.0             PRAMN(3,1)",
-                   "62.5              PRAMN(1,2)", "150.0             PRAMN(2,2)",  "150.0             PRAMN(3,2)",
-                   "40.0              PRAMX(1,1)", "230.0             PRAMX(2,1)",  "230.0             PRAMX(3,1)",
-                   "125.0             PRAMX(1,2)", "230.0             PRAMX(2,2)",  "230.0             PRAMX(3,2)",
-                   "45.0              PRBMN(1,1)", "390.0             PRBMN(2,1)",  "340.0             PRBMN(3,1)",
-                   "0.0               PRBMN(1,2)", "0.0               PRBMN(2,2)",  "0.0               PRBMN(3,2)",
-                   "60.0              PRBMX(1,1)", "420.0             PRBMX(2,1)",  "420.0             PRBMX(3,1)",
-                   "0.0               PRBMX(1,2)", "0.0               PRBMX(2,2)",  "0.0               PRBMX(3,2)",
-                   "0.12              FLIGNI(1,1)","0.0               FLIGNI(2,1)", "0.06              FLIGNI(1,2)",
-                   "0.0               FLIGNI(2,2)","0.06              FLIGNI(1,3)", "0.0               FLIGNI(2,3)",
-                   "0.55              HIMAX",      "0.7               HIWSF",       "1.0               HIMON(1)",
-                   "0.0               HIMON(2)",   "0.75              EFRGRN(1)",   "0.6               EFRGRN(2)",
-                   "0.6               EFRGRN(3)",  "0.04              VLOSSP",      "0.0               FSDETH(1)",
-                   "0.0               FSDETH(2)",  "0.0               FSDETH(3)",   "500.0             FSDETH(4)",
-                   "0.1               FALLRT",     "0.05              RDRJ",        "0.05              RDRM",      "0.14              RDSRFC",
-                   "2.0               RTDTMP",     "0.0               CRPRTF(1)",   "0.0               CRPRTF(2)",
-                   "0.0               CRPRTF(3)",  "0.05              MRTFRAC",     "0.0               SNFXMX(1)",
-                   "-15.0             DEL13C",     "1.0               CO2IPR(1)",   "0.82              CO2ITR(1)",
-                   "1.0               CO2ICE(1,1,1)", "1.0            CO2ICE(1,1,2)","1.0              CO2ICE(1,1,3)",
-                   "1.0               CO2ICE(1,2,1)", "1.0            CO2ICE(1,2,2)","1.0              CO2ICE(1,2,3)",
-                   "1.0               CO2IRS(1)",  "0.10000           CKMRSPMX(1)", "0.15000           CKMRSPMX(2)",
-                   "0.05000           CKMRSPMX(3)","0.00000           CMRSPNPP(1)", "0.00000           CMRSPNPP(2)",
-                   "1.25000           CMRSPNPP(3)","1.00000           CMRSPNPP(4)", "4.00000           CMRSPNPP(5)",
-                   "1.50000           CMRSPNPP(6)","0.23000           CGRESP(1)",   "0.23000           CGRESP(2)",
-                   "0.23000           CGRESP(3)",  "0.25000           NO3PREF(1)",  "6.00000           CLAYPG",
-                   "0.50000           CMIX ",      "-13.000           TMPGERM",     "<value_DDBASE>    DDBASE",
-                   "-3.5              TMPKILL",    "10                BASETEMP",    "30                BASETEMP(2)",
-                   "-1	              BASETEMP(3)","-1	              BASETEMP(4)", "100               MNDDHRV",
-                   "550               MXDDHRV",    "120.0             CURGDYS",     "0.5               CLSGRES",
-                   "0.12              CMXTURN",    "1.0               NPP2CS(1)",   "2.0               CAFUE",
-                   "1.40              EMAX",       "1.2 	            KCET",        "<value_KLIGHT>    KLIGHT",
-                   "<value_SLA>       SLA",        "0.9               LEAFCL",      "0.9               LEAFEMERG",
-                   "0.25              LEAFMX",     "0.02              LEAFPM",      "80                DDEMERG",
-                   "<value_DDLAIMX>   DDLAIMX",    "-1		            DDPPSTART",   "-1		             DDPPEND",
-                   "-1		            PPTYPE",     "-1		            PPCRITICAL",  "-1		             PPSNST",
-                   "-1		            VERNALSNST", "0.0               LUXEUPF(1)",  "0.0               LUXEUPF(2)",
-                   "0.0               LUXEUPF(3)", "0.0               CSTGEUPF(1)", "0.0               CSTGEUPF(2)",
-                   "0.0               CSTGEUPF(3)","0                 CSTGDYS",     "1.0               CSTGA2DRAT")
+  if (cell_crop_data[, crop] %in% 'maiz') {
+    param.vector   = c("<value_crop>      <crop_name>","<value_RUETB>     RUETB",
+                         "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
+                         "<value_PPDF3>     PPDF(3)",    "<value_PPDF4>     PPDF(4)",
+                         "0.0               BIOFLG",     "1800.0            BIOK5",       "<value_PLTMRF>               PLTMRF",
+                         "150.0             FULCAN",     "7.0                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
+                         "0.1               FRTC(2)",    "90.0              FRTC(3)",     "0.1               FRTC(4)",
+                         "0.1               FRTC(5)",    "0.3               CFRTCN(1)",   "0.25              CFRTCN(2)",
+                         "0.5               CFRTCW(1)",  "0.1               CFRTCW(2)",   "700.0             BIOMAX",
+                         "15.0              PRAMN(1,1)", "150.0             PRAMN(2,1)",  "190.0             PRAMN(3,1)",
+                         "62.5              PRAMN(1,2)", "150.0             PRAMN(2,2)",  "150.0             PRAMN(3,2)",
+                         "40.0              PRAMX(1,1)", "230.0             PRAMX(2,1)",  "230.0             PRAMX(3,1)",
+                         "125.0             PRAMX(1,2)", "230.0             PRAMX(2,2)",  "230.0             PRAMX(3,2)",
+                         "45.0              PRBMN(1,1)", "390.0             PRBMN(2,1)",  "340.0             PRBMN(3,1)",
+                         "0.0               PRBMN(1,2)", "0.0               PRBMN(2,2)",  "0.0               PRBMN(3,2)",
+                         "60.0              PRBMX(1,1)", "420.0             PRBMX(2,1)",  "420.0             PRBMX(3,1)",
+                         "0.0               PRBMX(1,2)", "0.0               PRBMX(2,2)",  "0.0               PRBMX(3,2)",
+                         "0.12              FLIGNI(1,1)","0.0               FLIGNI(2,1)", "0.06              FLIGNI(1,2)",
+                         "0.0               FLIGNI(2,2)","0.06              FLIGNI(1,3)", "0.0               FLIGNI(2,3)",
+                         "0.55              HIMAX",      "0.7               HIWSF",       "1.0               HIMON(1)",
+                         "0.0               HIMON(2)",   "0.75              EFRGRN(1)",   "0.6               EFRGRN(2)",
+                         "0.6               EFRGRN(3)",  "0.04              VLOSSP",      "0.0               FSDETH(1)",
+                         "0.0               FSDETH(2)",  "0.0               FSDETH(3)",   "500.0             FSDETH(4)",
+                         "0.1               FALLRT",     "0.05              RDRJ",        "0.05              RDRM",      "0.14              RDSRFC",
+                         "2.0               RTDTMP",     "0.0               CRPRTF(1)",   "0.0               CRPRTF(2)",
+                         "0.0               CRPRTF(3)",  "0.05              MRTFRAC",     "0.0               SNFXMX(1)",
+                         "-15.0             DEL13C",     "1.0               CO2IPR(1)",   "0.82              CO2ITR(1)",
+                         "1.0               CO2ICE(1,1,1)", "1.0            CO2ICE(1,1,2)","1.0              CO2ICE(1,1,3)",
+                         "1.0               CO2ICE(1,2,1)", "1.0            CO2ICE(1,2,2)","1.0              CO2ICE(1,2,3)",
+                         "1.0               CO2IRS(1)",  "0.10000           CKMRSPMX(1)", "0.15000           CKMRSPMX(2)",
+                         "0.05000           CKMRSPMX(3)","0.00000           CMRSPNPP(1)", "0.00000           CMRSPNPP(2)",
+                         "1.25000           CMRSPNPP(3)","1.00000           CMRSPNPP(4)", "4.00000           CMRSPNPP(5)",
+                         "1.50000           CMRSPNPP(6)","0.23000           CGRESP(1)",   "0.23000           CGRESP(2)",
+                         "0.23000           CGRESP(3)",  "0.25000           NO3PREF(1)",  "6.00000           CLAYPG",
+                         "0.50000           CMIX ",      "-13.000           TMPGERM",     "<value_DDBASE>    DDBASE",
+                         "-3.5              TMPKILL",    "10                BASETEMP",    "30                BASETEMP(2)",
+                         "-1	              BASETEMP(3)","-1	              BASETEMP(4)", "100               MNDDHRV",
+                         "550               MXDDHRV",    "120.0             CURGDYS",     "0.5               CLSGRES",
+                         "0.12              CMXTURN",    "1.0               NPP2CS(1)",   "2.0               CAFUE",
+                         "1.40              EMAX",       "1.2 	            KCET",        "<value_KLIGHT>    KLIGHT",
+                         "<value_SLA>       SLA",        "0.9               LEAFCL",      "0.9               LEAFEMERG",
+                         "0.25              LEAFMX",     "0.02              LEAFPM",      "80                DDEMERG",
+                         "<value_DDLAIMX>   DDLAIMX",    "-1		            DDPPSTART",   "-1		             DDPPEND",
+                         "-1		            PPTYPE",     "-1		            PPCRITICAL",  "-1		             PPSNST",
+                         "-1		            VERNALSNST", "0.0               LUXEUPF(1)",  "0.0               LUXEUPF(2)",
+                         "0.0               LUXEUPF(3)", "0.0               CSTGEUPF(1)", "0.0               CSTGEUPF(2)",
+                         "0.0               CSTGEUPF(3)","0                 CSTGDYS",     "1.0               CSTGA2DRAT")
 
-  # create crop.100 DT, replace values
+  } else if (cell_crop_data[, crop] %in% 'soyb') {
+    # soyb params
+    param.vector = c("<value_crop>      <crop_name>",
+                     "<value_RUETB>     RUETB",  "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
+                     "<value_PPDF3>     PPDF(3)","<value_PPDF4>     PPDF(4)",    "0.0               BIOFLG",
+                     "1800.0            BIOK5",  "<value_PLTMRF>    PLTMRF",     "150.0             FULCAN",
+                     "5                 FRTCIN", "<value_FRTC1>     FRTC(1) ",   "0.05              FRTC(2) ",
+                     "90.0              FRTC(3)", "0.1              FRTC(4) ", "0.1                 FRTC(5)",
+                     "0.4               CFRTCN(1)", "0.25           CFRTCN(2)", "0.5                CFRTCW(1)",
+                     "0.1               CFRTCW(2)", "200.0          BIOMAX", "5.0                   PRAMN(1,1)",
+                     "150.0             PRAMN(2,1)", "100.0         PRAMN(3,1)", "15.0              PRAMN(1,2)",
+                     "150.0             PRAMN(2,2)", "100.0         PRAMN(3,2)", "15.0              PRAMX(1,1)",
+                     "230.0             PRAMX(2,1)", "100.0         PRAMX(3,1)", "30.0              PRAMX(1,2) ",
+                     "230.0             PRAMX(2,2)", "100.0         PRAMX(3,2)", "24.0              PRBMN(1,1)",
+                     "390.0             PRBMN(2,1)", "100.0         PRBMN(3,1)", "0.0               PRBMN(1,2)",
+                     "0.0               PRBMN(2,2)", "000.0         PRBMN(3,2)", "32.0              PRBMX(1,1)",
+                     "420.0             PRBMX(2,1)", "100.0         PRBMX(3,1)", "0.0               PRBMX(1,2)",
+                     "0.0               PRBMX(2,2)", "000.0         PRBMX(3,2)", "0.12              FLIGNI(1,1)",
+                     "0.0               FLIGNI(2,1)", "0.06         FLIGNI(1,2)", "0.0              FLIGNI(2,2)",
+                     "0.06              FLIGNI(1,3)", "0.0          FLIGNI(2,3)", "<value_HIMAX>    HIMAX",
+                     "0.5               HIWSF      ", "1.0          HIMON(1)   ", "0.0              HIMON(2)",
+                     "0.7               EFRGRN(1)  ", "0.6          EFRGRN(2)", "0.6                EFRGRN(3)",
+                     "0.04              VLOSSP", "0.0               FSDETH(1)", "0.0                FSDETH(2)",
+                     "0.0               FSDETH(3)", "500.0          FSDETH(4)", "0.1                FALLRT",
+                     "0.5               RDRJ     ", "0.15           RDRM     ", "0.14               RDSRFC",
+                     "2.0               RTDTMP", "0.0               CRPRTF(1)", "0.0                CRPRTF(2)",
+                     "0.0               CRPRTF(3)", "0.05           MRTFRAC", "<value_SNFXMX1>      SNFXMX(1)",
+                     "-27.0             DEL13C", "1.3               CO2IPR(1)", "0.77               CO2ITR(1)",
+                     "1.0               CO2ICE(1,1,1)", "1.0        CO2ICE(1,1,2)", "1.0            CO2ICE(1,1,3)",
+                     "1.3               CO2ICE(1,2,1)", "1.0        CO2ICE(1,2,2)", "1.0            CO2ICE(1,2,3)",
+                     "1.0               CO2IRS(1)", "0.1            CKMRSPMX(1)", "0.15             CKMRSPMX(2)",
+                     "0.05              CKMRSPMX(3)", "0.0          CMRSPNPP(1)", "0.0              CMRSPNPP(2)",
+                     "1.25              CMRSPNPP(3)", "1.0          CMRSPNPP(4)", "4.0              CMRSPNPP(5)",
+                     "1.5               CMRSPNPP(6)", "0.23         CGRESP(1)", "0.23               CGRESP(2)",
+                     "0.23              CGRESP(3)", "0.5            NO3PREF(1)", "6.0               CLAYPG",
+                     "0.5               CMIX", "17.0                TMPGERM", "1200.0               DDBASE",
+                     "-2.0              TMPKILL", "10               BASETEMP", "30                  BASETEMP(2)",
+                     "-1		            BASETEMP(3)", "-1		        BASETEMP(4)", "30               MNDDHRV 100",
+                     "50                MXDDHRV 400", "120.0        CURGDYS", "0.5                  CLSGRES",
+                     "0.12              CMXTURN", "1.0              NPP2CS(1)", "2.0                CAFUE",
+                     "0.9               EMAX", "1.1                 KCET", "<value_KLIGHT>          KLIGHT",
+                     "<value_SLA>              SLA", "0.9           LEAFCL", "0.9                   LEAFEMERG",
+                     "0.25              LEAFMX", "0.02              LEAFPM", "80                    DDEMERG",
+                     "730               DDLAIMX", "-1		            DDPPSTART", "-1		              DDPPEND",
+                     "-1		            PPTYPE", "-1		            PPCRITICAL", "-1		            PPSNST",
+                     "-1		            VERNALSNST", "0.0           LUXEUPF(1) ", "0.0              LUXEUPF(2)",
+                     "0.0               LUXEUPF(3)", "0.0           CSTGEUPF(1)", "0.0              CSTGEUPF(2)",
+                     "0.0               CSTGEUPF(3)", "0            CSTGDYS", "1.0                  CSTGA2DRAT")
+  } else if (cell_crop_data[, crop] %in% 'wwht') {
+    # wwheat params
+    param.vector = c("<value_crop>      <crop_name>",
+                     "<value_RUETB>     RUETB", "<value_PPDF1>     PPDF(1)", "<value_PPDF2>     PPDF(2)",
+                     "<value_PPDF3>     PPDF(3)", "<value_PPDF4>   PPDF(4)", "0.0               BIOFLG",
+                     "1800.0            BIOK5", "<value_PLTMRF>    PLTMRF", "150.0              FULCAN",
+                     "6                 FRTCINDX", "<value_FRTC1>  FRTC(1)", "0.07              FRTC(2)",
+                     "210               FRTC(3)", "0.1             FRTC(4)", "0.1               FRTC(5)",
+                     "0.4               CFRTCN(1)", "0.25          CFRTCN(2)", "0.6             CFRTCW(1)",
+                     "0.1               CFRTCW(2)", "300.0         BIOMAX", "20.0               PRAMN(1,1)",
+                     "100.0             PRAMN(2,1)", "100.0        PRAMN(3,1)", "50.0           PRAMN(1,2)",
+                     "160.0             PRAMN(2,2)", "200.0        PRAMN(3,2)", "40.0           PRAMX(1,1)",
+                     "200.0             PRAMX(2,1)", "230.0        PRAMX(3,1)", "120.0          PRAMX(1,2)",
+                     "260.0             PRAMX(2,2)", "270.0        PRAMX(3,2)", "45.0           PRBMN(1,1)",
+                     "390.0             PRBMN(2,1)", "340.0        PRBMN(3,1)", "0.0            PRBMN(1,2)",
+                     "0.0               PRBMN(2,2)", "0.0          PRBMN(3,2)", "60.0           PRBMX(1,1)",
+                     "420.0             PRBMX(2,1)", "420.0        PRBMX(3,1)", "0.0            PRBMX(1,2)",
+                     "0.0               PRBMX(2,2)", "0.0          PRBMX(3,2)", "0.15           FLIGNI(1,1)",
+                     "0.0               FLIGNI(2,1)", "0.06        FLIGNI(1,2)", "0.0           FLIGNI(2,2)",
+                     "0.06              FLIGNI(1,3)", "0.0         FLIGNI(2,3)", "<value_HIMAX> HIMAX",
+                     "0.50              HIWSF", "1.0               HIMON(1)", "0.0              HIMON(2)",
+                     "0.65              EFRGRN(1)", "0.6           EFRGRN(2)", "0.6             EFRGRN(3)",
+                     "0.04              VLOSSP", "0.0              FSDETH(1)", "0.0             FSDETH(2)",
+                     "0.0               FSDETH(3)", "200.0         FSDETH(4)", "0.12            FALLRT",
+                     "0.05              RDRJ", "0.05               RDRM", "0.14                 RDSRFC",
+                     "<value_RTDTMP>    RTDTMP", "0.0              CRPRTF(1)", "0.0             CRPRTF(2)",
+                     "0.0               CRPRTF(3)", "0.05          MRTFRAC", "0.0               SNFXMX(1)",
+                     "-27.0             DEL13C", "1.22             CO2IPR(1)", "0.88            CO2ITR(1)",
+                     "1.08              CO2ICE(1,1,1)", "1.0       CO2ICE(1,1,2)", "1.0         CO2ICE(1,1,3)",
+                     "1.08              CO2ICE(1,2,1)", "1.0       CO2ICE(1,2,2)", "1.0         CO2ICE(1,2,3)",
+                     "1.0               CO2IRS(1)", "0.10000       CKMRSPMX(1)", "0.15000       CKMRSPMX(2)",
+                     "0.05000           CKMRSPMX(3)", "0.00000     CMRSPNPP(1)", "0.00000       CMRSPNPP(2)",
+                     "1.25000           CMRSPNPP(3)", "1.00000     CMRSPNPP(4)", "4.00000       CMRSPNPP(5)",
+                     "1.50000           CMRSPNPP(6)", "0.23000     CGRESP(1)", "0.23000         CGRESP(2)",
+                     "0.23000           CGRESP(3)", "0.25000       NO3PREF(1)", "7.00000        CLAYPG",
+                     "0.50000           CMIX", "-10.0000           TMPGERM", "<value_DDBASE>    DDBASE",
+                     "-40.0             TMPKILL", "0               BASETEMP", "25               BASETEMP(2)",
+                     "28	              BASETEMP(3)", "40	         BASETEMP(4)", "24            MNDDHRV",
+                     "31                MXDDHRV", "120.0           CURGDYS", "0.5               CLSGRES",
+                     "0.12              CMXTURN", "1.0             NPP2CS(1)", "2.0             CAFUE",
+                     "0.90              EMAX", "1.1                KCET", "<value_KLIGHT>       KLIGHT",
+                     "<value_SLA>       SLA", "0.9                 LEAFCL", "0.95               LEAFEMERG",
+                     "<value_LEAFMX>    LEAFMX", "0.0              LEAFPM", "<value_DDEMERG>    DDEMERG",
+                     "<value_DDLAIMX>   DDLAIMX", "<value_DDPPSTART> DDPPSTART", "<value_DDPPEND>	 DDPPEND",
+                     "1.0		            PPTYPE", "<value_PPCRITICAL> PPCRITICAL", "<value_PPSNST>	 PPSNST",
+                     "1.5  		          VERNALSNST", "0.0            LUXEUPF(1) ", "0.0            LUXEUPF(2)",
+                     "0.0               LUXEUPF(3)", "0.0            CSTGEUPF(1)", "0.0            CSTGEUPF(2)",
+                     "0.0               CSTGEUPF(3)", "0             CSTGDYS", "1.0                CSTGA2DRAT")
+  } else {
+    # swheat params
+    # param.vector = c()
+  }
+   # create crop.100 DT, replace values
   # add index matching for crop type
   crop.100 = data.table(crop.100 = param.vector)
   crop.100[, crop.100 := gsub('<value_crop>',   cell_crop_data[,dc_cropname], crop.100)]
@@ -82,10 +184,20 @@ create_crop = function(cell_data = copy(cell_data), cell, cover_crop = copy(cove
   crop.100[, crop.100 := gsub('<value_PPDF4>',  cell_crop_data[,PPDF4],       crop.100)]
   crop.100[, crop.100 := gsub('<value_PLTMRF>', cell_crop_data[,PLTMRF],      crop.100)]
   crop.100[, crop.100 := gsub('<value_FRTC1>',  cell_crop_data[,FRTC1],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_HIMAX>',  cell_crop_data[,HIMAX],       crop.100)]
+  crop.100[, crop.100 := gsub('<value_RTDTMP>', cell_crop_data[,RTDTMP],      crop.100)]
   crop.100[, crop.100 := gsub('<value_DDBASE>', cell_crop_data[,DDBASE],      crop.100)]
   crop.100[, crop.100 := gsub('<value_KLIGHT>', cell_crop_data[,KLIGHT],      crop.100)]
   crop.100[, crop.100 := gsub('<value_SLA>',    cell_crop_data[,SLA],         crop.100)]
+  crop.100[, crop.100 := gsub('<value_LEAFMX>', cell_crop_data[,LEAFMX],      crop.100)]
+  crop.100[, crop.100 := gsub('<value_DDEMERG>',cell_crop_data[,DDEMERG],     crop.100)]
   crop.100[, crop.100 := gsub('<value_DDLAIMX>',cell_crop_data[,DDLAIMX],     crop.100)]
+  crop.100[, crop.100 := gsub('<value_DDPPSTART>',  cell_crop_data[,DDPPSTART], crop.100)]
+  crop.100[, crop.100 := gsub('<value_DDPPEND>',    cell_crop_data[,DDPPEND],   crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPCRITICAL>', cell_crop_data[,PPCRITICAL],crop.100)]
+  crop.100[, crop.100 := gsub('<value_PPSNST>',     cell_crop_data[,PPSNST],    crop.100)]
+  crop.100[, crop.100 := gsub('<value_SNFXMX1>',    cell_crop_data[,SNFXMX1],   crop.100)]
+
 
   # read in cover_crop.100 to append to C6_00s for gridid
   colnames(cover_crop) = 'crop.100'
@@ -161,11 +273,6 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   cell_sch_data       = cell_data
   schedule_path       = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
   schedule_filename   = cell_sch_data[1, paste(.scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
-
-  # add ifelse here...
-  # look-up separately extracted DT with schl file info based on the crop, scenario, eq_schl_name
-  # rationale is the two sequences of files
-  # need to select proper one and rebuild to match simulation...
   block_name          = cell_sch_data[1, paste(.scenario, '_', .crop, '_',.irr, sep = "")]
   crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]
 
