@@ -21,10 +21,14 @@ make_weather_file(
 One element of list for each of the climate variables (tasmin, tasmax, pr).
 Usually created using load_climate()}
 
+\item{.gridid}{integer, cell number (-180 to 180 longitude) from cell_data_table.}
+
 \item{cell}{integer, specifying the raster cell number from which to extract values.
 Note that climate rasters are in rotated (0-360 degree longitude) coordinates.}
 
-\item{.gcm}{character (length one) giving name of the cmip6 model the climate is from}
+\item{.gcm}{character (length one) giving name of the cmip6 model.}
+
+\item{.ssp}{character (length one) giving name of ssp scenario.}
 
 \item{weather}{data.table containing gregorian calendar and index numbers to extract gregorian values
 from a daily climate rast that uses a different calendar. Usually created using initialize_weather()}

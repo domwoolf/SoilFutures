@@ -5,7 +5,7 @@
 \title{Create a crop.100 file}
 \usage{
 create_crop(
-  cell_data = copy(cell_data),
+  cell_data = .cell_data,
   cell,
   cover_crop = copy(cover_crop_template),
   tmp.dir
