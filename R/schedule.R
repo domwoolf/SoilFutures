@@ -327,3 +327,59 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
   return(schedule_filename)
   }
+
+#' Create a revised equilibrium schedule file
+#'
+#' Used for revising EQ schedule file for simulation.
+#'
+#' This function creates a universal equilibrium schedule file combining both sequences for a grid cell based on a land use ID.
+#'
+#' @import data.table
+#' @param schedule.file1_fname file, extracted from EQ data.table
+#' @param schedule.file2 file, extracted previously from EQ data.table
+#' @export
+
+revise_eq_sch = function(schedule.file1_fname, schedule.file2) {
+  # rewrite EQ files
+  schedule.file1 = fread(paste(args[1], schedule.file1_fname, sep = '/'), fill = TRUE)
+  # 85 years (2016 - 2099)
+  position       = schedule.file1[V1 == 85, which = TRUE]
+  position       = position[length(position)]
+  schedule.file1 = schedule.file1[1:position,]
+  # replace values
+  schedule.file1[1, V1 := gsub('1', 2016L, V1)]
+  schedule.file1[2, V1 := gsub('10000', 2099L, V1)]
+  schedule.file1[3, V1 := gsub('site.100', site.file, V1)]
+  if (cell_data_subset[row, ssp] %in% 'ssp126') {
+    schedule.file1[7, V1 := gsub('-1', 126L, V1)]
+    newrow         = data.table(V1 = 2016L, V2 = 2099L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
+    schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
+  } else if (cell_data_subset[row, ssp] %in% 'ssp370') {
+    schedule.file1[7, V1 := gsub('-1', 370L, V1)]
+    newrow         = data.table(V1 = 2016L, V2 = 2099L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
+    schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
+  }
+  schedule.file1 = schedule.file1[-17,]
+  schedule.file1[20, V1 := gsub('10000', 2099L, V1)]
+  schedule.file1[21, V1 := gsub('150', 85L, V1)]
+  schedule.file1[22, V1 := gsub('1', 2016L, V1)]
+  schedule.file1[24, V1 := gsub('100', 1L, V1)]
+  schedule.file1[26, V1 := gsub('site.wth', w_fname, V1)]
+  endrow         = data.table(V1 = -999L, V2 = -999L, V3 = 'X', V4 = '', V5 = '')
+  schedule.file1 = rbind(schedule.file1, endrow)
+  # read in seq2 sch file
+  schedule.file2 = fread(paste(args[1], schedule.file2, sep = '/'), fill = TRUE)
+  schedule.file2 = schedule.file2[18:nrow(schedule.file2),]
+  schedule.file2[1, V1 := gsub('1', 2L, V1)]
+  schedule.file2[2, V1 := gsub('1', 2100L, V1)]
+  schedule.file2[4, V1 := gsub('1', 2100L, V1)]
+  schedule.file2[7, V1 := gsub('F', 'C', V1)]
+  schedule.file2 = schedule.file2[-8,]
+  # bind tables
+  schedule.file1 = rbind(schedule.file1, schedule.file2)
+  # save
+  fwrite(schedule.file1, paste(pkg.env$tmp_path, tmp.dir, schedule.file1_fname, sep = '/'),
+         quote = FALSE, sep = ' ', col.names = FALSE)
+  return(schedule.file1)
+}
+

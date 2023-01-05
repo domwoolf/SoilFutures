@@ -8,16 +8,23 @@ create_site(
   .gridid,
   .run_seq,
   .irr,
+  .crop,
   cell_data_site = copy(cell_data_site),
   tmp.dir
 )
 }
 \arguments{
+\item{.gridid}{integer, grid cell ID number}
+
+\item{.run_seq}{integer, land use cohort ID number}
+
 \item{.irr}{Integer, irrigation level}
 
-\item{cell}{Integer, grid cell ID number}
+\item{.crop}{character, name of crop aligned with gridid and run_seq}
 
-\item{cell_data}{Data table, contains spatial data associated with each cell and site.100 file}
+\item{cell_data_site}{Data table, contains spatial data associated with each cell and site.100 file}
+
+\item{tmp.dir}{character, temporary directory to write the site.100 file to}
 }
 \description{
 Used for writing a site file using spatial data.

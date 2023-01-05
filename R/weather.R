@@ -133,7 +133,7 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
 #' a uniquely named file.  File naming is unique to allow parallel execution of DayCent, with each instance
 #' using a different weather file.
 #'
-#'There are 6 files created in this function:
+#'There are 4 files created in this function:
 #'1. Annual weather statistics using daily means and total annual pr, five-year intervals AND simulation period.
 #'This file includes data on quantiles, means, and standard deviations for tasmin, tasmax, and pr.
 #'Estimates were made over the entire simulation period and in five-year intervals.
@@ -597,9 +597,58 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     # save
   biovars_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_biovars_statistics.csv')
   fwrite(biovars_tbl, biovars_fname, append = TRUE)
+}
 
-  # File 5 | Growing season weather statistics using daily means, five-year intervals AND simulation period
-    # weather statistics
+#' Create weather growing and non-growing season statistics file
+#'
+#' Used for side effect of writing a weather files based on location.
+#' Location is specified as a raster cell number.
+#'
+#' This function creates a weather statistics files for a specified climate model, ssp, and location.
+#' Raw climate model data was converted into daily values in the Gregorian calendar, which sometimes
+#' requires date conversion from the native gcm calendar.  Daily vectors are constructed from 2015 through
+#' to 2100 for each of, minimum daily temperature (tasmin), maximum daily temperature (tasmax),
+#' and precipitation (pr).  These vectors are written as columns in the weather file which is written to
+#' a uniquely named file.  File naming is unique to allow parallel execution of DayCent, with each instance
+#' using a different weather file.
+#'
+#'There are 3 files created in this function:
+#'1. Growing season weather statistics using daily means, five-year intervals AND simulation period.
+#'This file includes data on quantiles, means, and standard deviations for tasmin, tasmax, and pr.
+#'Estimates were made over the growing season for the entire simulation period and in five-year intervals.
+#'
+#'2. Non-growing season weather statistics using daily means, five-year intervals AND simulation period.
+#'This file includes data on quantiles, means, and standard deviations for tasmin, tasmax, and pr.
+#'Estimates were made over the non-growin season for the entire simulation period and in five-year intervals.
+#'
+#'3. Histogram bins of growing and non-growing season variable frequencies, five-year intervals AND simulation period.
+#'This file includes frequency data on tasmin, tasmax, and pr, including consecutive days of pr,
+#'consecutive dry days, consecutive days exceeding 75% quantile and below 25% quantile for tasmin, tasmax.
+#'
+#'@import data.table
+#'@import dismo
+#'@param weather_fname data.table, containing 86 years (2016-2100) of tasmin, tasmax, and pr data for gridcell.
+#'Must be read in to function as a file.path
+#' @param .gridid integer, cell number (-180 to 180 longitude) from cell_data_table.
+#' @param .gcm character (length one) giving name of the cmip6 model.
+#' @param .ssp character (length one) giving name of ssp scenario.
+#' @param .crop character (length one) giving crop name from cell_data_table.
+#' @param .plant_date integer, planting date for crop from cell_data_table.
+#' @param .harv_date integer, harvest data for crop from cell_data_table.
+#' @param out.dir directory to create in out.path, set with arg[2]
+#' @export
+
+make_weather_grwszn_stats = function(weather_fname, .gridid, .crop, .ssp, .gcm, .plant_date, .harv_date, out.dir) {
+  w         = fread(weather_fname)
+  names(w)  = c('dom', 'month', 'y', 'doy', 'tasmax', 'tasmin', 'pr')
+  prob      = seq(0.1, 0.9, 0.1) # quantile probabilities for summary stats
+  freqtmax  = seq(-35, 35, by = 5)
+  freqtmin  = seq(-35, 35, by = 5)
+  freqpr    = c(seq(0, 4, by = 0.5), seq(5, 10, by = 1), seq(12, 20, by = 2), 25, 30)
+  freqdays  = c(seq(0,4, by = 1), seq(5, 10, by = 2), 11)
+
+  # File 1 | Growing season weather statistics using daily means, five-year intervals AND simulation period
+  # weather statistics
   w_growing = copy(w)
   w_growing = w_growing[doy >= .plant_date & doy <= .harv_date,]
   w_growing[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
@@ -622,7 +671,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   w_gr.sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(w_gr.sum, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_gr.sum = w_gr.sum[, c(-5:-13)]
-    # estimate total growing season precipitation
+  # estimate total growing season precipitation
   w_gryearly  = copy(w_growing)
   w_gryearly[, sum_pr := sum(pr), by = y]
   w_gryearly.mean.sd  = w_gryearly[, .( # mean, sd for every block
@@ -638,10 +687,10 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   w_grsum.yr[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(w_grsum.yr, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_grsum.yr = w_grsum.yr[, c(-1:-13)]
-    # bind tables
+  # bind tables
   w_gr.sum    = cbind(w_gr.sum, w_grsum.yr)
-    # growing season weather statistics, simulation period
-    # estimate growing season daily values
+  # growing season weather statistics, simulation period
+  # estimate growing season daily values
   w_grmean.sd_ann  = w_growing[, .( # mean, sd
     y_block        = 'sim-period',
     mtasmax        = mean(tasmax),
@@ -661,7 +710,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   w_grsum_ann[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(w_grsum_ann, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_grsum_ann        = w_grsum_ann[, c(-5:-22)]
-    # estimate total gr precipitation
+  # estimate total gr precipitation
   w_gryearly.mean.sd_ann  = w_gryearly[, .( # mean, sd
     y_block               = 'sim-period',
     gr.mpr                = mean(sum_pr),
@@ -678,12 +727,14 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   # bind tables
   w_grsum_ann     = cbind(w_grsum_ann, w_grsum.yr_ann)
   w_gr.sum        = rbind(w_gr.sum, w_grsum_ann)
+  w_gr.sum[, crop := .crop]
+  setcolorder(w_gr.sum, c('gridid', 'y_block', 'gcm', 'ssp', 'crop'))
   # save
   w_grsum_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_daily_growing-season_statistics.csv')
   fwrite(w_gr.sum, w_grsum_fname, append = TRUE)
 
-  # File 6 | Non-growing season weather statistics using daily means, five-year intervals AND simulation period
-    # weather statistics
+  # File 2 | Non-growing season weather statistics using daily means, five-year intervals AND simulation period
+  # weather statistics
   w_ngrowing = copy(w)
   w_ngrowing = w_ngrowing[doy <= .plant_date | doy >= .harv_date,]
   w_ngrowing[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
@@ -706,7 +757,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   w_ngr.sum[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(w_ngr.sum, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_ngr.sum = w_ngr.sum[, c(-5:-13)]
-    # estimate total ngrowing season precipitation
+  # estimate total ngrowing season precipitation
   w_ngryearly  = copy(w_ngrowing)
   w_ngryearly[, sum_pr := sum(pr), by = y]
   w_ngryearly.mean.sd  = w_ngryearly[, .( # mean, sd for every block
@@ -722,10 +773,10 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   w_ngrsum.yr[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(w_ngrsum.yr, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_ngrsum.yr = w_ngrsum.yr[, c(-1:-13)]
-    # bind tables
+  # bind tables
   w_ngr.sum    = cbind(w_ngr.sum, w_ngrsum.yr)
-    # ngrowing season weather statistics, simulation period
-    # estimate ngrowing season daily values
+  # ngrowing season weather statistics, simulation period
+  # estimate ngrowing season daily values
   w_ngrmean.sd_ann  = w_ngrowing[, .( # mean, sd
     y_block        = 'sim-period',
     mtasmax        = mean(tasmax),
@@ -745,14 +796,14 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   w_ngrsum_ann[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(w_ngrsum_ann, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_ngrsum_ann        = w_ngrsum_ann[, c(-5:-22)]
-    # estimate total ngrowing precipitation
+  # estimate total ngrowing precipitation
   w_ngryearly.mean.sd_ann  = w_ngryearly[, .( # mean, sd
-    y_block               = 'sim-period',
+    y_block                = 'sim-period',
     ngr.mpr                = mean(sum_pr),
     ngr.sdpr               = sd(sum_pr))]
   w_ngrsummary.yr_ann      = w_ngryearly[, .( # quantile for every year
-    y_block               = 'sim-period',
-    prob                  = prob,
+    y_block                = 'sim-period',
+    prob                   = prob,
     q_ngr.mpr              = quantile(sum_pr, prob))]
   w_ngrsum.yr_ann     = dcast(w_ngrsummary.yr_ann, y_block ~ prob, value.var = colnames(w_ngrsummary.yr_ann))
   w_ngrsum.yr_ann     = w_ngrsum.yr_ann[w_ngryearly.mean.sd_ann, on = .(y_block = y_block)]
@@ -762,13 +813,15 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   # bind tables
   w_ngrsum_ann     = cbind(w_ngrsum_ann, w_ngrsum.yr_ann)
   w_ngr.sum        = rbind(w_ngr.sum, w_ngrsum_ann)
+  w_ngr.sum[, crop := .crop]
+  setcolorder(w_ngr.sum, c('gridid', 'y_block', 'gcm', 'ssp', 'crop'))
   # save
   w_ngrsum_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_daily_ngrowing-season_statistics.csv')
   fwrite(w_ngr.sum, w_ngrsum_fname, append = TRUE)
 
-  # File 7 | Histogram bins of variable frequencies for growing and non-growing season, five-year blocks AND simulation period
+  # File 3 | Histogram bins of variable frequencies for growing and non-growing season, five-year blocks AND simulation period
   # frequencies, and counts of days (pr, dry | greater than 75% or less than 25% for tmin, tmax)
-    # pr
+  # pr
   w_growing.sim.pr = transform(table(cut(w_growing$pr, freqpr)))
   setDT(w_growing.sim.pr)
   w_growing.sim.pr[, y_block := 'sim-period']
@@ -788,7 +841,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(pr_freq, c('y_block', 'var', 'period'))
     w_growing.pr = rbind(w_growing.pr, pr_freq)
   }
-    # consecutive pr days > 0 | one or more days
+  # consecutive pr days > 0 | one or more days
   cons_gr_pr         = w_growing[, .SD[.N >= 1 & all(pr > 0)], rleid(pr > 0)]
   cons_gr_pr_count   = cons_gr_pr[, .N, keyby = .(rleid, y_block)] # count rleid
   cons_gr_pr_sim.per = transform(table(cut(cons_gr_pr_count$N, freqdays))) # count by sim period
@@ -810,7 +863,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_gr_pr_freq, c('y_block', 'var', 'period'))
     cons_gr_pr_blk = rbind(cons_gr_pr_blk, cons_gr_pr_freq)
   }
-    # consecutive dry days > 0 | one or more days
+  # consecutive dry days > 0 | one or more days
   cons_gr_dry = w_growing[, .SD[.N >= 1 & all(pr == 0)], rleid(pr == 0)]
   cons_gr_dry_count   = cons_gr_dry[, .N, keyby = .(rleid, y_block)] # count rleid
   cons_gr_dry_sim.per = transform(table(cut(cons_gr_dry_count$N, freqdays))) # count by sim period
@@ -832,7 +885,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_gr_dry_freq, c('y_block', 'var', 'period'))
     cons_gr_dry_blk = rbind(cons_gr_dry_blk, cons_gr_dry_freq)
   }
-    # tasmin
+  # tasmin
   w_growing.sim.tasmin = transform(table(cut(w_growing$tasmin, freqtmin)))
   setDT(w_growing.sim.tasmin)
   w_growing.sim.tasmin[, y_block := 'sim-period']
@@ -852,7 +905,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(tasmin_freq, c('y_block', 'var', 'period'))
     w_growing.tasmin = rbind(w_growing.tasmin, tasmin_freq)
   }
-    # consecutive tasmin days > 75th percentile | one or more days
+  # consecutive tasmin days > 75th percentile | one or more days
   grtmin.75 = quantile(w_growing$tasmin, probs = c(.75))
   cons_gr_tasmin75         = w_growing[, .SD[.N >= 1 & all(tasmin > grtmin.75)], rleid(tasmin > grtmin.75)]
   cons_gr_tasmin_count75   = cons_gr_tasmin75[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -875,7 +928,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_gr_tasmin_freq, c('y_block', 'var', 'period'))
     cons_gr_tasmin_blk75 = rbind(cons_gr_tasmin_blk75, cons_gr_tasmin_freq)
   }
-    # consecutive tasmin days < 25th percentile | one or more days
+  # consecutive tasmin days < 25th percentile | one or more days
   grtmin.25 = quantile(w_growing$tasmin, probs = c(.25))
   cons_gr_tasmin         = w_growing[, .SD[.N >= 1 & all(tasmin < grtmin.25)], rleid(tasmin < grtmin.25)]
   cons_gr_tasmin_count   = cons_gr_tasmin[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -898,7 +951,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_gr_tasmin_freq, c('y_block', 'var', 'period'))
     cons_gr_tasmin_blk = rbind(cons_gr_tasmin_blk, cons_gr_tasmin_freq)
   }
-    # tasmax
+  # tasmax
   w_growing.sim.tasmax = transform(table(cut(w_growing$tasmax, freqtmax)))
   setDT(w_growing.sim.tasmax)
   w_growing.sim.tasmax[, y_block := 'sim-period']
@@ -918,7 +971,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(tasmax_freq, c('y_block', 'var', 'period'))
     w_growing.tasmax = rbind(w_growing.tasmax, tasmax_freq)
   }
-    # consecutive tasmax days > 75th percentile | one or more days
+  # consecutive tasmax days > 75th percentile | one or more days
   grtmax.75 = quantile(w_growing$tasmax, probs = c(.75))
   cons_gr_tasmax75         = w_growing[, .SD[.N >= 1 & all(tasmax > grtmax.75)], rleid(tasmax > grtmax.75)]
   cons_gr_tasmax_count75   = cons_gr_tasmax75[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -941,7 +994,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_gr_tasmax_freq, c('y_block', 'var', 'period'))
     cons_gr_tasmax_blk75 = rbind(cons_gr_tasmax_blk75, cons_gr_tasmax_freq)
   }
-    # consecutive tasmax days < 25th percentile | one or more days
+  # consecutive tasmax days < 25th percentile | one or more days
   grtmax.25 = quantile(w_growing$tasmax, probs = c(.25))
   cons_gr_tasmax         = w_growing[, .SD[.N >= 1 & all(tasmax < grtmax.25)], rleid(tasmax < grtmax.25)]
   cons_gr_tasmax_count   = cons_gr_tasmax[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -964,16 +1017,16 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_gr_tasmax_freq, c('y_block', 'var', 'period'))
     cons_gr_tasmax_blk = rbind(cons_gr_tasmax_blk, cons_gr_tasmax_freq)
   }
-    # rbind all histogram tables
+  # rbind all histogram tables
   grhistogram.tbl = rbind(w_growing.sim.pr, w_growing.pr, w_growing.sim.tasmin, w_growing.tasmin,
-                        w_growing.sim.tasmax, w_growing.tasmax, cons_gr_dry_sim.per, cons_gr_dry_blk,
-                        cons_gr_dry_sim.per, cons_gr_pr_blk, cons_gr_tasmin_sim.per, cons_gr_tasmin_blk,
-                        cons_gr_tasmax_sim.per, cons_gr_tasmax_blk, cons_gr_tasmin_sim.per75, cons_gr_tasmin_blk75,
-                        cons_gr_tasmax_sim.per75, cons_gr_tasmax_blk75)
+                          w_growing.sim.tasmax, w_growing.tasmax, cons_gr_dry_sim.per, cons_gr_dry_blk,
+                          cons_gr_dry_sim.per, cons_gr_pr_blk, cons_gr_tasmin_sim.per, cons_gr_tasmin_blk,
+                          cons_gr_tasmax_sim.per, cons_gr_tasmax_blk, cons_gr_tasmin_sim.per75, cons_gr_tasmin_blk75,
+                          cons_gr_tasmax_sim.per75, cons_gr_tasmax_blk75)
   grhistogram.tbl[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(grhistogram.tbl, c('gridid', 'y_block', 'gcm', 'ssp', 'period'))
-    # Non-growing season
-    # pr
+  # Non-growing season
+  # pr
   w_ngrowing.sim.pr = transform(table(cut(w_ngrowing$pr, freqpr)))
   setDT(w_ngrowing.sim.pr)
   w_ngrowing.sim.pr[, y_block := 'sim-period']
@@ -993,7 +1046,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(pr_freq, c('y_block', 'var', 'period'))
     w_ngrowing.pr = rbind(w_ngrowing.pr, pr_freq)
   }
-    # consecutive pr days > 0 | one or more days
+  # consecutive pr days > 0 | one or more days
   cons_ngr_pr         = w_ngrowing[, .SD[.N >= 1 & all(pr > 0)], rleid(pr > 0)]
   cons_ngr_pr_count   = cons_ngr_pr[, .N, keyby = .(rleid, y_block)] # count rleid
   cons_ngr_pr_sim.per = transform(table(cut(cons_ngr_pr_count$N, freqdays))) # count by sim period
@@ -1015,7 +1068,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_ngr_pr_freq, c('y_block', 'var', 'period'))
     cons_ngr_pr_blk = rbind(cons_ngr_pr_blk, cons_ngr_pr_freq)
   }
-    # consecutive dry days > 0 | one or more days
+  # consecutive dry days > 0 | one or more days
   cons_ngr_dry = w_ngrowing[, .SD[.N >= 1 & all(pr == 0)], rleid(pr == 0)]
   cons_ngr_dry_count   = cons_ngr_dry[, .N, keyby = .(rleid, y_block)] # count rleid
   cons_ngr_dry_sim.per = transform(table(cut(cons_ngr_dry_count$N, freqdays))) # count by sim period
@@ -1037,7 +1090,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_ngr_dry_freq, c('y_block', 'var', 'period'))
     cons_ngr_dry_blk = rbind(cons_ngr_dry_blk, cons_ngr_dry_freq)
   }
-    # tasmin
+  # tasmin
   w_ngrowing.sim.tasmin = transform(table(cut(w_ngrowing$tasmin, freqtmin)))
   setDT(w_ngrowing.sim.tasmin)
   w_ngrowing.sim.tasmin[, y_block := 'sim-period']
@@ -1057,7 +1110,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(tasmin_freq, c('y_block', 'var', 'period'))
     w_ngrowing.tasmin = rbind(w_ngrowing.tasmin, tasmin_freq)
   }
-    # consecutive tasmin days > 75th percentile | one or more days
+  # consecutive tasmin days > 75th percentile | one or more days
   ngrtmin.75 = quantile(w_ngrowing$tasmin, probs = c(.75))
   cons_ngr_tasmin75         = w_ngrowing[, .SD[.N >= 1 & all(tasmin > ngrtmin.75)], rleid(tasmin > ngrtmin.75)]
   cons_ngr_tasmin_count75   = cons_ngr_tasmin75[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -1080,7 +1133,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_ngr_tasmin_freq, c('y_block', 'var', 'period'))
     cons_ngr_tasmin_blk75 = rbind(cons_ngr_tasmin_blk75, cons_ngr_tasmin_freq)
   }
-    # consecutive tasmin days < 25th percentile | one or more days
+  # consecutive tasmin days < 25th percentile | one or more days
   ngrtmin.25 = quantile(w_ngrowing$tasmin, probs = c(.25))
   cons_ngr_tasmin         = w_ngrowing[, .SD[.N >= 1 & all(tasmin < ngrtmin.25)], rleid(tasmin < ngrtmin.25)]
   cons_ngr_tasmin_count   = cons_ngr_tasmin[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -1103,7 +1156,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_ngr_tasmin_freq, c('y_block', 'var', 'period'))
     cons_ngr_tasmin_blk = rbind(cons_ngr_tasmin_blk, cons_ngr_tasmin_freq)
   }
-    # tasmax
+  # tasmax
   w_ngrowing.sim.tasmax = transform(table(cut(w_ngrowing$tasmax, freqtmax)))
   setDT(w_ngrowing.sim.tasmax)
   w_ngrowing.sim.tasmax[, y_block := 'sim-period']
@@ -1123,7 +1176,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(tasmax_freq, c('y_block', 'var', 'period'))
     w_ngrowing.tasmax = rbind(w_ngrowing.tasmax, tasmax_freq)
   }
-    # consecutive tasmax days > 75th percentile | one or more days
+  # consecutive tasmax days > 75th percentile | one or more days
   ngrtmax.75 = quantile(w_ngrowing$tasmax, probs = c(.75))
   cons_ngr_tasmax75         = w_ngrowing[, .SD[.N >= 1 & all(tasmax > ngrtmax.75)], rleid(tasmax > ngrtmax.75)]
   cons_ngr_tasmax_count75   = cons_ngr_tasmax75[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -1146,7 +1199,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_ngr_tasmax_freq, c('y_block', 'var', 'period'))
     cons_ngr_tasmax_blk75 = rbind(cons_ngr_tasmax_blk75, cons_ngr_tasmax_freq)
   }
-    # consecutive tasmax days < 25th percentile | one or more days
+  # consecutive tasmax days < 25th percentile | one or more days
   ngrtmax.25 = quantile(w_ngrowing$tasmax, probs = c(.25))
   cons_ngr_tasmax         = w_ngrowing[, .SD[.N >= 1 & all(tasmax < ngrtmax.25)], rleid(tasmax < ngrtmax.25)]
   cons_ngr_tasmax_count   = cons_ngr_tasmax[, .N, keyby = .(rleid, y_block)] # count rleid
@@ -1169,17 +1222,19 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
     setcolorder(cons_ngr_tasmax_freq, c('y_block', 'var', 'period'))
     cons_ngr_tasmax_blk = rbind(cons_ngr_tasmax_blk, cons_ngr_tasmax_freq)
   }
-    # rbind all histongram tables
+  # rbind all histongram tables
   ngrhistogram.tbl = rbind(w_ngrowing.sim.pr, w_ngrowing.pr, w_ngrowing.sim.tasmin, w_ngrowing.tasmin,
-                          w_ngrowing.sim.tasmax, w_ngrowing.tasmax, cons_ngr_dry_sim.per, cons_ngr_dry_blk,
-                          cons_ngr_dry_sim.per, cons_ngr_pr_blk, cons_ngr_tasmin_sim.per, cons_ngr_tasmin_blk,
-                          cons_ngr_tasmax_sim.per, cons_ngr_tasmax_blk, cons_ngr_tasmin_sim.per75, cons_ngr_tasmin_blk75,
-                          cons_ngr_tasmax_sim.per75, cons_ngr_tasmax_blk75)
+                           w_ngrowing.sim.tasmax, w_ngrowing.tasmax, cons_ngr_dry_sim.per, cons_ngr_dry_blk,
+                           cons_ngr_dry_sim.per, cons_ngr_pr_blk, cons_ngr_tasmin_sim.per, cons_ngr_tasmin_blk,
+                           cons_ngr_tasmax_sim.per, cons_ngr_tasmax_blk, cons_ngr_tasmin_sim.per75, cons_ngr_tasmin_blk75,
+                           cons_ngr_tasmax_sim.per75, cons_ngr_tasmax_blk75)
   ngrhistogram.tbl[, `:=` (gridid = .gridid, ssp = .ssp, gcm = .gcm)]
   setcolorder(ngrhistogram.tbl, c('gridid', 'y_block', 'gcm', 'ssp', 'period'))
-    # bind gr and ngr histogram.tbl
+  # bind gr and ngr histogram.tbl
   grhistogram.tbl  = rbind(grhistogram.tbl, ngrhistogram.tbl)
-    # save
+  grhistogram.tbl[, crop := .crop]
+  setcolorder(grhistogram.tbl, c('gridid', 'y_block', 'gcm', 'ssp', 'crop'))
+  # save
   w_growinghist_fname = paste0(pkg.env$out_path, '/', out.dir,'/weather_histogram-statistics_gr_ngr_season.csv')
   fwrite(grhistogram.tbl, w_growinghist_fname, append = TRUE)
 }
