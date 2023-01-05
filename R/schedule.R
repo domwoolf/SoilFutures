@@ -352,11 +352,11 @@ revise_eq_sch = function(schedule.file1_fname, schedule.file2) {
   schedule.file1[3, V1 := gsub('site.100', site.file, V1)]
   if (cell_data_subset[row, ssp] %in% 'ssp126') {
     schedule.file1[7, V1 := gsub('-1', 126L, V1)]
-    newrow         = data.table(V1 = 2016L, V2 = 2099L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
+    newrow         = data.table(V1 = 2016L, V2 = 2100L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
     schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
   } else if (cell_data_subset[row, ssp] %in% 'ssp370') {
     schedule.file1[7, V1 := gsub('-1', 370L, V1)]
-    newrow         = data.table(V1 = 2016L, V2 = 2099L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
+    newrow         = data.table(V1 = 2016L, V2 = 22100L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
     schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
   }
   schedule.file1 = schedule.file1[-17,]
