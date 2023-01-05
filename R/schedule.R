@@ -348,7 +348,7 @@ revise_eq_sch = function(schedule.file1_fname, schedule.file2) {
   schedule.file1 = schedule.file1[1:position,]
   # replace values
   schedule.file1[1, V1 := gsub('1', 2016L, V1)]
-  schedule.file1[2, V1 := gsub('10000', 2099L, V1)]
+  schedule.file1[2, V1 := gsub('10000', 2100L, V1)]
   schedule.file1[3, V1 := gsub('site.100', site.file, V1)]
   if (cell_data_subset[row, ssp] %in% 'ssp126') {
     schedule.file1[7, V1 := gsub('-1', 126L, V1)]
