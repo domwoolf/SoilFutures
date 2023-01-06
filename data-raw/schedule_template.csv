@@ -105,7 +105,7 @@ conv,S,0,1,0,0,0,1   <harvest_day>  LAST
 conv,S,0,1,0,0,0,1   <cult_day_postharvest> CULT K
 conv,S,0,1,0,0,0,1   <cult_day_preharvest> CULT K
 conv,S,0,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
-conv,S,0,1,1,0,0,1   <cult_kill_day>  CULT KILL
+conv,S,0,1,0,0,0,1   <cult_kill_day>  CULT KILL
 conv,S,0,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
 conv,S,0,1,0,0,0,1   <plant_day>  PLTM
 conv,S,0,1,0,0,0,1   <plant_day>  CULT B
