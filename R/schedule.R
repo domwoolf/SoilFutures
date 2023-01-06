@@ -15,7 +15,7 @@
 #' @param cover_crop table template of cover crop parameters to include in the crop.100.
 #' @param tmp.dir directory to create in tmp.path, set with arg[1]
 #' @export
-create_crop = function(cell_data = .cell_data, cell, cover_crop = copy(cover_crop_template), tmp.dir) {
+create_crop = function(cell_data, cell, cover_crop = copy(cover_crop_template), tmp.dir) {
   # get gridid, crop parameter data
   cell_crop_data = unique(cell_data[gridid == cell, .(gridid, crop, dc_cropname, RUETB, PPDF1,
                                                       PPDF2, PPDF3, PPDF4, PLTMRF, FRTC1, DDBASE,
@@ -258,7 +258,7 @@ create_omad = function(cell_data = cell_data, cell, tmp.dir){
 #' @param .gridid unique cell value to be passed to function.
 #' @param .ssp character, specifies scenario
 #' @param .gcm character, specifies scenario
-#' @param .crop character, one of 'maiz', 'wwheat', 'swheat', 'soy'
+#' @param .crop character, one of 'maiz', 'wwheat', 'swheat', 'soyb'
 #' @param .scenario character, specifies scenario
 #' @param .irr binary, specifies irrigation level
 #' @param start_yr integer, specifies start year of simulation

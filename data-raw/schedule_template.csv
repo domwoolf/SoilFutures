@@ -1,4 +1,4 @@
-scenario,N_or_S,irr,maiz,soy,wwheat,swheat,schedule
+scenario,N_or_S,irr,maiz,soyb,wwht,swht,schedule
 conv,N,0,1,0,0,0,<start_year>           Starting year
 conv,N,0,1,0,0,0,<end_year>         Last year
 conv,N,0,1,0,0,0,<fname>       Site file name
