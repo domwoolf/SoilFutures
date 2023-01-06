@@ -4,12 +4,14 @@
 \alias{revise_eq_sch}
 \title{Create a revised equilibrium schedule file}
 \usage{
-revise_eq_sch(schedule.file1_fname, schedule.file2)
+revise_eq_sch(schedule.file1_fname, schedule.file2, tmp.dir)
 }
 \arguments{
 \item{schedule.file1_fname}{file, extracted from EQ data.table}
 
 \item{schedule.file2}{file, extracted previously from EQ data.table}
+
+\item{tmp.dir}{character, temporary directory to write the schedule files to}
 }
 \description{
 Used for revising EQ schedule file for simulation.

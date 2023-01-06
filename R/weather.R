@@ -650,7 +650,11 @@ make_weather_grwszn_stats = function(weather_fname, .gridid, .crop, .ssp, .gcm, 
   # File 1 | Growing season weather statistics using daily means, five-year intervals AND simulation period
   # weather statistics
   w_growing = copy(w)
-  w_growing = w_growing[doy >= .plant_date & doy <= .harv_date,]
+  if (.plant_date < .harv_date) {
+    w_growing = w_growing[doy >= .plant_date & doy <= .harv_date,]
+  } else {
+    w_growing = w_growing[doy >= .plant_date | doy <= .harv_date,]
+  }
   w_growing[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
   w_gr.mean.sd  = w_growing[, .( # mean, sd for every block
     mtasmax  = mean(tasmax),
@@ -736,7 +740,11 @@ make_weather_grwszn_stats = function(weather_fname, .gridid, .crop, .ssp, .gcm, 
   # File 2 | Non-growing season weather statistics using daily means, five-year intervals AND simulation period
   # weather statistics
   w_ngrowing = copy(w)
-  w_ngrowing = w_ngrowing[doy <= .plant_date | doy >= .harv_date,]
+  if (.plant_date < .harv_date) {
+    w_ngrowing = w_ngrowing[doy <= .plant_date | doy >= .harv_date,]
+  } else {
+    w_ngrowing = w_ngrowing[doy <= .plant_date & doy >= .harv_date,]
+  }
   w_ngrowing[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
   w_ngr.mean.sd  = w_ngrowing[, .( # mean, sd for every block
     mtasmax  = mean(tasmax),

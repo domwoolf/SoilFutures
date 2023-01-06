@@ -25,5 +25,5 @@ Used for writing a crop.100 file based on Yang et al. (2022) ERL
 }
 \details{
 This function accepts parameter values from a csv file and creates a crop.100 for
-all simulations for a crop type in a cell. N.B. crop.100 written with FRTCINX at 7 (forced harvest).
+all simulations for a crop type in a cell.
 }

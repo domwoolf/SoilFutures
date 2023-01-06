@@ -7,7 +7,7 @@
 #' Used for writing a crop.100 file based on Yang et al. (2022) ERL
 #'
 #' This function accepts parameter values from a csv file and creates a crop.100 for
-#' all simulations for a crop type in a cell. N.B. crop.100 written with FRTCINX at 7 (forced harvest).
+#' all simulations for a crop type in a cell.
 #' @import data.table
 #'
 #' @param cell_data multiple row data.table providing input data for the simulation.
@@ -29,7 +29,7 @@ create_crop = function(cell_data = .cell_data, cell, cover_crop = copy(cover_cro
                          "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
                          "<value_PPDF3>     PPDF(3)",    "<value_PPDF4>     PPDF(4)",
                          "0.0               BIOFLG",     "1800.0            BIOK5",       "<value_PLTMRF>               PLTMRF",
-                         "150.0             FULCAN",     "7.0                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
+                         "150.0             FULCAN",     "5.0                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
                          "0.1               FRTC(2)",    "90.0              FRTC(3)",     "0.1               FRTC(4)",
                          "0.1               FRTC(5)",    "0.3               CFRTCN(1)",   "0.25              CFRTCN(2)",
                          "0.5               CFRTCW(1)",  "0.1               CFRTCW(2)",   "700.0             BIOMAX",
@@ -78,7 +78,7 @@ create_crop = function(cell_data = .cell_data, cell, cover_crop = copy(cover_cro
                      "<value_RUETB>     RUETB",  "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
                      "<value_PPDF3>     PPDF(3)","<value_PPDF4>     PPDF(4)",    "0.0               BIOFLG",
                      "1800.0            BIOK5",  "<value_PLTMRF>    PLTMRF",     "150.0             FULCAN",
-                     "5                 FRTCIN", "<value_FRTC1>     FRTC(1) ",   "0.05              FRTC(2) ",
+                     "5.0                 FRTCINDX", "<value_FRTC1>     FRTC(1) ",   "0.05              FRTC(2) ",
                      "90.0              FRTC(3)", "0.1              FRTC(4) ", "0.1                 FRTC(5)",
                      "0.4               CFRTCN(1)", "0.25           CFRTCN(2)", "0.5                CFRTCW(1)",
                      "0.1               CFRTCW(2)", "200.0          BIOMAX", "5.0                   PRAMN(1,1)",
@@ -337,13 +337,14 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
 #' @import data.table
 #' @param schedule.file1_fname file, extracted from EQ data.table
 #' @param schedule.file2 file, extracted previously from EQ data.table
+#' @param tmp.dir character, temporary directory to write the schedule files to
 #' @export
 
-revise_eq_sch = function(schedule.file1_fname, schedule.file2) {
+revise_eq_sch = function(schedule.file1_fname, schedule.file2, tmp.dir) {
   # rewrite EQ files
-  schedule.file1 = fread(paste(args[1], schedule.file1_fname, sep = '/'), fill = TRUE)
-  # 85 years (2016 - 2099)
-  position       = schedule.file1[V1 == 85, which = TRUE]
+  schedule.file1 = fread(schedule.file1_fname, fill = TRUE, header = FALSE)
+  # 84 years (2016 - 2099)
+  position       = schedule.file1[V1 == 84, which = TRUE]
   position       = position[length(position)]
   schedule.file1 = schedule.file1[1:position,]
   # replace values
@@ -358,6 +359,10 @@ revise_eq_sch = function(schedule.file1_fname, schedule.file2) {
     schedule.file1[7, V1 := gsub('-1', 370L, V1)]
     newrow         = data.table(V1 = 2016L, V2 = 2100L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
     schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
+  } else {
+    schedule.file1[7, V1 := gsub('-1', 1L, V1)]
+    newrow         = data.table(V1 = 2016L, V2 = 2100L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
+    schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
   }
   schedule.file1 = schedule.file1[-17,]
   schedule.file1[20, V1 := gsub('10000', 2099L, V1)]
@@ -368,7 +373,7 @@ revise_eq_sch = function(schedule.file1_fname, schedule.file2) {
   endrow         = data.table(V1 = -999L, V2 = -999L, V3 = 'X', V4 = '', V5 = '')
   schedule.file1 = rbind(schedule.file1, endrow)
   # read in seq2 sch file
-  schedule.file2 = fread(paste(args[1], schedule.file2, sep = '/'), fill = TRUE)
+  schedule.file2 = fread(schedule.file2, fill = TRUE, header = FALSE)
   schedule.file2 = schedule.file2[18:nrow(schedule.file2),]
   schedule.file2[1, V1 := gsub('1', 2L, V1)]
   schedule.file2[2, V1 := gsub('1', 2100L, V1)]
