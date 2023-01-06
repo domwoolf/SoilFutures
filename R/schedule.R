@@ -288,11 +288,10 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   pre.crop.cult       = 1L
 
   # read in schedule template from file
-  crop.index          = match(.crop, pkg.env$crop_types)
   cell_schedule_f     = schedule_table[scenario       %in% .scenario &
                                          N_or_S       %in% crop_hemi &
                                          irr          %in% .irr      &
-                                         get(.crop)   %in% crop.index ]
+                                         get(.crop)        ==   1]
   cell_schedule_f[, schedule := gsub('<fname>',        paste(cell_sch_data[,gridid],cell_sch_data[,run_seq],'site.100', sep = '_'), schedule)]
   cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
   cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
