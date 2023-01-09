@@ -29,7 +29,7 @@ create_crop = function(cell_data, cell, cover_crop = copy(cover_crop_template), 
                          "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
                          "<value_PPDF3>     PPDF(3)",    "<value_PPDF4>     PPDF(4)",
                          "0.0               BIOFLG",     "1800.0            BIOK5",       "<value_PLTMRF>               PLTMRF",
-                         "150.0             FULCAN",     "5.0                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
+                         "150.0             FULCAN",     "7.0                 FRTCINDX",    "<value_FRTC1>               FRTC(1)",
                          "0.1               FRTC(2)",    "90.0              FRTC(3)",     "0.1               FRTC(4)",
                          "0.1               FRTC(5)",    "0.3               CFRTCN(1)",   "0.25              CFRTCN(2)",
                          "0.5               CFRTCW(1)",  "0.1               CFRTCW(2)",   "700.0             BIOMAX",
@@ -78,7 +78,7 @@ create_crop = function(cell_data, cell, cover_crop = copy(cover_crop_template), 
                      "<value_RUETB>     RUETB",  "<value_PPDF1>     PPDF(1)",    "<value_PPDF2>     PPDF(2)",
                      "<value_PPDF3>     PPDF(3)","<value_PPDF4>     PPDF(4)",    "0.0               BIOFLG",
                      "1800.0            BIOK5",  "<value_PLTMRF>    PLTMRF",     "150.0             FULCAN",
-                     "5.0                 FRTCINDX", "<value_FRTC1>     FRTC(1) ",   "0.05              FRTC(2) ",
+                     "7.0               FRTCINDX", "<value_FRTC1>     FRTC(1) ",   "0.05              FRTC(2) ",
                      "90.0              FRTC(3)", "0.1              FRTC(4) ", "0.1                 FRTC(5)",
                      "0.4               CFRTCN(1)", "0.25           CFRTCN(2)", "0.5                CFRTCW(1)",
                      "0.1               CFRTCW(2)", "200.0          BIOMAX", "5.0                   PRAMN(1,1)",
@@ -283,11 +283,10 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
 
   # event doy
   pre.harv.cult       = 14
-  post.harv.cult      = 30
+  post.harv.cult      = 14 # changed all to accommodate for winter wheat; consistent with pre harvest
   post.harv.cc.cult   = 1L
   pre.crop.cult       = 1L
 
-  # read in schedule template from file
   cell_schedule_f     = schedule_table[scenario       %in% .scenario &
                                          N_or_S       %in% crop_hemi &
                                          irr          %in% .irr      &
