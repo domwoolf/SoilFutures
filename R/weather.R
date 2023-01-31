@@ -183,7 +183,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
 
   # File 1 | Annual weather statistics using daily means and total annual pr, five-year intervals
   # annual weather statistics, five-year intervals
-  w_daily   = copy(w)
+  w_daily   = copy(w) # CHANGE
     # estimate annual daily values
   w_daily[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
   w_mean.sd  = w_daily[, .( # mean, sd for every block
@@ -206,7 +206,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   setcolorder(w_sum, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_sum = w_sum[, c(-5:-13)]
     # estimate total annual precipitation
-  w_yearly  = copy(w)
+  w_yearly  = copy(w) # CHANGE
   w_yearly[, sum_pr := sum(pr), by = y]
   w_yearly[, ("y_block") := lapply(.SD, make_blocks2), .SDcols = "y"]
   w_yearly.mean.sd  = w_yearly[, .( # mean, sd for every block
@@ -223,7 +223,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   setcolorder(w_sum.yr, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_sum.yr = w_sum.yr[, c(-1:-13)]
     # bind tables
-  w_sum    = cbind(w_sum, w_sum.yr)
+  w_sum    = cbind(w_sum, w_sum.yr) # SEE IF THIS CAN BE AVOIDED
     # annual weather statistics, simulation period
     # estimate annual daily values
   w_mean.sd_ann  = w_daily[, .( # mean, sd
@@ -260,6 +260,7 @@ make_weather_stats = function(weather_fname, .gridid, .ssp, .gcm, .plant_date, .
   setcolorder(w_sum.yr_ann, c('gridid', 'y_block', 'gcm', 'ssp'))
   w_sum.yr_ann     = w_sum.yr_ann[, c(-1:-22)]
     # bind tables
+    # SEE IF THIS CAN BE AVOIDED
   w_sum_ann    = cbind(w_sum_ann, w_sum.yr_ann)
   w_sum        = rbind(w_sum, w_sum_ann)
     # save
