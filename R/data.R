@@ -76,7 +76,7 @@
 #' Extended site files identified a priori based on land use cohort selection criteria
 #' for simulations.
 #'
-#' @format ## `eq_pnh_template`
+#' @format ## `eq_pnh_sch_template`
 #' A data frame with 1971 rows and 2 columns:
 #' \describe{
 #'   \item{schl_name}{Schedule File Name}
@@ -92,7 +92,7 @@
 #' Extended site files identified a priori based on land use cohort selection criteria
 #' for simulations.
 #'
-#' @format ## `eq_psh_template`
+#' @format ## `eq_psh_sch_template`
 #' A data frame with 1970 rows and 2 columns:
 #' \describe{
 #'   \item{schl_name}{Schedule File Name}

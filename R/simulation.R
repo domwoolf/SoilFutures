@@ -278,25 +278,39 @@ results_processing = function(.lis_fname, .gridid, .scenario, .crop, .irr, .ssp,
   file.rename('nflux.out', paste0('nflux_', .lis_fname, '.out'))
   file.rename('harvest.csv', paste0('harvest_', .lis_fname, '.csv'))
 
-  harvest.csv  = fread(paste0('harvest_', .lis_fname, '.csv'))
-  harvest.csv  = harvest.csv[, c(1:9, 28:29, 32, 33, 39:40)]
-  harvest.csv[, gridid := .gridid][, scenario := .scenario][, irr := .irr][, ssp := .ssp][, gcm := .gcm]
-  setcolorder(harvest.csv, c('gridid', 'scenario', 'irr', 'ssp', 'gcm'))
-  harvest.csv[, time := floor(time)]
+  # check for rewild, adjust harvest.csv
 
-  year_sum.out = fread(paste0('year_summary_', lis_fname, '.out'))
+  if(.scenario %in% 'rewild') {
+    harvest.csv  = fread(paste0('harvest_', .lis_fname, '.csv'))
+    add.df = data.table(matrix(NA, nrow = 85, ncol = 82))
+    names(add.df) = names(add.csv)
+    harvest.csv = rbind(harvest.csv, add.df)
+    harvest.csv[, time := 2016:2100]
+    harvest.csv  = harvest.csv[, c(1:9, 28:29, 32, 33, 39:40)]
+    harvest.csv[, gridid := .gridid][, scenario := .scenario][, irr := .irr][, ssp := .ssp][, gcm := .gcm]
+    setcolorder(harvest.csv, c('gridid', 'scenario', 'irr', 'ssp', 'gcm'))
+    harvest.csv[, time := floor(time)]
+  } else {
+    harvest.csv  = fread(paste0('harvest_', .lis_fname, '.csv'))
+    harvest.csv  = harvest.csv[, c(1:9, 28:29, 32, 33, 39:40)]
+    harvest.csv[, gridid := .gridid][, scenario := .scenario][, irr := .irr][, ssp := .ssp][, gcm := .gcm]
+    setcolorder(harvest.csv, c('gridid', 'scenario', 'irr', 'ssp', 'gcm'))
+    harvest.csv[, time := floor(time)]
+  }
+
+  year_sum.out = fread(paste0('year_summary_', .lis_fname, '.out'))
   year_sum.out[, gridid := .gridid][, scenario := .scenario][, irr := .irr][, ssp := .ssp][, gcm := .gcm]
   setcolorder(year_sum.out, c('gridid', 'scenario', 'irr', 'ssp', 'gcm'))
   year_sum.out[, time := floor(time)]
 
-  lis.file     = fread(paste0(lis_fname, '.lis'),
+  lis.file     = fread(paste0(.lis_fname, '.lis'),
                        skip = "time",
                        blank.lines.skip = TRUE)
   lis.file[, gridid := .gridid][, scenario := .scenario][, irr := .irr][, ssp := .ssp][, gcm := .gcm]
   setcolorder(lis.file, c('gridid', 'scenario', 'irr', 'ssp', 'gcm'))
   lis.file     = lis.file[time != 2101, ]
 
-  nflux.out    = fread(paste0('nflux_', lis_fname, '.out'))
+  nflux.out    = fread(paste0('nflux_', .lis_fname, '.out'))
   nflux.out    = nflux.out[, -5:-9]
   nflux.out[, gridid := .gridid][, scenario := .scenario][, irr := .irr][, ssp := .ssp][, gcm := .gcm]
   nflux.out[, time := floor(time)]
