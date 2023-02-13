@@ -13,7 +13,6 @@
 #' }
 #' @source NASA, Bridget Thrasher.
 "cmip6_calendars"
-
 #'
 #' Cover Crop Template.
 #'
@@ -28,7 +27,6 @@
 #' }
 #' @source Colorado State University, Yi Yang.
 "cover_crop_template"
-
 #'
 #' Schedule Template.
 #'
@@ -50,7 +48,6 @@
 #' }
 #' @source Cornell University, S.C. McClelland
 "schedule_template"
-
 #'
 #' Extended site.100 files.
 #'
@@ -72,7 +69,6 @@
 #' }
 #' @source Colorado State University, Yi Yang.
 "cell_data_site"
-
 #'
 #' Northern Hemisphere Rewild Schedule Files.
 #'
@@ -89,7 +85,6 @@
 #' }
 #' @source Colorado State University, Yi Yang. Cornell University, S.C. McClelland.
 "eq_pnh_sch_template"
-
 #'
 #' Southern Hemisphere Rewild Schedule Files.
 #'

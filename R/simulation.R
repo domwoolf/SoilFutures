@@ -14,7 +14,6 @@
 #' @param .irr integer, binary value of irrigation level
 #' @param .scenario character, scenario of row in data.table
 #' @export
-
 pr_sim_run = function(.row, .gridid, .ssp, .gcm, .crop, .irr, .scenario) {
   row_to_return = paste0(
       'Running row ',
@@ -35,7 +34,6 @@ pr_sim_run = function(.row, .gridid, .ssp, .gcm, .crop, .irr, .scenario) {
     )
   print(row_to_return)
 }
-
 #' Change weather file name
 #'
 #' Determines if weather file should be removed and new weather file added based on contents
@@ -67,7 +65,6 @@ wthfile_exists_wfname = function(.gridid, .ssp, .gcm, .p_gridid, .p_ssp, .p_gcm,
   }
   return(w_fname)
 }
-
 #' Change weather file path
 #'
 #' Determines if new weather path created added based on contents of simulation data.table.
@@ -78,7 +75,6 @@ wthfile_exists_wfname = function(.gridid, .ssp, .gcm, .p_gridid, .p_ssp, .p_gcm,
 #' @param .p_gcm character, gcm of previous row
 #' @param .grab_wpath character, directory with weather file
 #' @export
-
 name_of_wpath = function(w_fname, .grab_wpath, .p_gridid, .p_ssp, .p_gcm) {
   if((.gridid != .p_gridid) |
      (.ssp != .p_ssp) |
@@ -92,7 +88,6 @@ name_of_wpath = function(w_fname, .grab_wpath, .p_gridid, .p_ssp, .p_gcm) {
   }
   return(w_fname.path)
 }
-
 #' Check if weather file exists in directory
 #'
 #' Checks the weather directory specified for the existence of weather file. If the file
@@ -108,7 +103,6 @@ name_of_wpath = function(w_fname, .grab_wpath, .p_gridid, .p_ssp, .p_gcm) {
 #' @param .grab_wth_path character, directory to write wth file to
 #' @param .argsgcm.ssp character, second argument defined in bash script
 #' @export
-
 wthfile_exists_wpath = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gridid_rotated,
                                 .ssp, .gcm, .grab_wth_path, .argsgcm.ssp) {
   if (!file.exists(w_fname.path)) {
@@ -137,7 +131,6 @@ wthfile_exists_wpath = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gri
     )
   }
 }
-
 #' Check for bad weather file
 #'
 #' This function checks if the weather file has less than the required 7 columns
@@ -149,7 +142,6 @@ wthfile_exists_wpath = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gri
 #' @param .ssp character, ssp of row in data.table
 #' @param .gcm character, gcm of row in data.table
 #' @export
-
 bad_wth_check = function(.w_fname, .row, .gridid, .ssp, .gcm) {
   wth.cols = fread(.w_fname)
   if (NCOL(wth.cols) != 7) {
@@ -170,7 +162,6 @@ bad_wth_check = function(.w_fname, .row, .gridid, .ssp, .gcm) {
     next
   }
 }
-
 #' Check crop.100 file
 #'
 #' Rewrite the crop.100 if it does not match the gridid and crop in the simulation row
@@ -184,7 +175,6 @@ bad_wth_check = function(.w_fname, .row, .gridid, .ssp, .gcm) {
 #' @param .arg_rowstart integer, fifth argument giving start row of simulation
 #' @param .arg_endrow integer, sixth argument giving end row of simulation
 #' @export
-
 write_new_crop100 = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .argsgcm.ssp,
                              .arg_rowstart, .arg_rowend) {
   if (.gridid != .p_gridid |
@@ -200,7 +190,6 @@ write_new_crop100 = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .argsg
     )
   }
 }
-
 #' Check omad.100 file
 #'
 #' Rewrite the omad.100 if it does not match the gridid in the simulation row
@@ -212,7 +201,6 @@ write_new_crop100 = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .argsg
 #' @param .arg_rowstart integer, fifth argument giving start row of simulation
 #' @param .arg_endrow integer, sixth argument giving end row of simulation
 #' @export
-
 write_new_omad100 = function(.gridid, .p_gridid, .simrow, .argsgcm.ssp,
                              .arg_rowstart, .arg_rowend) {
   if (.gridid != .p_gridid) {
@@ -222,7 +210,6 @@ write_new_omad100 = function(.gridid, .p_gridid, .simrow, .argsgcm.ssp,
                 paste0(.argsgcm.ssp, '/', .arg_rowstart, '-', .arg_rowend))
   }
 }
-
 #' Check site.100 file
 #'
 #' Rewrite the site.100 if it does not match the gridid, crop, irr in the simulation row
@@ -239,7 +226,6 @@ write_new_omad100 = function(.gridid, .p_gridid, .simrow, .argsgcm.ssp,
 #' @param .arg_endrow integer, sixth argument giving end row of simulation
 #' @param sitefile character, current site.100 file
 #' @export
-
 write_new_site100 = function(.gridid, .p_gridid, .crop, .p_crop, .irr, .p_irr,
                              .run_seq, .argsgcm.ssp, .arg_rowstart, .arg_rowend,
                              sitefile) {
@@ -258,7 +244,6 @@ write_new_site100 = function(.gridid, .p_gridid, .crop, .p_crop, .irr, .p_irr,
   }
   return(sitefile)
 }
-
 #' Prepare DayCent output for pre-processing
 #'
 #' Reformat DayCent output and save results to two tables: annual results, growing season results
@@ -280,7 +265,6 @@ write_new_site100 = function(.gridid, .p_gridid, .crop, .p_crop, .irr, .p_irr,
 #' @param .out_tbl_fname character, name of annual results file
 #' @param .out_gr_tbl_fname character, name of growing, non-growing season results file
 #' @export
-
 results_processing = function(.lis_fname, .gridid, .scenario, .crop, .irr, .ssp, .gcm,
                               .plant_date, .harv_date, .clim_ipcc, .argsgcm.ssp, .main_out_path,
                               .arg_rowstart, .arg_endrow, .out_tbl_fname, .out_gr_tbl_fname) {
@@ -469,7 +453,6 @@ results_processing = function(.lis_fname, .gridid, .scenario, .crop, .irr, .ssp,
     append = TRUE
   )
 }
-
 #' Track simulation times
 #'
 #' Write row run time to a log file to track length of each simulation
@@ -486,7 +469,6 @@ results_processing = function(.lis_fname, .gridid, .scenario, .crop, .irr, .ssp,
 #' @param .scenario character, scenario associated with row in data.table
 #' @param .log.file character, name of log file to write to
 #' @export
-
 sim_time_logf = function(.row, .old, .end.daycent, .start.daycent, .gridid, .gcm,
                          .ssp, .crop, .irr, .scenario, .log.file) {
   if(.row %% 50 == 1) {
@@ -501,5 +483,4 @@ sim_time_logf = function(.row, .old, .end.daycent, .start.daycent, .gridid, .gcm
                        'Daycent elapsed:', dcent.elp, '.')
     write(line, .log.file, append = TRUE)
   }
-
 }
