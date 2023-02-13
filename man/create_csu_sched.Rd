@@ -13,6 +13,7 @@ create_csu_sched(
   .crop,
   .scenario,
   .irr,
+  .site_fname,
   start_year,
   end_year,
   weather_fname,
@@ -30,11 +31,13 @@ create_csu_sched(
 
 \item{.gcm}{character, specifies scenario}
 
-\item{.crop}{character, one of 'maiz', 'wwheat', 'swheat', 'soy'}
+\item{.crop}{character, one of 'maiz', 'wwheat', 'swheat', 'soyb'}
 
 \item{.scenario}{character, specifies scenario}
 
 \item{.irr}{binary, specifies irrigation level}
+
+\item{.site_fname}{character, name of site.100 file}
 
 \item{end_year}{integer, specifies end year of simulation}
 

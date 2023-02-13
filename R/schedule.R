@@ -21,7 +21,7 @@ create_crop = function(cell_data, cell, cover_crop = copy(cover_crop_template), 
                                                       PPDF2, PPDF3, PPDF4, PLTMRF, FRTC1, DDBASE,
                                                       KLIGHT, SLA, DDLAIMX, HIMAX, SNFXMX1, RTDTMP,
                                                       LEAFMX, DDEMERG, DDPPSTART, DDPPEND, PPCRITICAL,
-                                                      PPSNST)])
+                                                      PPSNST, FRTC3, MNDDHRV)])
 
   # create parameter vectors
   if (cell_crop_data[, crop] %in% 'maiz') {
@@ -170,7 +170,52 @@ create_crop = function(cell_data, cell, cover_crop = copy(cover_crop_template), 
                      "0.0               CSTGEUPF(3)", "0             CSTGDYS", "1.0                CSTGA2DRAT")
   } else {
     # swheat params
-    # param.vector = c()
+    param.vector = c('<value_crop>      <crop_name>', '<value_RUETB>     RUETB', '<value_PPDF1>     PPDF(1)',
+                     '<value_PPDF2>     PPDF(2)', '<value_PPDF3>         PPDF(3)', '<value_PPDF4>   PPDF(4)',
+                     '0.0               BIOFLG', '1800.0                 BIOK5', '<value_PLTMRF>    PLTMRF',
+                     '150.0             FULCAN', '5.0                    FRTCINDX', '<value_FRTC1>  FRTC(1)',
+                     '0.1               FRTC(2)', '<value_FRTC3>         FRTC(3)   ', '0.1          FRTC(4)',
+                     '0.1               FRTC(5)', '0.4                   CFRTCN(1)', '0.25          CFRTCN(2)',
+                     '0.4               CFRTCW(1)', '0.1                 CFRTCW(2)', '300.0         BIOMAX',
+                     '20.0              PRAMN(1,1)', '100.0              PRAMN(2,1)', '100.0        PRAMN(3,1)',
+                     '50.0              PRAMN(1,2)', '160.0              PRAMN(2,2)', '200.0        PRAMN(3,2)',
+                     '40.0              PRAMX(1,1)', '200.0              PRAMX(2,1)', '230.0        PRAMX(3,1)',
+                     '120.0             PRAMX(1,2)', '260.0              PRAMX(2,2)', '270.0        PRAMX(3,2)',
+                     '45.0              PRBMN(1,1)', '390.0              PRBMN(2,1)', '340.0        PRBMN(3,1)',
+                     '0.0               PRBMN(1,2)', '0.0                PRBMN(2,2)', '0.0          PRBMN(3,2)',
+                     '60.0              PRBMX(1,1)', '420.0              PRBMX(2,1)', '420.0        PRBMX(3,1)',
+                     '0.0               PRBMX(1,2)', '0.0                PRBMX(2,2)', '0.0          PRBMX(3,2)',
+                     '0.15              FLIGNI(1,1)', '0.0               FLIGNI(2,1)', '0.06        FLIGNI(1,2)',
+                     '0.0               FLIGNI(2,2)', '0.06              FLIGNI(1,3)', '0.0         FLIGNI(2,3)',
+                     '<value_HIMAX>     HIMAX', '0.5                     HIWSF', '1.0               HIMON(1)',
+                     '0.0               HIMON(2)', '0.65                 EFRGRN(1)', '0.6           EFRGRN(2)',
+                     '0.6               EFRGRN(3)', '0.04                VLOSSP', '0.0              FSDETH(1)',
+                     '0.0               FSDETH(2)', '0.0                 FSDETH(3)', '200.0         FSDETH(4)',
+                     '0.12              FALLRT', '0.05                   RDRJ', '0.05               RDRM',
+                     '0.14              RDSRFC', '2.0                    RTDTMP', '0.0              CRPRTF(1)',
+                     '0.0               CRPRTF(2)', '0.0                 CRPRTF(3)', '0.05          MRTFRAC',
+                     '0.0               SNFXMX(1)', '-27.0               DEL13C', '1.3              CO2IPR(1)', '0.77              CO2ITR(1)',
+                     '1.0               CO2ICE(1,1,1)', '1.0             CO2ICE(1,1,2)', '1.0       CO2ICE(1,1,3)',
+                     '1.3               CO2ICE(1,2,1)', '1.0             CO2ICE(1,2,2)', '1.0       CO2ICE(1,2,3)',
+                     '1.0               CO2IRS(1)', '0.1                 CKMRSPMX(1)', '0.15        CKMRSPMX(2)',
+                     '0.05              CKMRSPMX(3)', '0.0               CMRSPNPP(1)', '0.0         CMRSPNPP(2)',
+                     '1.25              CMRSPNPP(3)', '1.0               CMRSPNPP(4)', '4.0         CMRSPNPP(5)',
+                     '1.5               CMRSPNPP(6)', '0.23              CGRESP(1)', '0.23          CGRESP(2)',
+                     '0.23              CGRESP(3)', '0.25                NO3PREF(1)',
+                     '6.0               CLAYPG', '0.5                    CMIX',
+                     '10.0              TMPGERM', '<value_DDBASE>        DDBASE', '-5.0             TMPKILL',
+                     '5                 BASETEMP', '30                   BASETEMP(2)', '-1	       BASETEMP(3)',
+                     '-1	              BASETEMP(4)', '<value_MNDDHRV>    MNDDHRV', '20              MXDDHRV',
+                     '120.0             CURGDYS', '0.5                   CLSGRES', '0.12            CMXTURN',
+                     '1.0               NPP2CS(1)', '2.0                 CAFUE', '0.9               EMAX',
+                     '1.15              KCET', '<value_KLIGHT>           KLIGHT', '<value_SLA>      SLA',
+                     '0.9               LEAFCL', '0.9                    LEAFEMERG', '0.25          LEAFMX',
+                     '0.02              LEAFPM', '<value_DDEMERG>        DDEMERG', '<value_DDLAIMX> DDLAIMX',
+                     '-1                DDPPSTART', '-1                  DDPPEND', '-1              PPTYPE',
+                     '-1                PPCRITICAL', '-1                 PPSNST', '-1               VERNALSNST',
+                     '0.0               LUXEUPF(1) ', '0.0               LUXEUPF(2)', '0.0          LUXEUPF(3)',
+                     '0.0               CSTGEUPF(1)', '0.0               CSTGEUPF(2)', '0.0         CSTGEUPF(3)',
+                     '0                 CSTGDYS', '1.0                   CSTGA2DRAT')
   }
    # create crop.100 DT, replace values
   # add index matching for crop type
@@ -197,6 +242,8 @@ create_crop = function(cell_data, cell, cover_crop = copy(cover_crop_template), 
   crop.100[, crop.100 := gsub('<value_PPCRITICAL>', cell_crop_data[,PPCRITICAL],crop.100)]
   crop.100[, crop.100 := gsub('<value_PPSNST>',     cell_crop_data[,PPSNST],    crop.100)]
   crop.100[, crop.100 := gsub('<value_SNFXMX1>',    cell_crop_data[,SNFXMX1],   crop.100)]
+  crop.100[, crop.100 := gsub('<value_FRTC3>',      cell_crop_data[,FRTC3],     crop.100)]
+  crop.100[, crop.100 := gsub('<value_MNDDHRV>',    cell_crop_data[,MNDDHRV],   crop.100)]
 
 
   # read in cover_crop.100 to append to C6_00s for gridid
@@ -261,6 +308,7 @@ create_omad = function(cell_data = cell_data, cell, tmp.dir){
 #' @param .crop character, one of 'maiz', 'wwheat', 'swheat', 'soyb'
 #' @param .scenario character, specifies scenario
 #' @param .irr binary, specifies irrigation level
+#' @param .site_fname character, name of site.100 file
 #' @param start_yr integer, specifies start year of simulation
 #' @param end_year integer, specifies end year of simulation
 #' @param weather_fname name of input weather file
@@ -268,7 +316,8 @@ create_omad = function(cell_data = cell_data, cell, tmp.dir){
 
 #' @returns invisibly returns boolean indicating whether file was written successfully.
 #' @export
-create_csu_sched = function(cell_data, schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario, .irr, start_year, end_year, weather_fname, tmp.dir) {
+create_csu_sched = function(cell_data, schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario,
+                            .irr, .site_fname, start_year, end_year, weather_fname, tmp.dir) {
   # variable definition
   cell_sch_data       = cell_data
   schedule_path       = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
@@ -291,7 +340,7 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
                                          N_or_S       %in% crop_hemi &
                                          irr          %in% .irr      &
                                          get(.crop)        ==   1]
-  cell_schedule_f[, schedule := gsub('<fname>',        paste(cell_sch_data[,gridid],cell_sch_data[,run_seq],'site.100', sep = '_'), schedule)]
+  cell_schedule_f[, schedule := gsub('<fname>',        .site_fname,     schedule)]
   cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
   cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
   cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
@@ -337,63 +386,47 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   return(schedule_filename)
   }
 
-#' Create a revised equilibrium schedule file
+#' Create an equilibrium schedule file from a template
 #'
 #' Used for revising EQ schedule file for simulation.
 #'
-#' This function creates a universal equilibrium schedule file combining both sequences for a grid cell based on a land use ID.
+#' This function creates a universal equilibrium schedule file for a grid cell based on a land use ID.
 #'
 #' @import data.table
-#' @param schedule.file1_fname file, extracted from EQ data.table
-#' @param schedule.file2 file, extracted previously from EQ data.table
+#' @param cell_data multiple row data.table providing input data for the simulation.
+#' @param eq_pnh_template data.table providing template of schedule file for pnh land use.
+#' @param eq_psh_template data.table providing template of schedule file for psh land use.
+#' @param .ssp character, specifies scenario
+#' @param .site_fname character, name of site.100 file
+#' @param .eqtype character, either pnh or psh followed by land use (lu) number
+#' @param weather_fname character, weather file name
 #' @param tmp.dir character, temporary directory to write the schedule files to
 #' @export
 
-revise_eq_sch = function(schedule.file1_fname, schedule.file2, tmp.dir) {
-  # rewrite EQ files
-  schedule.file1 = fread(schedule.file1_fname, fill = TRUE, header = FALSE)
-  # 84 years (2016 - 2099)
-  position       = schedule.file1[V1 == 84, which = TRUE]
-  position       = position[length(position)]
-  schedule.file1 = schedule.file1[1:position,]
-  # replace values
-  schedule.file1[1, V1 := gsub('1', 2016L, V1)]
-  schedule.file1[2, V1 := gsub('10000', 2100L, V1)]
-  schedule.file1[3, V1 := gsub('site.100', site.file, V1)]
-  if (cell_data_subset[row, ssp] %in% 'ssp126') {
-    schedule.file1[7, V1 := gsub('-1', 126L, V1)]
-    newrow         = data.table(V1 = 2016L, V2 = 2100L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
-    schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
-  } else if (cell_data_subset[row, ssp] %in% 'ssp370') {
-    schedule.file1[7, V1 := gsub('-1', 370L, V1)]
-    newrow         = data.table(V1 = 2016L, V2 = 2100L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
-    schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
+create_eq_sch   = function(cell_data, eq_pnh_template = copy(eq_pnh_sch_template), eq_psh_template = copy(eq_psh_sch_template),
+                           .ssp, .site_fname, .eqtype, weather_fname, tmp.dir) {
+  schedule_path = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
+  # split .eqtype here
+  if (eqheader %in% 'pnh') {
+    eq_fname   = cell_data[1, paste(.eqtype, '.sch', sep = "")]
+    eq_sch_f   = eq_pnh_template[schl_name %in% .eqtype]
+    eq_sch_f[, schl_data := gsub('<fname>',        .site_fname,     schl_data)]
+    eq_sch_f[, schl_data := gsub('<weather_file>', weather_fname,   schl_data)]
+    ifelse(.ssp %in% 'historical',
+           eq_sch_f[, schl_data := gsub('<co2_option>', 1L, schl_data)],
+           eq_sch_f[, schl_data := gsub('<co2_option>', gsub('ssp','',.ssp), schl_data)])
+    fwrite(list(eq_sch_f[, schl_data]), paste(schedule_path, '/',eq_fname, sep = ''), quote = FALSE, col.names = FALSE)
+    return(eq_fname)
   } else {
-    schedule.file1[7, V1 := gsub('-1', 1L, V1)]
-    newrow         = data.table(V1 = 2016L, V2 = 2100L, V3 = 'co2tm(1)', V4 = 'and', V5 = 'co2tm(2)')
-    schedule.file1 = rbind(schedule.file1[1:7,], newrow, schedule.file1[8:nrow(schedule.file1)])
+    eq_fname   = cell_data[1, paste(.eqtype, '.sch', sep = "")]
+    eq_sch_f   = eq_psh_template[schl_name %in% .eqtype]
+    eq_sch_f[, schl_data := gsub('<fname>',        .site_fname,     schl_data)]
+    eq_sch_f[, schl_data := gsub('<weather_file>', weather_fname,   schl_data)]
+    ifelse(.ssp %in% 'historical',
+           eq_sch_f[, schl_data := gsub('<co2_option>', 1L, schl_data)],
+           eq_sch_f[, schl_data := gsub('<co2_option>', gsub('ssp','',.ssp), schl_data)])
+    fwrite(list(eq_sch_f[, schl_data]), paste(schedule_path, '/',eq_fname, sep = ''), quote = FALSE, col.names = FALSE)
+    return(eq_fname)
   }
-  schedule.file1 = schedule.file1[-17,]
-  schedule.file1[20, V1 := gsub('10000', 2099L, V1)]
-  schedule.file1[21, V1 := gsub('150', 85L, V1)]
-  schedule.file1[22, V1 := gsub('1', 2016L, V1)]
-  schedule.file1[24, V1 := gsub('100', 1L, V1)]
-  schedule.file1[26, V1 := gsub('site.wth', w_fname, V1)]
-  endrow         = data.table(V1 = -999L, V2 = -999L, V3 = 'X', V4 = '', V5 = '')
-  schedule.file1 = rbind(schedule.file1, endrow)
-  # read in seq2 sch file
-  schedule.file2 = fread(schedule.file2, fill = TRUE, header = FALSE)
-  schedule.file2 = schedule.file2[18:nrow(schedule.file2),]
-  schedule.file2[1, V1 := gsub('1', 2L, V1)]
-  schedule.file2[2, V1 := gsub('1', 2100L, V1)]
-  schedule.file2[4, V1 := gsub('1', 2100L, V1)]
-  schedule.file2[7, V1 := gsub('F', 'C', V1)]
-  schedule.file2 = schedule.file2[-8,]
-  # bind tables
-  schedule.file1 = rbind(schedule.file1, schedule.file2)
-  # save
-  fwrite(schedule.file1, paste(pkg.env$tmp_path, tmp.dir, schedule.file1_fname, sep = '/'),
-         quote = FALSE, sep = ' ', col.names = FALSE)
-  return(schedule.file1)
 }
 

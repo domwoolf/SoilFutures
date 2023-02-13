@@ -4,12 +4,7 @@
 \alias{create_crop}
 \title{Create a crop.100 file}
 \usage{
-create_crop(
-  cell_data = .cell_data,
-  cell,
-  cover_crop = copy(cover_crop_template),
-  tmp.dir
-)
+create_crop(cell_data, cell, cover_crop = copy(cover_crop_template), tmp.dir)
 }
 \arguments{
 \item{cell_data}{multiple row data.table providing input data for the simulation.}

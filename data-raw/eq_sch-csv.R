@@ -1,6 +1,8 @@
-## code to prepare `EQ_extracted_sch.csv` dataset as .rda goes here
+## code to prepare rewild schedule template datasets as .rda goes here
 
 library(data.table)
-EQ_sch_data = fread('data-raw/EQ_extracted_sch.csv')
+eq_pnh_sch_template = fread('eq_sch_pnh-template.csv')
+eq_psh_sch_template = fread('eq_sch_psh-template.csv')
 
-usethis::use_data(EQ_sch_data, overwrite = TRUE)
+usethis::use_data(eq_pnh_sch_template, overwrite = TRUE)
+usethis::use_data(eq_psh_sch_template, overwrite = TRUE)
