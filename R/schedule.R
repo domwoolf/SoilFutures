@@ -404,7 +404,7 @@ create_eq_sch   = function(cell_data, eq_pnh_template = copy(eq_pnh_sch_template
                            .ssp, .site_fname, .eqtype, weather_fname, tmp.dir) {
   schedule_path = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
   # split .eqtype here
-  if (eqheader %like% 'pnh') {
+  if (.eqtype %like% 'pnh') {
     eq_fname   = cell_data[1, paste(.eqtype, '.sch', sep = "")]
     eq_sch_f   = eq_pnh_template[schl_name %in% .eqtype]
     eq_sch_f[, schl_data := gsub('<fname>',        .site_fname,     schl_data)]
