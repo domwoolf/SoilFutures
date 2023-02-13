@@ -70,12 +70,16 @@ wthfile_exists_wfname = function(.gridid, .ssp, .gcm, .p_gridid, .p_ssp, .p_gcm,
 #' Determines if new weather path created added based on contents of simulation data.table.
 #'
 #' @param w_fname character, name of weather file in tmp directory
+#' @param .gridid integer, gridid associated with row in data.table
 #' @param .p_gridid integer, gridid of previous row
+#' @param .ssp character, ssp of row in data.table
 #' @param .p_ssp character, ssp of previous row
+#' @param .gcm character, gcm of row in data.table
 #' @param .p_gcm character, gcm of previous row
 #' @param .grab_wpath character, directory with weather file
 #' @export
-name_of_wpath = function(w_fname, .grab_wpath, .p_gridid, .p_ssp, .p_gcm) {
+name_of_wpath = function(w_fname, .grab_wpath, .gridid, .p_gridid, .ssp,
+                         .p_ssp, .gcm, .p_gcm) {
   if((.gridid != .p_gridid) |
      (.ssp != .p_ssp) |
      (.gcm != .p_gcm)) {

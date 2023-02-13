@@ -289,7 +289,6 @@ create_omad = function(cell_data = cell_data, cell, tmp.dir){
     fwrite(omad.100, paste(pkg.env$tmp_path, tmp.dir,'omad.100', sep = '/'), quote = FALSE, col.names = FALSE)
     return(omad.100)
 }
-
 #' Create a DayCent Schedule file for CSU extended simulations
 #'
 #' Used for writing a schedule file based on spatial data and CSU spin-ups.
@@ -385,7 +384,6 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
   return(schedule_filename)
   }
-
 #' Create an equilibrium schedule file from a template
 #'
 #' Used for revising EQ schedule file for simulation.
@@ -402,12 +400,11 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
 #' @param weather_fname character, weather file name
 #' @param tmp.dir character, temporary directory to write the schedule files to
 #' @export
-
 create_eq_sch   = function(cell_data, eq_pnh_template = copy(eq_pnh_sch_template), eq_psh_template = copy(eq_psh_sch_template),
                            .ssp, .site_fname, .eqtype, weather_fname, tmp.dir) {
   schedule_path = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
   # split .eqtype here
-  if (eqheader %in% 'pnh') {
+  if (eqheader %like% 'pnh') {
     eq_fname   = cell_data[1, paste(.eqtype, '.sch', sep = "")]
     eq_sch_f   = eq_pnh_template[schl_name %in% .eqtype]
     eq_sch_f[, schl_data := gsub('<fname>',        .site_fname,     schl_data)]

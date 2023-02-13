@@ -4,16 +4,31 @@
 \alias{name_of_wpath}
 \title{Change weather file path}
 \usage{
-name_of_wpath(w_fname, .grab_wpath, .p_gridid, .p_ssp, .p_gcm)
+name_of_wpath(
+  w_fname,
+  .grab_wpath,
+  .gridid,
+  .p_gridid,
+  .ssp,
+  .p_ssp,
+  .gcm,
+  .p_gcm
+)
 }
 \arguments{
 \item{w_fname}{character, name of weather file in tmp directory}
 
 \item{.grab_wpath}{character, directory with weather file}
 
+\item{.gridid}{integer, gridid associated with row in data.table}
+
 \item{.p_gridid}{integer, gridid of previous row}
 
+\item{.ssp}{character, ssp of row in data.table}
+
 \item{.p_ssp}{character, ssp of previous row}
+
+\item{.gcm}{character, gcm of row in data.table}
 
 \item{.p_gcm}{character, gcm of previous row}
 }
