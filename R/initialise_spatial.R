@@ -70,7 +70,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
+  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
@@ -136,7 +136,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
+  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
@@ -202,7 +202,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
+  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
@@ -270,7 +270,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
+  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
