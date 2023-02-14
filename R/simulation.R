@@ -283,7 +283,7 @@ results_processing = function(.lis_fname, .gridid, .scenario, .crop, .irr, .ssp,
   if(.scenario %in% 'rewild') {
     harvest.csv  = fread(paste0('harvest_', .lis_fname, '.csv'))
     add.df = data.table(matrix(NA, nrow = 85, ncol = 82))
-    names(add.df) = names(add.csv)
+    names(add.df) = names(harvest.csv)
     harvest.csv = rbind(harvest.csv, add.df)
     harvest.csv[, time := 2016:2100]
     harvest.csv  = harvest.csv[, c(1:9, 28:29, 32, 33, 39:40)]
