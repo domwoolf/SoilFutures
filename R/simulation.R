@@ -85,7 +85,7 @@ name_of_wpath = function(.w_fname, .grab_wpath, .gridid, .p_gridid, .ssp,
      (.gcm != .p_gcm)) {
 
     w_fname.path = paste0(
-      grab_wth_path,
+      .grab_wpath,
       '/',
       .w_fname
     )
