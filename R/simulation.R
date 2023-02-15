@@ -109,7 +109,7 @@ name_of_wpath = function(.w_fname, .grab_wpath, .gridid, .p_gridid, .ssp,
 #' @export
 wthfile_exists_wpath = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gridid_rotated,
                                 .ssp, .gcm, .grab_wth_path, .argsgcm.ssp) {
-  if (!file.exists(w_fname.path)) {
+  if (!file.exists(.w_fname.path)) {
     initial_wth = initialize_weather(.start_yr[1], .end_yr[1])
     if (.gcm %in% 'historical') {
       list_climate = load_climate(.ssp,
