@@ -78,7 +78,7 @@ wthfile_exists_wfname = function(.gridid, .ssp, .gcm, .p_gridid, .p_ssp, .p_gcm,
 #' @param .p_gcm character, gcm of previous row
 #' @param .grab_wpath character, directory with weather file
 #' @export
-name_of_wpath = function(w_fname, .grab_wpath, .gridid, .p_gridid, .ssp,
+name_of_wpath = function(.w_fname, .grab_wpath, .gridid, .p_gridid, .ssp,
                          .p_ssp, .gcm, .p_gcm) {
   if((.gridid != .p_gridid) |
      (.ssp != .p_ssp) |
@@ -87,7 +87,7 @@ name_of_wpath = function(w_fname, .grab_wpath, .gridid, .p_gridid, .ssp,
     w_fname.path = paste0(
       grab_wth_path,
       '/',
-      w_fname
+      .w_fname
     )
   }
   return(w_fname.path)
