@@ -45,7 +45,7 @@ pr_sim_run = function(.row, .gridid, .ssp, .gcm, .crop, .irr, .scenario) {
 #' @param .p_gridid integer, gridid of previous row
 #' @param .p_ssp character, ssp of previous row
 #' @param .p_gcm character, gcm of previous row
-#' @param w_fname character, name of weather file in tmp directory
+#' @param .w_fname character, name of weather file in tmp directory
 #' @param arg.gcm character, third argument defined in bash script
 #' @param arg.ssp character, fourth argument defined in bash script
 #' @export
