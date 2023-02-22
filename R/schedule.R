@@ -351,8 +351,7 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   # create .sch block
   cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
   cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,    schedule)]
-  cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult),  schedule)]
-  cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+
   # DOY check for post-harv cult greater than 365
   if (harvest.date + post.harv.cult > 365L | harvest.date + post.harv.cc.cult > 365L) {
       cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', 365L, schedule)]
@@ -368,6 +367,7 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
   cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
   # IRIG events
   cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+
   # ccg and ccl scenarios
   # DOY check greater than 365
   if (harvest.date + 7 > 365L) {
@@ -376,8 +376,22 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
     cell_schedule_f[, schedule := gsub('<cc_plant_day>', (harvest.date + 7),                                                          schedule)]
   }
   ifelse(.scenario %in% 'ccg', cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'RYE', schedule)], cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'CLVC',                schedule)])
-  cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
-  cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
+  # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
+  if (plant.date <= 15L) {
+    # no cc
+    cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  plant.date - 7L,               schedule)]
+    cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+    # cc
+    cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - 8L),                    schedule)]
+    cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - 7L),                  schedule)]
+  } else {
+    # no cc
+    cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult),  schedule)]
+    cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+    # cc
+    cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
+    cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
+  }
   # remove 0 OMAD lines
   if(cell_sch_data[1, orgCN.ratio] == 0) cell_schedule_f = cell_schedule_f[!schedule %like% 'O_cell']
 
