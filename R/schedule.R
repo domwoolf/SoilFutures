@@ -354,7 +354,11 @@ create_csu_sched = function(cell_data, schedule_table = copy(schedule_template),
 
   # DOY check for post-harv cult greater than 365
   if (harvest.date + post.harv.cult > 365L | harvest.date + post.harv.cc.cult > 365L) {
+    if (.scenario %in% 'conv'| .scenario %in% 'res'| .scenario %in% 'ntill') {
       cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', 365L, schedule)]
+    } else {
+      cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cc.cult), schedule)]
+    }
   } else {
     if (.scenario %in% 'conv'| .scenario %in% 'res'| .scenario %in% 'ntill') {
       cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)]
