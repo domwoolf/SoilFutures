@@ -66,7 +66,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv','res','ntill','ccg','ccl','rewild'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ccg', 'ccl', 'ccg-ntill', 'ccl-ntill','rewild'))), by = irr]
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
@@ -132,7 +132,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv','res','ntill','ccg','ccl','rewild'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ccg', 'ccl', 'ccg-ntill', 'ccl-ntill','rewild'))), by = irr]
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
@@ -266,7 +266,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv','res','ntill','ccg','ccl','rewild'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ccg', 'ccl', 'ccg-ntill', 'ccl-ntill','rewild'))), by = irr]
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
@@ -312,7 +312,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   main_table     = main_table[eq.file.lookup, on = .(gridid = gridid, regionid = regionid)]
   main_table     = main_table[!is.na(gridid.rotated),]
 
-  fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_csu-13Feb23.csv", sep = "/")) #csv
-  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_csu-13Feb23.RData", sep = "/")) #rda
+  fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_covercrops-30May23.csv", sep = "/")) #csv
+  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_covercrops-30May23.RData", sep = "/")) #rda
   return(main_table)
 }

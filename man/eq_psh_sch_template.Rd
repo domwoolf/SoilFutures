@@ -5,7 +5,7 @@
 \alias{eq_psh_sch_template}
 \title{Southern Hemisphere Rewild Schedule Files.}
 \format{
-## `eq_psh_template`
+## `eq_psh_sch_template`
 A data frame with 1970 rows and 2 columns:
 \describe{
   \item{schl_name}{Schedule File Name}

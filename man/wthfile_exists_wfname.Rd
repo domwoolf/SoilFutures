@@ -29,11 +29,11 @@ wthfile_exists_wfname(
 
 \item{.p_gcm}{character, gcm of previous row}
 
+\item{.w_fname}{character, name of weather file in tmp directory}
+
 \item{arg.gcm}{character, third argument defined in bash script}
 
 \item{arg.ssp}{character, fourth argument defined in bash script}
-
-\item{w_fname}{character, name of weather file in tmp directory}
 }
 \description{
 Determines if weather file should be removed and new weather file added based on contents

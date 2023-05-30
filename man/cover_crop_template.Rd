@@ -6,7 +6,7 @@
 \title{Cover Crop Template.}
 \format{
 ## `cover_crop_template`
-A data frame with 11980 rows and 1 column:
+A data frame with 11982 rows and 1 column:
 \describe{
   \item{V1}{crop.100 parameters; start of crop indicated by crop code in all caps}
   ...

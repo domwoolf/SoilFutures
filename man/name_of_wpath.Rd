@@ -5,7 +5,7 @@
 \title{Change weather file path}
 \usage{
 name_of_wpath(
-  w_fname,
+  .w_fname,
   .grab_wpath,
   .gridid,
   .p_gridid,
@@ -16,8 +16,6 @@ name_of_wpath(
 )
 }
 \arguments{
-\item{w_fname}{character, name of weather file in tmp directory}
-
 \item{.grab_wpath}{character, directory with weather file}
 
 \item{.gridid}{integer, gridid associated with row in data.table}
@@ -31,6 +29,8 @@ name_of_wpath(
 \item{.gcm}{character, gcm of row in data.table}
 
 \item{.p_gcm}{character, gcm of previous row}
+
+\item{w_fname}{character, name of weather file in tmp directory}
 }
 \description{
 Determines if new weather path created added based on contents of simulation data.table.
