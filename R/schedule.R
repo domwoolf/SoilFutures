@@ -422,6 +422,9 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
   # replace 0's with cell_data harvest date
   GDD_harvest_dt[, (colnames(GDD_harvest_dt[,7:91])) := lapply(.SD, function(x)
     ifelse(x == 0, cell_sch_data[,harvest.date], x)), .SDcols = colnames(GDD_harvest_dt[,7:91])]
+  # replace NA's with cell_data harvest data
+  GDD_harvest_dt[, (colnames(GDD_harvest_dt[,7:91])) := lapply(.SD, function(x)
+    ifelse(is.na(x), cell_sch_data[,harvest.date], x)), .SDcols = colnames(GDD_harvest_dt[,7:91])]
   # cropping hemisphere (by planting and harvest date in Gregorian calendar)
   plant.date          = cell_sch_data[,plant.date]
   harvest_main        = cell_sch_data[,harvest.date]
