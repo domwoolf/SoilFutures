@@ -412,8 +412,9 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
   GDD_harvest_dt      = GDD_harvest_dt[gridid %in% .gridid & crop %in% .crop & irr %in% .irr
                                        & gcm %in% .gcm & ssp %in% .ssp,]
   # variable definition
-  harvest_dates       = colnames(GDD_harvest_dt[,7:91])
-  cult_post_harvest_dates = gsub('harvest_day_', 'cult_day_postharvest_', harvest_dates)
+  harvest_dates               = colnames(GDD_harvest_dt[,7:91])
+  cult_post_harvest_dates     = gsub('harvest_day_', 'cult_day_postharvest_', harvest_dates)
+  cultkill_post_harvest_dates = gsub('harvest_day_', 'cultkill_day_postharvest_', harvest_dates)
   cc_plant_dates      = gsub('harvest_day_', 'cc_plant_day_', harvest_dates)
   schedule_path       = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
   schedule_filename   = cell_sch_data[1, paste(.scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
@@ -464,6 +465,7 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
   for(h_date in harvest_dates) {
     cell_schedule_f[, schedule := gsub(h_date, GDD_harvest_dt[,get(h_date)], schedule)]
     cell_schedule_f[, schedule := gsub(cult_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult), schedule)]
+    cell_schedule_f[, schedule := gsub(cultkill_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult + 1L), schedule)]
     if (GDD_harvest_dt[,get(h_date)] + 7 > 365L) {
       cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], 365L, schedule)]
     } else {
