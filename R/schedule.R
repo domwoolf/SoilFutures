@@ -437,67 +437,133 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
   post.harv.cc.cult   = 1L
   pre.crop.cult       = 1L
 
-  cell_schedule_f     = schedule_table[scenario       %in% .scenario &
-                                         N_or_S       %in% crop_hemi &
-                                         irr          %in% .irr      &
-                                         get(.crop)        ==   1]
-  cell_schedule_f[, schedule := gsub('<fname>',        .site_fname,     schedule)]
-  cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
-  cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
-  cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
-  cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
-  cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,        schedule)]
+  if (harvest_main < 358) {
+    cell_schedule_f     = schedule_table[scenario       %in% .scenario &
+                                           N_or_S       %in% crop_hemi &
+                                           irr          %in% .irr      &
+                                           get(.crop)        ==   1    &
+                                           harv_error        ==   0]
+    cell_schedule_f[, schedule := gsub('<fname>',        .site_fname,     schedule)]
+    cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
+    cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
+    cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
+    cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
+    cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,        schedule)]
 
-  # co2 option
-  ifelse(.ssp %in% 'historical',
-         cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
-         cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
-  # nitrogen, residue
-  cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
-  cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
-  cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
-  # IRIG events
-  cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+    # co2 option
+    ifelse(.ssp %in% 'historical',
+           cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
+           cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
+    # nitrogen, residue
+    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
+    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
+    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+    # IRIG events
+    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
 
-  # create .sch block with dynamic GDD harvest dates
-  cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
-  counter = 1L
-  for(h_date in harvest_dates) {
-    cell_schedule_f[, schedule := gsub(h_date, GDD_harvest_dt[,get(h_date)], schedule)]
-    cell_schedule_f[, schedule := gsub(cult_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult), schedule)]
-    cell_schedule_f[, schedule := gsub(cultkill_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult + 1L), schedule)]
-    if (GDD_harvest_dt[,get(h_date)] + 7 > 365L) {
-      cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], 365L, schedule)]
-    } else {
-      cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], (GDD_harvest_dt[,get(h_date)] + 7), schedule)]
+    # create .sch block with dynamic GDD harvest dates
+    cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
+    counter = 1L
+    for(h_date in harvest_dates) {
+      cell_schedule_f[, schedule := gsub(h_date, GDD_harvest_dt[,get(h_date)], schedule)]
+      cell_schedule_f[, schedule := gsub(cult_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult), schedule)]
+      cell_schedule_f[, schedule := gsub(cultkill_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult + 1L), schedule)]
+      if (GDD_harvest_dt[,get(h_date)] + 7 > 365L) {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], 365L, schedule)]
+      } else {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], (GDD_harvest_dt[,get(h_date)] + 7), schedule)]
+      }
+      counter = counter + 1L
     }
-    counter = counter + 1L
-  }
 
-  # cover crop cultivar
-  ifelse(.scenario %like% 'ccg', cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'RYE', schedule)], cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'CLVC', schedule)])
+    # cover crop cultivar
+    ifelse(.scenario %like% 'ccg', cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'RYE', schedule)], cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'CLVC', schedule)])
 
-  # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
-  if (plant.date <= 15L) {
-    # no cc
-    cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  plant.date - 6L,               schedule)]
-    cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
-    # cc
-    cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - 8L),                    schedule)]
-    cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - 7L),                  schedule)]
+    # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
+    if (plant.date <= 15L) {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  plant.date - 6L,               schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - 8L),                    schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - 7L),                  schedule)]
+    } else {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult + 1L),  schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
+    }
+    # remove 0 OMAD lines
+    if(cell_sch_data[1, orgCN.ratio] == 0) cell_schedule_f = cell_schedule_f[!schedule %like% 'O_cell']
+
+    fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
+    return(schedule_filename)
   } else {
-    # no cc
-    cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult + 1L),  schedule)]
-    cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
-    # cc
-    cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
-    cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
-  }
-  # remove 0 OMAD lines
-  if(cell_sch_data[1, orgCN.ratio] == 0) cell_schedule_f = cell_schedule_f[!schedule %like% 'O_cell']
+    cell_schedule_f     = schedule_table[scenario       %in% .scenario &
+                                           N_or_S       %in% crop_hemi &
+                                           irr          %in% .irr      &
+                                           get(.crop)        ==   1    &
+                                           harv_error        ==   1]
+    cell_schedule_f[, schedule := gsub('<fname>',        .site_fname,     schedule)]
+    cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
+    cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
+    cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
+    cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
+    cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,        schedule)]
 
-  fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
-  return(schedule_filename)
+    # co2 option
+    ifelse(.ssp %in% 'historical',
+           cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
+           cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
+    # nitrogen, residue
+    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
+    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
+    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+    # IRIG events
+    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+
+    # create .sch block with dynamic GDD harvest dates
+    cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
+    counter = 1L
+    for(h_date in harvest_dates) {
+      cell_schedule_f[, schedule := gsub(h_date, GDD_harvest_dt[,get(h_date)], schedule)]
+      cell_schedule_f[, schedule := gsub(cult_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult), schedule)]
+      if (GDD_harvest_dt[,get(h_date)] + 7 >= 365L) {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], 7L, schedule)]
+        cell_schedule_f[, schedule := gsub(cultkill_post_harvest_dates[counter], 6L, schedule)]
+      } else {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], (GDD_harvest_dt[,get(h_date)] + 7), schedule)]
+      }
+      counter = counter + 1L
+    }
+
+    # cover crop cultivar
+    ifelse(.scenario %like% 'ccg', cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'RYE', schedule)], cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'CLVC', schedule)])
+
+    # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
+    if (plant.date <= 15L) {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  plant.date - 6L,               schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - 8L),                    schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - 7L),                  schedule)]
+    } else {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult + 1L),  schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
+    }
+    # remove 0 OMAD lines
+    if(cell_sch_data[1, orgCN.ratio] == 0) cell_schedule_f = cell_schedule_f[!schedule %like% 'O_cell']
+
+    fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
+    return(schedule_filename)
+  }
 }
 #' Create an equilibrium schedule file from a template
 #'
