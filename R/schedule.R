@@ -358,7 +358,7 @@ non_cc_sched = function(cell_data, schedule_table = copy(schedule_template), .gr
     } else {
       cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)]
   }
-  cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
+  cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,0.6F,0.2T)', sep = ''),                   schedule)]
   cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
   cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
   # IRIG events
@@ -455,7 +455,7 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
            cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
            cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
     # nitrogen, residue
-    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
+    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,0.6F,0.2T)', sep = ''),                   schedule)]
     cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
     cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
     # IRIG events
