@@ -16,7 +16,8 @@
 #' @param .arg_rowstart integer, fifth argument giving start row of simulation
 #' @param .arg_endrow integer, sixth argument giving end row of simulation
 #' @export
-write_new_crop100_t = function(.crop_100) {
+write_new_crop100_t = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .date, .argsgcm.ssp,
+                               .arg_rowstart, .arg_rowend) {
   if (.gridid != .p_gridid |
       .crop != .p_crop) {
     # crop.100 rewrite
@@ -31,6 +32,7 @@ write_new_crop100_t = function(.crop_100) {
   }
   # modify for 2016 model version
   if (.model %in% 'public') {
+    .crop_100 = 'crop.100'
     crop_100 = setDT(read.table(.crop_100, sep = '\t'))
     crop_100[, V1 := gsub('RUETB',   'PRDX',   V1)]
     crop_100 = crop_100[!V1 %in% '-1     BASETEMP(3)',]
@@ -60,6 +62,63 @@ write_new_crop100_t = function(.crop_100) {
     crop_100 = crop_100[!V1 %like% 'CSTGA2DRAT',]
     fwrite(crop_100, paste0(pkg.env$tmp_path, '/', .date, '/', .argsgcm.ssp, '/', .arg_rowstart, '-', .arg_rowend, '/','crop.100'), quote = FALSE, col.names = FALSE)
   }
+}
+
+#' Check omad.100 file
+#'
+#' Rewrite the omad.100 if it does not match the gridid in the simulation row
+#'
+#' @param .gridid integer, gridid associated with row in data.table
+#' @param .p_gridid integer, gridid of previous row
+#' @param .simrow data.table, single row data.table
+#' @param .date character, date of test simulation
+#' @param .argsgcm.ssp character, first argument giving name of directory for gcm-ssp
+#' @param .arg_rowstart integer, fifth argument giving start row of simulation
+#' @param .arg_endrow integer, sixth argument giving end row of simulation
+#' @export
+write_new_omad100_t = function(.gridid, .p_gridid, .simrow, .argsgcm.ssp,
+                             .arg_rowstart, .arg_rowend) {
+  if (.gridid != .p_gridid) {
+    file.remove('omad.100')
+    create_omad(.simrow,
+                .gridid,
+                paste0(.date, '/',.argsgcm.ssp, '/', .arg_rowstart, '-', .arg_rowend))
+  }
+}
+
+#' Check site.100 file
+#'
+#' Rewrite the site.100 if it does not match the gridid, crop, irr in the simulation row
+#'
+#' @param .gridid integer, gridid associated with row in data.table
+#' @param .p_gridid integer, gridid of previous row
+#' @param .crop character, crop associated with row in data.table
+#' @param .p_crop character, crop of previous row
+#' @param .irr integer, binary irrigation level associated with row in data.table
+#' @param .p_irr integer, irr level of previous row
+#' @param .run_seq integer, run sequence number associated with row in data.table
+#' @param .argsgcm.ssp character, first argument giving name of directory for gcm-ssp
+#' @param .arg_rowstart integer, fifth argument giving start row of simulation
+#' @param .arg_endrow integer, sixth argument giving end row of simulation
+#' @param sitefile character, current site.100 file
+#' @export
+write_new_site100_t = function(.gridid, .p_gridid, .crop, .p_crop, .irr, .p_irr,
+                             .run_seq, .date, .argsgcm.ssp, .arg_rowstart, .arg_rowend,
+                             sitefile) {
+  if (.gridid != .p_gridid |
+      .crop != .p_crop |
+      .irr != .p_irr) {
+    file.remove(sitefile)
+    sitefile = create_site(
+      .gridid,
+      .run_seq,
+      .irr,
+      .crop,
+      cell_data_site,
+      paste0(.date, '/', .argsgcm.ssp, '/', .arg_rowstart, '-', .arg_rowend)
+    )
+  }
+  return(sitefile)
 }
 
 #' Prepare DayCent output for pre-processing
