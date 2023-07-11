@@ -119,6 +119,22 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   fwrite(w, paste0(tmp.dir, '/', weather_fname), sep = ' ', col.names = FALSE) # removed pkg.env$tmp.path
   return(weather_fname)
 }
+#' Fix weather file precipitation
+#'
+#' Used to convert precipitation in weather files (.wth) from mm/day to cm/day.
+#'
+#' @import data.table
+#' @param .wthfile character, name of weather file in working directory
+#' @export
+weather_pr_mm_to_cm = function(.wthfile) {
+  w_name   = .wthfile
+  mm_to_cm = 10L
+  w_file   = fread(.wthfile)
+  if (NCOL(w_file) == 7) {
+    w_file[, V7 := V7/mm_to_cm]
+    fwrite(w_file, w_name, sep = ' ', col.names = FALSE)
+    }
+}
 
 #' Create weather statistics file
 #'
