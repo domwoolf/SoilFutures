@@ -77,7 +77,7 @@ write_new_crop100_t = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .dat
 #' @param .arg_rowstart integer, fifth argument giving start row of simulation
 #' @param .arg_endrow integer, sixth argument giving end row of simulation
 #' @export
-write_new_omad100_t = function(.gridid, .p_gridid, .simrow, .argsgcm.ssp,
+write_new_omad100_t = function(.gridid, .p_gridid, .simrow, .date, .argsgcm.ssp,
                              .arg_rowstart, .arg_rowend) {
   if (.gridid != .p_gridid) {
     file.remove('omad.100')
@@ -98,6 +98,7 @@ write_new_omad100_t = function(.gridid, .p_gridid, .simrow, .argsgcm.ssp,
 #' @param .irr integer, binary irrigation level associated with row in data.table
 #' @param .p_irr integer, irr level of previous row
 #' @param .run_seq integer, run sequence number associated with row in data.table
+#' @param .date character, date of test simulation
 #' @param .argsgcm.ssp character, first argument giving name of directory for gcm-ssp
 #' @param .arg_rowstart integer, fifth argument giving start row of simulation
 #' @param .arg_endrow integer, sixth argument giving end row of simulation

@@ -8,6 +8,7 @@ write_new_omad100_t(
   .gridid,
   .p_gridid,
   .simrow,
+  .date,
   .argsgcm.ssp,
   .arg_rowstart,
   .arg_rowend
@@ -20,11 +21,11 @@ write_new_omad100_t(
 
 \item{.simrow}{data.table, single row data.table}
 
+\item{.date}{character, date of test simulation}
+
 \item{.argsgcm.ssp}{character, first argument giving name of directory for gcm-ssp}
 
 \item{.arg_rowstart}{integer, fifth argument giving start row of simulation}
-
-\item{.date}{character, date of test simulation}
 
 \item{.arg_endrow}{integer, sixth argument giving end row of simulation}
 }

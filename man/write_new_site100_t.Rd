@@ -34,6 +34,8 @@ write_new_site100_t(
 
 \item{.run_seq}{integer, run sequence number associated with row in data.table}
 
+\item{.date}{character, date of test simulation}
+
 \item{.argsgcm.ssp}{character, first argument giving name of directory for gcm-ssp}
 
 \item{.arg_rowstart}{integer, fifth argument giving start row of simulation}
