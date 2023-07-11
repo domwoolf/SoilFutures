@@ -13,7 +13,8 @@ write_new_crop100_t(
   .date,
   .argsgcm.ssp,
   .arg_rowstart,
-  .arg_rowend
+  .arg_rowend,
+  .model
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ write_new_crop100_t(
 \item{.argsgcm.ssp}{character, first argument giving name of directory for gcm-ssp}
 
 \item{.arg_rowstart}{integer, fifth argument giving start row of simulation}
+
+\item{.model}{character (binary), DayCent model version either 'public' or 'SF'}
 
 \item{.arg_endrow}{integer, sixth argument giving end row of simulation}
 }

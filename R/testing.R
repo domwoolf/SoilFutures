@@ -15,9 +15,10 @@
 #' @param .argsgcm.ssp character, first argument giving name of directory for gcm-ssp
 #' @param .arg_rowstart integer, fifth argument giving start row of simulation
 #' @param .arg_endrow integer, sixth argument giving end row of simulation
+#' @param .model character (binary), DayCent model version either 'public' or 'SF'
 #' @export
 write_new_crop100_t = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .date, .argsgcm.ssp,
-                               .arg_rowstart, .arg_rowend) {
+                               .arg_rowstart, .arg_rowend, .model) {
   if (.gridid != .p_gridid |
       .crop != .p_crop) {
     # crop.100 rewrite
