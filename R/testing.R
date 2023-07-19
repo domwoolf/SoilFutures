@@ -36,6 +36,7 @@ write_new_crop100_t = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .dat
     .crop_100 = 'crop.100'
     crop_100 = setDT(read.table(.crop_100, sep = '\t'))
     crop_100[, V1 := gsub('RUETB',   'PRDX',   V1)]
+    crop_100[, V1 := gsub('7.0               FRTCINDX', '2.0               FRTCINDX', V1)]
     crop_100 = crop_100[!V1 %in% '-1     BASETEMP(3)',]
     crop_100 = crop_100[!V1 %in% '-1     BASETEMP(4)',]
     crop_100 = crop_100[!V1 %like% 'KCET',]
