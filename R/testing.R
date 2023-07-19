@@ -31,7 +31,7 @@ write_new_crop100_t = function(.gridid, .p_gridid, .crop, .p_crop, .simrow, .dat
       paste0(.date, '/', .argsgcm.ssp, '/', .arg_rowstart, '-', .arg_rowend)
     )
   }
-  # modify for 2016 model version
+  # modify for inventory model version
   if (.model %in% 'public') {
     .crop_100 = 'crop.100'
     crop_100 = setDT(read.table(.crop_100, sep = '\t'))
@@ -103,10 +103,11 @@ write_new_omad100_t = function(.gridid, .p_gridid, .simrow, .date, .argsgcm.ssp,
 #' @param .arg_rowstart integer, fifth argument giving start row of simulation
 #' @param .arg_endrow integer, sixth argument giving end row of simulation
 #' @param sitefile character, current site.100 file
+#' @param .model character (binary), DayCent model version either 'public' or 'SF'
 #' @export
 write_new_site100_t = function(.gridid, .p_gridid, .crop, .p_crop, .irr, .p_irr,
                              .run_seq, .date, .argsgcm.ssp, .arg_rowstart, .arg_rowend,
-                             sitefile) {
+                             sitefile, .model) {
   if (.gridid != .p_gridid |
       .crop != .p_crop |
       .irr != .p_irr) {
@@ -120,7 +121,319 @@ write_new_site100_t = function(.gridid, .p_gridid, .crop, .p_crop, .irr, .p_irr,
       paste0(.date, '/', .argsgcm.ssp, '/', .arg_rowstart, '-', .arg_rowend)
     )
   }
+  if (.model %in% 'public') {
+    .site_100 = paste0(.gridid, '_', .run_seq, '_', .crop, '_site.100')
+    site_100  = setDT(read.table(.site_100, sep = '\t'))
+    site_100  = site_100[!V1 %like% 'DOFWUE',]
+    site_100[, V1 := gsub('NADJMAX',   'NADJFC',   V1)]
+    site_100[, V1 := gsub('NADJMIN',   'NADJWP',   V1)]
+    site_100  = site_100[!V1 %like% 'NADJCPT',]
+    site_100  = site_100[!V1 %like% 'NADJNIT',]
+    site_100  = site_100[!V1 %like% 'NADJWFP',]
+    site_100  = site_100[!V1 %like% 'MAXNITF',]
+    site_100  = site_100[!V1 %like% 'BASENIT',]
+    site_100  = site_100[!V1 %like% 'MINNH4',]
+    site_100  = site_100[!V1 %like% 'CO2DEN(1)',]
+    site_100  = site_100[!V1 %like% 'CO2DEN(2)',]
+    site_100  = site_100[!V1 %like% 'WFPSSLP',]
+    site_100  = site_100[!V1 %like% 'MAXPH',]
+    site_100  = site_100[!V1 %like% 'DPHPAR',]
+    site_100  = site_100[!V1 %like% 'IPPAR',]
+    site_100  = site_100[!V1 %like% 'IDPAR(1)',]
+    site_100  = site_100[!V1 %like% 'IDPAR(2)',]
+    site_100  = site_100[!V1 %like% 'IDPAR(3)',]
+    site_100  = site_100[!V1 %like% 'MAXDFC',]
+    site_100  = site_100[!V1 %like% 'DFCPAR(1)',]
+    site_100  = site_100[!V1 %like% 'DFCPAR(2)',]
+    site_100  = site_100[!V1 %like% 'DFCPAR(3)',]
+    site_100  = site_100[!V1 %like% 'TA9PAR(1)',]
+    site_100  = site_100[!V1 %like% 'TA9PAR(2)',]
+    site_100  = site_100[!V1 %like% 'TA9PAR(3)',]
+    site_100  = site_100[!V1 %like% 'STEMPMF',]
+    site_100  = site_100[!V1 %like% 'VMAXCAP',]
+    site_100  = site_100[!V1 %like% 'FSMPAR(1)',]
+    site_100  = site_100[!V1 %like% 'FSMPAR(2)',]
+    fwrite(site_100, paste0(pkg.env$tmp_path, '/', .date, '/', .argsgcm.ssp, '/', .arg_rowstart, '-', .arg_rowend, '/',
+                            .gridid, '_', .run_seq, '_', .crop, '_site.100'), quote = FALSE, col.names = FALSE)
+    }
   return(sitefile)
+}
+
+#' Create a DayCent Schedule file for non-cover crop simulations
+#'
+#' Used for writing a schedule file based on spatial data and CSU spin-ups.
+#'
+#' This function creates a schedule file for a specified scenario and crop,
+#' using spatial climate, crop calendar, and crop management data.
+#'
+#' @import data.table
+#' @import stringr
+#'
+#' @param cell_data multiple row data.table providing input data for the simulation.
+#' @param schedule_table data.table providing template of schedule file.
+#' @param .gridid unique cell value to be passed to function.
+#' @param .ssp character, specifies scenario
+#' @param .gcm character, specifies scenario
+#' @param .crop character, one of 'maiz', 'wwheat', 'swheat', 'soyb'
+#' @param .scenario character, specifies scenario
+#' @param .irr binary, specifies irrigation level
+#' @param .site_fname character, name of site.100 file
+#' @param start_yr integer, specifies start year of simulation
+#' @param end_year integer, specifies end year of simulation
+#' @param weather_fname name of input weather file
+#' @param tmp.dir directory to create in tmp.path, set with arg[1]
+
+#' @returns invisibly returns boolean indicating whether file was written successfully.
+#' @export
+non_cc_sched_t = function(cell_data, schedule_table = copy(schedule_template), .gridid, .ssp, .gcm, .crop, .scenario,
+                        .irr, .site_fname, start_year, end_year, weather_fname, tmp.dir) {
+  # variable definition
+  cell_sch_data       = cell_data
+  schedule_path       = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
+  schedule_filename   = cell_sch_data[1, paste(.scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
+  block_name          = cell_sch_data[1, paste(.scenario, '_', .crop, '_',.irr, sep = "")]
+  crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]
+
+  # cropping hemisphere (by planting and harvest date in Gregorian calendar)
+  plant.date          = cell_sch_data[,plant.date]
+  harvest.date        = cell_sch_data[,harvest.date]
+  crop_hemi           = fifelse(plant.date > harvest.date, 'S','N') # this should catch imperfect 'N' or 'S' assignments
+
+  # event doy
+  pre.harv.cult       = 14
+  post.harv.cult      = 14 # changed all to accommodate for winter wheat; consistent with pre harvest
+  post.harv.cc.cult   = 1L
+  pre.crop.cult       = 1L
+
+  cell_schedule_f     = schedule_table[scenario       %in% .scenario &
+                                         N_or_S       %in% crop_hemi &
+                                         irr          %in% .irr      &
+                                         get(.crop)        ==   1]
+  cell_schedule_f[, schedule := gsub('<fname>',        .site_fname,     schedule)]
+  cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
+  cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
+  cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
+  cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
+  cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,   schedule)]
+  ifelse(.ssp %in% 'historical',
+         cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
+         cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
+  # create .sch block
+  cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
+  cell_schedule_f[, schedule := gsub('<harvest_day>',  harvest.date,    schedule)]
+
+  # DOY check for post-harv cult greater than 365
+  if (harvest.date + post.harv.cult > 365L) {
+    cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', 365L, schedule)]
+  } else {
+    cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)]
+  }
+  cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,0.6F)', sep = ''),                   schedule)]
+  cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
+  cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+  # IRIG events
+  cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+
+  # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
+  if (plant.date <= 15L) {
+    cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  plant.date - 6L,               schedule)]
+    cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+  } else {
+    cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult + 1L),  schedule)]
+    cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+  }
+  # remove 0 OMAD lines
+  if(cell_sch_data[1, orgCN.ratio] == 0) cell_schedule_f = cell_schedule_f[!schedule %like% 'O_cell']
+
+  fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
+  return(schedule_filename)
+}
+#' Create a DayCent Schedule file for cover crop simulations based on GDD harvest dates
+#'
+#' Used for writing a schedule file based on spatial data and CSU spin-ups.
+#'
+#' This function creates a schedule file for a specified scenario and crop,
+#' using spatial climate, crop calendar, and crop management data.
+#'
+#' @import data.table
+#' @import stringr
+#'
+#' @param cell_data multiple row data.table providing input data for the simulation.
+#' @param schedule_table data.table providing template of schedule file.
+#' @param GDD_harvest_dt data.table providing template of growing degree day harvest dates.
+#' @param .gridid unique cell value to be passed to function.
+#' @param .ssp character, specifies scenario
+#' @param .gcm character, specifies scenario
+#' @param .crop character, one of 'maiz', 'wwheat', 'swheat', 'soyb'
+#' @param .scenario character, specifies scenario
+#' @param .irr binary, specifies irrigation level
+#' @param .site_fname character, name of site.100 file
+#' @param start_yr integer, specifies start year of simulation
+#' @param end_year integer, specifies end year of simulation
+#' @param weather_fname name of input weather file
+#' @param tmp.dir directory to create in tmp.path, set with arg[1]
+
+#' @returns invisibly returns boolean indicating whether file was written successfully.
+#' @export
+cc_sched_t = function(cell_data, schedule_table = copy(covercrop_schedule_template), GDD_harvest_dt = copy(GDD_harvest_dates), .gridid, .ssp, .gcm, .crop, .scenario,
+                    .irr, .site_fname, start_year, end_year, weather_fname, tmp.dir) {
+
+  cell_sch_data       = cell_data
+  GDD_harvest_dt      = GDD_harvest_dt[gridid %in% .gridid & crop %in% .crop & irr %in% .irr
+                                       & gcm %in% .gcm & ssp %in% .ssp,]
+  # variable definition
+  harvest_dates               = colnames(GDD_harvest_dt[,7:91])
+  cult_post_harvest_dates     = gsub('harvest_day_', 'cult_day_postharvest_', harvest_dates)
+  cultkill_post_harvest_dates = gsub('harvest_day_', 'cultkill_day_postharvest_', harvest_dates)
+  cc_plant_dates      = gsub('harvest_day_', 'cc_plant_day_', harvest_dates)
+  schedule_path       = paste(pkg.env$tmp_path, tmp.dir, sep = '/')
+  schedule_filename   = cell_sch_data[1, paste(.scenario, '_', .crop, '_irr',.irr, '_', .gridid, '.sch', sep = "")]
+  block_name          = cell_sch_data[1, paste(.scenario, '_', .crop, '_',.irr, sep = "")]
+  crop_cultivar       = cell_sch_data[1, paste(dc_cropname, sep = "")]
+  # replace 0's with cell_data harvest date
+  GDD_harvest_dt[, (colnames(GDD_harvest_dt[,7:91])) := lapply(.SD, function(x)
+    ifelse(x == 0, cell_sch_data[,harvest.date], x)), .SDcols = colnames(GDD_harvest_dt[,7:91])]
+  # replace NA's with cell_data harvest data
+  GDD_harvest_dt[, (colnames(GDD_harvest_dt[,7:91])) := lapply(.SD, function(x)
+    ifelse(is.na(x), cell_sch_data[,harvest.date], x)), .SDcols = colnames(GDD_harvest_dt[,7:91])]
+  # cropping hemisphere (by planting and harvest date in Gregorian calendar)
+  plant.date          = cell_sch_data[,plant.date]
+  harvest_main        = cell_sch_data[,harvest.date]
+  crop_hemi           = fifelse(plant.date > harvest_main, 'S','N') # this should catch imperfect 'N' or 'S' assignments
+
+  # event doy
+  pre.harv.cult       = 14
+  post.harv.cult      = 14 # changed all to accommodate for winter wheat; consistent with pre harvest
+  post.harv.cc.cult   = 1L
+  pre.crop.cult       = 1L
+
+  if (harvest_main < 358) {
+    cell_schedule_f     = schedule_table[scenario       %in% .scenario &
+                                           N_or_S       %in% crop_hemi &
+                                           irr          %in% .irr      &
+                                           get(.crop)        ==   1    &
+                                           harv_error        ==   0]
+    cell_schedule_f[, schedule := gsub('<fname>',        .site_fname,     schedule)]
+    cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
+    cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
+    cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
+    cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
+    cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,        schedule)]
+
+    # co2 option
+    ifelse(.ssp %in% 'historical',
+           cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
+           cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
+    # nitrogen, residue
+    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,0.6F)', sep = ''),                   schedule)]
+    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
+    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+    # IRIG events
+    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+
+    # create .sch block with dynamic GDD harvest dates
+    cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
+    counter = 1L
+    for(h_date in harvest_dates) {
+      cell_schedule_f[, schedule := gsub(h_date, GDD_harvest_dt[,get(h_date)], schedule)]
+      cell_schedule_f[, schedule := gsub(cult_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult), schedule)]
+      cell_schedule_f[, schedule := gsub(cultkill_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult + 1L), schedule)]
+      if (GDD_harvest_dt[,get(h_date)] + 7 > 365L) {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], 365L, schedule)]
+      } else {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], (GDD_harvest_dt[,get(h_date)] + 7), schedule)]
+      }
+      counter = counter + 1L
+    }
+
+    # cover crop cultivar
+    ifelse(.scenario %like% 'ccg', cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'RYE', schedule)], cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'CLVC', schedule)])
+
+    # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
+    if (plant.date <= 15L) {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  plant.date - 6L,               schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - 8L),                    schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - 7L),                  schedule)]
+    } else {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult + 1L),  schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
+    }
+    # remove 0 OMAD lines
+    if(cell_sch_data[1, orgCN.ratio] == 0) cell_schedule_f = cell_schedule_f[!schedule %like% 'O_cell']
+
+    fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
+    return(schedule_filename)
+  } else {
+    cell_schedule_f     = schedule_table[scenario       %in% .scenario &
+                                           N_or_S       %in% crop_hemi &
+                                           irr          %in% .irr      &
+                                           get(.crop)        ==   1    &
+                                           harv_error        ==   1]
+    cell_schedule_f[, schedule := gsub('<fname>',        .site_fname,     schedule)]
+    cell_schedule_f[, schedule := gsub('<weather_file>', weather_fname,   schedule)]
+    cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
+    cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
+    cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
+    cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,        schedule)]
+
+    # co2 option
+    ifelse(.ssp %in% 'historical',
+           cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
+           cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
+    # nitrogen, residue
+    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
+    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
+    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+    # IRIG events
+    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+
+    # create .sch block with dynamic GDD harvest dates
+    cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
+    counter = 1L
+    for(h_date in harvest_dates) {
+      cell_schedule_f[, schedule := gsub(h_date, GDD_harvest_dt[,get(h_date)], schedule)]
+      cell_schedule_f[, schedule := gsub(cult_post_harvest_dates[counter], (GDD_harvest_dt[,get(h_date)] + post.harv.cc.cult), schedule)]
+      if (GDD_harvest_dt[,get(h_date)] + 7 >= 365L) {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], 7L, schedule)]
+        cell_schedule_f[, schedule := gsub(cultkill_post_harvest_dates[counter], 6L, schedule)]
+      } else {
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], (GDD_harvest_dt[,get(h_date)] + 7), schedule)]
+      }
+      counter = counter + 1L
+    }
+
+    # cover crop cultivar
+    ifelse(.scenario %like% 'ccg', cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'RYE', schedule)], cell_schedule_f[, schedule := gsub('<cc_cultivar>', 'CLVC', schedule)])
+
+    # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
+    if (plant.date <= 15L) {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  plant.date - 6L,               schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - 8L),                    schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - 7L),                  schedule)]
+    } else {
+      # no cc
+      cell_schedule_f[, schedule := gsub('<cult_day_preharvest>',  (plant.date - pre.harv.cult + 1L),  schedule)]
+      cell_schedule_f[, schedule := gsub('<cult_kill_day>',        (plant.date - pre.crop.cult),  schedule)]
+      # cc
+      cell_schedule_f[, schedule := gsub('<cc_harvest_day>',(plant.date - pre.harv.cult - 1L),                                          schedule)]
+      cell_schedule_f[, schedule := gsub('<cc_harv-cult_day>',(plant.date - pre.harv.cult),                                             schedule)]
+    }
+    # remove 0 OMAD lines
+    if(cell_sch_data[1, orgCN.ratio] == 0) cell_schedule_f = cell_schedule_f[!schedule %like% 'O_cell']
+
+    fwrite(list(cell_schedule_f[, schedule]), paste(schedule_path, '/',schedule_filename, sep = ''), quote = FALSE, col.names = FALSE)
+    return(schedule_filename)
+  }
 }
 
 #' Prepare DayCent output for pre-processing

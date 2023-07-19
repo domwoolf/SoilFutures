@@ -16,7 +16,8 @@ write_new_site100_t(
   .argsgcm.ssp,
   .arg_rowstart,
   .arg_rowend,
-  sitefile
+  sitefile,
+  .model
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ write_new_site100_t(
 \item{.arg_rowstart}{integer, fifth argument giving start row of simulation}
 
 \item{sitefile}{character, current site.100 file}
+
+\item{.model}{character (binary), DayCent model version either 'public' or 'SF'}
 
 \item{.arg_endrow}{integer, sixth argument giving end row of simulation}
 }
