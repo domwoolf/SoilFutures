@@ -64,12 +64,12 @@ conv,N,1,1,0,0,0,F             Weather choice
 conv,N,1,1,0,0,0,<weather_file>
 conv,N,1,1,0,0,0,1   <cult_day_preharvest> CULT K
 conv,N,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
-conv,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 conv,N,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
 conv,N,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
 conv,N,1,1,0,0,0,1   <plant_day>  PLTM
 conv,N,1,1,0,0,0,1   <plant_day>  CULT B
 conv,N,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+conv,N,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,N,1,1,0,0,0,1   <harvest_day>  HARV <res-amt>
 conv,N,1,1,0,0,0,1   <harvest_day>  LAST
 conv,N,1,1,0,0,0,1   <cult_day_postharvest> CULT K
@@ -142,12 +142,12 @@ conv,S,1,1,0,0,0,1   <harvest_day>  LAST
 conv,S,1,1,0,0,0,1   <cult_day_postharvest> CULT K
 conv,S,1,1,0,0,0,1   <cult_day_preharvest> CULT K
 conv,S,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
-conv,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 conv,S,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
 conv,S,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
 conv,S,1,1,0,0,0,1   <plant_day>  PLTM
 conv,S,1,1,0,0,0,1   <plant_day>  CULT B
 conv,S,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+conv,S,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,S,1,1,0,0,0,-999 -999 X
 res,N,0,1,0,0,0,<start_year>           Starting year
 res,N,0,1,0,0,0,<end_year>         Last year
@@ -214,12 +214,12 @@ res,N,1,1,0,0,0,F             Weather choice
 res,N,1,1,0,0,0,<weather_file>
 res,N,1,1,0,0,0,1   <cult_day_preharvest> CULT K
 res,N,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
-res,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 res,N,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
 res,N,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
 res,N,1,1,0,0,0,1   <plant_day>  PLTM
 res,N,1,1,0,0,0,1   <plant_day>  CULT B
 res,N,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+res,N,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,N,1,1,0,0,0,1   <harvest_day>  HARV G
 res,N,1,1,0,0,0,1   <harvest_day>  LAST
 res,N,1,1,0,0,0,1   <cult_day_postharvest> CULT K
@@ -292,12 +292,12 @@ res,S,1,1,0,0,0,1   <harvest_day>  LAST
 res,S,1,1,0,0,0,1   <cult_day_postharvest> CULT K
 res,S,1,1,0,0,0,1   <cult_day_preharvest> CULT K
 res,S,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
-res,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 res,S,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
 res,S,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
 res,S,1,1,0,0,0,1   <plant_day>  PLTM
 res,S,1,1,0,0,0,1   <plant_day>  CULT B
 res,S,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+res,S,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,S,1,1,0,0,0,-999 -999 X
 ntill,N,0,1,0,0,0,<start_year>           Starting year
 ntill,N,0,1,0,0,0,<end_year>         Last year
@@ -361,12 +361,12 @@ ntill,N,1,1,0,0,0,1.0           Output interval
 ntill,N,1,1,0,0,0,F             Weather choice
 ntill,N,1,1,0,0,0,<weather_file>
 ntill,N,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
-ntill,N,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,N,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
 ntill,N,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
 ntill,N,1,1,0,0,0,1   <plant_day>  PLTM
 ntill,N,1,1,0,0,0,1   <plant_day>  CULT B
 ntill,N,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+ntill,N,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,N,1,1,0,0,0,1   <harvest_day>  HARV G
 ntill,N,1,1,0,0,0,1   <harvest_day>  LAST
 ntill,N,1,1,0,0,0,-999 -999 X
@@ -434,12 +434,12 @@ ntill,S,1,1,0,0,0,<weather_file>
 ntill,S,1,1,0,0,0,1   <harvest_day>  HARV G
 ntill,S,1,1,0,0,0,1   <harvest_day>  LAST
 ntill,S,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
-ntill,S,1,1,0,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,S,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
 ntill,S,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
 ntill,S,1,1,0,0,0,1   <plant_day>  PLTM
 ntill,S,1,1,0,0,0,1   <plant_day>  CULT B
 ntill,S,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+ntill,S,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,S,1,1,0,0,0,-999 -999 X
 conv,N,0,0,1,0,0,<start_year>           Starting year
 conv,N,0,0,1,0,0,<end_year>         Last year
@@ -506,12 +506,12 @@ conv,N,1,0,1,0,0,F             Weather choice
 conv,N,1,0,1,0,0,<weather_file>
 conv,N,1,0,1,0,0,1   <cult_day_preharvest> CULT K
 conv,N,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
-conv,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 conv,N,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
 conv,N,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
 conv,N,1,0,1,0,0,1   <plant_day>  PLTM
 conv,N,1,0,1,0,0,1   <plant_day>  CULT B
 conv,N,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+conv,N,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,N,1,0,1,0,0,1   <harvest_day>  HARV <res-amt>
 conv,N,1,0,1,0,0,1   <harvest_day>  LAST
 conv,N,1,0,1,0,0,1   <cult_day_postharvest> CULT K
@@ -584,12 +584,12 @@ conv,S,1,0,1,0,0,1   <harvest_day>  LAST
 conv,S,1,0,1,0,0,1   <cult_day_postharvest> CULT K
 conv,S,1,0,1,0,0,1   <cult_day_preharvest> CULT K
 conv,S,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
-conv,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 conv,S,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
 conv,S,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
 conv,S,1,0,1,0,0,1   <plant_day>  PLTM
 conv,S,1,0,1,0,0,1   <plant_day>  CULT B
 conv,S,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+conv,S,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,S,1,0,1,0,0,-999 -999 X
 res,N,0,0,1,0,0,<start_year>           Starting year
 res,N,0,0,1,0,0,<end_year>         Last year
@@ -656,12 +656,12 @@ res,N,1,0,1,0,0,F             Weather choice
 res,N,1,0,1,0,0,<weather_file>
 res,N,1,0,1,0,0,1   <cult_day_preharvest> CULT K
 res,N,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
-res,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 res,N,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
 res,N,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
 res,N,1,0,1,0,0,1   <plant_day>  PLTM
 res,N,1,0,1,0,0,1   <plant_day>  CULT B
 res,N,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+res,N,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,N,1,0,1,0,0,1   <harvest_day>  HARV G
 res,N,1,0,1,0,0,1   <harvest_day>  LAST
 res,N,1,0,1,0,0,1   <cult_day_postharvest> CULT K
@@ -734,12 +734,12 @@ res,S,1,0,1,0,0,1   <harvest_day>  LAST
 res,S,1,0,1,0,0,1   <cult_day_postharvest> CULT K
 res,S,1,0,1,0,0,1   <cult_day_preharvest> CULT K
 res,S,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
-res,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 res,S,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
 res,S,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
 res,S,1,0,1,0,0,1   <plant_day>  PLTM
 res,S,1,0,1,0,0,1   <plant_day>  CULT B
 res,S,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+res,S,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,S,1,0,1,0,0,-999 -999 X
 ntill,N,0,0,1,0,0,<start_year>           Starting year
 ntill,N,0,0,1,0,0,<end_year>         Last year
@@ -803,12 +803,12 @@ ntill,N,1,0,1,0,0,1.0           Output interval
 ntill,N,1,0,1,0,0,F             Weather choice
 ntill,N,1,0,1,0,0,<weather_file>
 ntill,N,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
-ntill,N,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,N,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
 ntill,N,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
 ntill,N,1,0,1,0,0,1   <plant_day>  PLTM
 ntill,N,1,0,1,0,0,1   <plant_day>  CULT B
 ntill,N,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+ntill,N,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,N,1,0,1,0,0,1   <harvest_day>  HARV G
 ntill,N,1,0,1,0,0,1   <harvest_day>  LAST
 ntill,N,1,0,1,0,0,-999 -999 X
@@ -876,12 +876,12 @@ ntill,S,1,0,1,0,0,<weather_file>
 ntill,S,1,0,1,0,0,1   <harvest_day>  HARV G
 ntill,S,1,0,1,0,0,1   <harvest_day>  LAST
 ntill,S,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
-ntill,S,1,0,1,0,0,"   1 <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,S,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
 ntill,S,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
 ntill,S,1,0,1,0,0,1   <plant_day>  PLTM
 ntill,S,1,0,1,0,0,1   <plant_day>  CULT B
 ntill,S,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+ntill,S,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,S,1,0,1,0,0,-999 -999 X
 conv,S,0,0,0,1,0,<start_year>           Starting year
 conv,S,0,0,0,1,0,<end_year>         Last year
@@ -951,12 +951,12 @@ conv,S,1,0,0,1,0,1   <harvest_day>  LAST
 conv,S,1,0,0,1,0,1   <cult_day_postharvest> CULT K
 conv,S,1,0,0,1,0,1   <cult_day_preharvest> CULT K
 conv,S,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
-conv,S,1,0,0,1,0,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 conv,S,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
 conv,S,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
 conv,S,1,0,0,1,0,1   <plant_day>  PLTM
 conv,S,1,0,0,1,0,1   <plant_day>  CULT B
 conv,S,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+conv,S,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,S,1,0,0,1,0,-999 -999 X
 conv,N,0,0,0,1,0,<start_year>           Starting year
 conv,N,0,0,0,1,0,<end_year>         Last year
@@ -1023,12 +1023,12 @@ conv,N,1,0,0,1,0,F             Weather choice
 conv,N,1,0,0,1,0,<weather_file>
 conv,N,1,0,0,1,0,1   <cult_day_preharvest> CULT K
 conv,N,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
-conv,N,1,0,0,1,0,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 conv,N,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
 conv,N,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
 conv,N,1,0,0,1,0,1   <plant_day>  PLTM
 conv,N,1,0,0,1,0,1   <plant_day>  CULT B
 conv,N,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+conv,N,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,N,1,0,0,1,0,1   <harvest_day>  HARV <res-amt>
 conv,N,1,0,0,1,0,1   <harvest_day>  LAST
 conv,N,1,0,0,1,0,1   <cult_day_postharvest> CULT K
@@ -1101,12 +1101,12 @@ res,S,1,0,0,1,0,1   <harvest_day>  LAST
 res,S,1,0,0,1,0,1   <cult_day_postharvest> CULT K
 res,S,1,0,0,1,0,1   <cult_day_preharvest> CULT K
 res,S,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
-res,S,1,0,0,1,0,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 res,S,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
 res,S,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
 res,S,1,0,0,1,0,1   <plant_day>  PLTM
 res,S,1,0,0,1,0,1   <plant_day>  CULT B
 res,S,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+res,S,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,S,1,0,0,1,0,-999 -999 X
 res,N,0,0,0,1,0,<start_year>           Starting year
 res,N,0,0,0,1,0,<end_year>         Last year
@@ -1173,12 +1173,12 @@ res,N,1,0,0,1,0,F             Weather choice
 res,N,1,0,0,1,0,<weather_file>
 res,N,1,0,0,1,0,1   <cult_day_preharvest> CULT K
 res,N,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
-res,N,1,0,0,1,0,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 res,N,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
 res,N,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
 res,N,1,0,0,1,0,1   <plant_day>  PLTM
 res,N,1,0,0,1,0,1   <plant_day>  CULT B
 res,N,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+res,N,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,N,1,0,0,1,0,1   <harvest_day>  HARV G
 res,N,1,0,0,1,0,1   <harvest_day>  LAST
 res,N,1,0,0,1,0,1   <cult_day_postharvest> CULT K
@@ -1247,12 +1247,12 @@ ntill,S,1,0,0,1,0,<weather_file>
 ntill,S,1,0,0,1,0,1   <harvest_day>  HARV G
 ntill,S,1,0,0,1,0,1   <harvest_day>  LAST
 ntill,S,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
-ntill,S,1,0,0,1,0,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,S,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
 ntill,S,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
 ntill,S,1,0,0,1,0,1   <plant_day>  PLTM
 ntill,S,1,0,0,1,0,1   <plant_day>  CULT B
 ntill,S,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+ntill,S,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,S,1,0,0,1,0,-999 -999 X
 ntill,N,0,0,0,1,0,<start_year>           Starting year
 ntill,N,0,0,0,1,0,<end_year>         Last year
@@ -1316,12 +1316,12 @@ ntill,N,1,0,0,1,0,1.0           Output interval
 ntill,N,1,0,0,1,0,F             Weather choice
 ntill,N,1,0,0,1,0,<weather_file>
 ntill,N,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
-ntill,N,1,0,0,1,0,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,N,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
 ntill,N,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
 ntill,N,1,0,0,1,0,1   <plant_day>  PLTM
 ntill,N,1,0,0,1,0,1   <plant_day>  CULT B
 ntill,N,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+ntill,N,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,N,1,0,0,1,0,1   <harvest_day>  HARV G
 ntill,N,1,0,0,1,0,1   <harvest_day>  LAST
 ntill,N,1,0,0,1,0,-999 -999 X
@@ -1393,12 +1393,12 @@ conv,S,1,0,0,0,1,1   <harvest_day>  LAST
 conv,S,1,0,0,0,1,1   <cult_day_postharvest> CULT K
 conv,S,1,0,0,0,1,1   <cult_day_preharvest> CULT K
 conv,S,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
-conv,S,1,0,0,0,1,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 conv,S,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
 conv,S,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
 conv,S,1,0,0,0,1,1   <plant_day>  PLTM
 conv,S,1,0,0,0,1,1   <plant_day>  CULT B
 conv,S,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+conv,S,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,S,1,0,0,0,1,-999 -999 X
 conv,N,0,0,0,0,1,<start_year>           Starting year
 conv,N,0,0,0,0,1,<end_year>         Last year
@@ -1465,12 +1465,12 @@ conv,N,1,0,0,0,1,F             Weather choice
 conv,N,1,0,0,0,1,<weather_file>
 conv,N,1,0,0,0,1,1   <cult_day_preharvest> CULT K
 conv,N,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
-conv,N,1,0,0,0,1,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 conv,N,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
 conv,N,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
 conv,N,1,0,0,0,1,1   <plant_day>  PLTM
 conv,N,1,0,0,0,1,1   <plant_day>  CULT B
 conv,N,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+conv,N,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 conv,N,1,0,0,0,1,1   <harvest_day>  HARV <res-amt>
 conv,N,1,0,0,0,1,1   <harvest_day>  LAST
 conv,N,1,0,0,0,1,1   <cult_day_postharvest> CULT K
@@ -1543,12 +1543,12 @@ res,S,1,0,0,0,1,1   <harvest_day>  LAST
 res,S,1,0,0,0,1,1   <cult_day_postharvest> CULT K
 res,S,1,0,0,0,1,1   <cult_day_preharvest> CULT K
 res,S,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
-res,S,1,0,0,0,1,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 res,S,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
 res,S,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
 res,S,1,0,0,0,1,1   <plant_day>  PLTM
 res,S,1,0,0,0,1,1   <plant_day>  CULT B
 res,S,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+res,S,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,S,1,0,0,0,1,-999 -999 X
 res,N,0,0,0,0,1,<start_year>           Starting year
 res,N,0,0,0,0,1,<end_year>         Last year
@@ -1615,12 +1615,12 @@ res,N,1,0,0,0,1,F             Weather choice
 res,N,1,0,0,0,1,<weather_file>
 res,N,1,0,0,0,1,1   <cult_day_preharvest> CULT K
 res,N,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
-res,N,1,0,0,0,1,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 res,N,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
 res,N,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
 res,N,1,0,0,0,1,1   <plant_day>  PLTM
 res,N,1,0,0,0,1,1   <plant_day>  CULT B
 res,N,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+res,N,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 res,N,1,0,0,0,1,1   <harvest_day>  HARV G
 res,N,1,0,0,0,1,1   <harvest_day>  LAST
 res,N,1,0,0,0,1,1   <cult_day_postharvest> CULT K
@@ -1689,12 +1689,12 @@ ntill,S,1,0,0,0,1,<weather_file>
 ntill,S,1,0,0,0,1,1   <harvest_day>  HARV G
 ntill,S,1,0,0,0,1,1   <harvest_day>  LAST
 ntill,S,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
-ntill,S,1,0,0,0,1,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,S,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
 ntill,S,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
 ntill,S,1,0,0,0,1,1   <plant_day>  PLTM
 ntill,S,1,0,0,0,1,1   <plant_day>  CULT B
 ntill,S,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+ntill,S,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,S,1,0,0,0,1,-999 -999 X
 ntill,N,0,0,0,0,1,<start_year>           Starting year
 ntill,N,0,0,0,0,1,<end_year>         Last year
@@ -1758,12 +1758,12 @@ ntill,N,1,0,0,0,1,1.0           Output interval
 ntill,N,1,0,0,0,1,F             Weather choice
 ntill,N,1,0,0,0,1,<weather_file>
 ntill,N,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
-ntill,N,1,0,0,0,1,"1   <irr_day> IRIG (1, 0.925F, -1L)"
 ntill,N,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
 ntill,N,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
 ntill,N,1,0,0,0,1,1   <plant_day>  PLTM
 ntill,N,1,0,0,0,1,1   <plant_day>  CULT B
 ntill,N,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+ntill,N,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,N,1,0,0,0,1,1   <harvest_day>  HARV G
 ntill,N,1,0,0,0,1,1   <harvest_day>  LAST
 ntill,N,1,0,0,0,1,-999 -999 X

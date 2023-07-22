@@ -8,7 +8,7 @@
 ## `schedule_template`
 A data frame with 2812 rows and 8 columns:
 \describe{
-  \item{scenario}{Scenario in simulation; five levels}
+  \item{scenario}{Scenario in simulation; three levels}
   \item{N_or_S}{North or South Hemisphere - loosely defined.}
   \item{irr}{Irrgiation, binary}
   \item{maiz}{Maize, binary}

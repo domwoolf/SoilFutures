@@ -36,7 +36,7 @@
 #' @format ## `schedule_template`
 #' A data frame with 2812 rows and 8 columns:
 #' \describe{
-#'   \item{scenario}{Scenario in simulation; five levels}
+#'   \item{scenario}{Scenario in simulation; three levels}
 #'   \item{N_or_S}{North or South Hemisphere - loosely defined.}
 #'   \item{irr}{Irrgiation, binary}
 #'   \item{maiz}{Maize, binary}
@@ -48,6 +48,27 @@
 #' }
 #' @source Cornell University, S.C. McClelland
 "schedule_template"
+#'
+#' Cover Crop Schedule Template.
+#'
+#' Cover crop schedule assignments for scenarios in DayCent simulations. Follows sch file format.
+#' Does not include rewild scenario. Accounts for growing degree day harvest dates.
+#'
+#' @format ## `schedule_template`
+#' A data frame with 102828 rows and 8 columns:
+#' \describe{
+#'   \item{scenario}{Scenario in simulation; four levels}
+#'   \item{N_or_S}{North or South Hemisphere - loosely defined.}
+#'   \item{irr}{Irrgiation, binary}
+#'   \item{maiz}{Maize, binary}
+#'   \item{soyb}{Soybean, binary.}
+#'   \item{swht}{Spring wheat, binary.}
+#'   \item{harv_error}{Harvest error in N hemisphere, binary.}
+#'   \item{schedule}{Schedule lines relevant for the scenario.}
+#'   ...
+#' }
+#' @source Cornell University, S.C. McClelland
+"covercrop_schedule_template"
 #'
 #' Extended site.100 files.
 #'

@@ -8,6 +8,7 @@
 #'
 #' @import data.table
 #' @import terra
+#' @import sf
 #' @export
 create_cell_data_csu_table = function(cmip6_calendars) {
   # create rasters
@@ -300,19 +301,88 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   # remove any plant/harv dates == 0
   main_table.swh = main_table.swh[plant.date !=0,]
   main_table.swh = main_table.swh[harvest.date !=0,]
+  gc()
 
   main_table = rbind(main_table, main_table.soy, fill = TRUE)
   main_table = rbind(main_table, main_table.wwh, fill = TRUE)
   main_table = rbind(main_table, main_table.swh, fill = TRUE)
 
   setorder(main_table, gridid)
+  gc()
 
   # ADD EQ File Name
   eq.file.lookup = fread(paste(pkg.env$gis_path, 'eq_file_assign_by-gridid.csv',       sep='/'))
   main_table     = main_table[eq.file.lookup, on = .(gridid = gridid, regionid = regionid)]
   main_table     = main_table[!is.na(gridid.rotated),]
+  gc()
 
-  fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_covercrops-30May23.csv", sep = "/")) #csv
-  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_covercrops-30May23.RData", sep = "/")) #rda
+  # ADD Country, Region Name
+  country.sf  = st_read(paste(pkg.env$gis_path, 'WB_countries_Admin0_10m.shp', sep = '/'))
+  country.sf_dt = setDT(as.data.frame(country.sf))
+
+  # CREATE raster
+  shp_r       = rast(ext(country.sf), nrow = 360, ncol = 720)
+
+  # CREATE shp as raster
+  country_r   = terra::rasterize(country.sf, shp_r, fun = 'sum', "OBJECTID")
+
+  # MATCH resolution of simulation data, dimensions the same
+  target.r    = rast(nrow = 360, ncol = 720, resolution = 0.5)
+  country_r   = resample(country_r, target.r, method = "near")
+
+  # CREATE data.frame, merge
+  country_r.dt    = as.data.frame(country_r, cells=TRUE, xy=TRUE)
+  country_r.dt    = setDT(country_r.dt)
+
+  country_n = data.table(WB_NAME = country.sf_dt$WB_NAME, ID = country.sf_dt$OBJECTID,
+                         WB_REGION = country.sf_dt$WB_REGION)
+
+  # BIND to cell numbers
+  country_r.dt = country_r.dt[country_n, on = .(OBJECTID = ID)]
+
+  main_table = main_table[country_r.dt[, .(cell, WB_NAME, WB_REGION)], on = .(gridid = cell)]
+  gc()
+  setorder(main_table, gridid)
+  main_table = main_table[!is.na(crop),]
+  gc()
+
+  # ADD fertilizer fraction by country
+  n_fert_ifa = fread(paste(pkg.env$gis_path, 'n-fertilizer-fraction-by-country.csv', sep = '/'))
+  n_fert_ifa[Country %in% 'U.S.A.', Country := 'United States of America']
+  n_fert_ifa[Country %in% 'Czechia', Country := 'Czech Republic']
+  n_fert_ifa[Country %in% 'Moldova Republic of', Country := 'Moldova']
+  n_fert_ifa[Country %in% 'Kyrgyzstan', Country := 'Kyrgyz Republic']
+  n_fert_ifa[Country %in% 'Korea DPR', Country := "Korea, Democratic People's Republic of"]
+  n_fert_ifa[Country %in% 'Iran', Country := 'Iran, Islamic Republic of']
+  n_fert_ifa[Country %in% 'Syria', Country := 'Syrian Arab Republic']
+  n_fert_ifa[Country %in% 'Egypt', Country := 'Egypt, Arab Republic of']
+  n_fert_ifa[Country %in% 'Venezuela', Country := 'Venezuela, Republica Bolivariana de']
+  n_fert_ifa[Country %in% 'Cote dIvoire', Country := "Côte d'Ivoire"]
+  n_fert_ifa[Country %in% 'Viet Nam', Country := 'Vietnam']
+  n_fert_ifa = n_fert_ifa[complete.cases(n_fert_ifa)]
+  setorder(n_fert_ifa, Country)
+
+  main_table = main_table[n_fert_ifa, on = .(WB_NAME = Country, WB_REGION = WB_REGION),
+                          by = .EACHI, allow.cartesian = TRUE]
+  gc()
+  main_table = main_table[!is.na(gridid)]
+  setorder(main_table, gridid)
+  setcolorder(main_table, c('gridid', 'gridid.rotated', 'x', 'y', 'WB_NAME', 'WB_REGION','regionid', 'ssp', 'gcm',
+                            'crop', 'irr','scenario','pset_id', 'clim_ipcc'))
+  # ADD Cropping Area
+  crop_area_r      = rast(paste(pkg.env$gis_path, 'all-cropland-rf-ir-area.tif', sep = '/'))
+  crop_area_dt     = as.data.table(terra::as.data.frame(crop_area_r, xy = TRUE, cells = TRUE))
+  gridid_all       = unique(main_table[, gridid])
+  crop_area_dt_f   = crop_area_dt[cell %in% gridid_all,]
+  crop_area_dt_f   = crop_area_dt_f[wht_irr_area_ha >= 1 | wht_rain_area_ha >= 1 | maiz_rain_area_ha >= 1 |
+                   maiz_irr_area_ha >= 1 | soyb_rain_area_ha >=1 | soyb_irr_area_ha >= 1,]
+  gridid_f         = unique(crop_area_dt_f[,cell])
+
+  # REMOVE < 1ha
+  main_table = main_table[gridid %in% gridid_f,]
+  gc()
+
+  fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_21July23.csv", sep = "/")) #csv
+  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_21July23.RData", sep = "/")) #rda
   return(main_table)
 }

@@ -1,9 +1,7 @@
 # NOT TO BE USED IN MAIN PACKAGE #
 
 library(data.table)
-cell_data = fread('data-raw/cell_data_table_covercrops-30May23.csv')
-cell_data = cell_data[scenario %in% c('ccg','ccl','ccg-ntill','ccl-ntill'),]
-cell_data = cell_data[crop %in% c('maiz','soyb','swht'),]
+cell_data = fread('data-raw/cell_data_table_21July23.csv')
 
 # split into gcm x ssp combinations
 gcm       = fread('data-raw/cmip6_calendars.csv')

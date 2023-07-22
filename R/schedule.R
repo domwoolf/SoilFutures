@@ -358,11 +358,13 @@ non_cc_sched = function(cell_data, schedule_table = copy(schedule_template), .gr
     } else {
       cell_schedule_f[, schedule := gsub('<cult_day_postharvest>', (harvest.date + post.harv.cult), schedule)]
   }
-  cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,0.6F,0.2T)', sep = ''),                   schedule)]
-  cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
-  cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+  cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,',
+                                                             cell_sch_data[, frac_NH4],'F,',
+                                                             cell_sch_data[, frac_NO3],'T)', sep = ''),                   schedule)]
+  cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                          schedule)]
+  cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),          schedule)]
   # IRIG events
-  cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+  cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date + 1L),                                                 schedule)]
 
   # DOY check for cc harvest day & cult events where < plant.date - event <= 1L
   if (plant.date <= 15L) {
@@ -455,11 +457,13 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
            cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
            cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
     # nitrogen, residue
-    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,0.6F,0.2T)', sep = ''),                   schedule)]
-    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
-    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,',
+                                                               cell_sch_data[, frac_NH4],'F,',
+                                                               cell_sch_data[, frac_NO3],'T)', sep = ''),                   schedule)]
+    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                          schedule)]
+    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),          schedule)]
     # IRIG events
-    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date + 1L),                                                 schedule)]
 
     # create .sch block with dynamic GDD harvest dates
     cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
@@ -518,11 +522,13 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
            cell_schedule_f[, schedule := gsub('<co2_option>', 1L, schedule)],
            cell_schedule_f[, schedule := gsub('<co2_option>', gsub('ssp','',.ssp), schedule)])
     # nitrogen, residue
-    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,1.0F)', sep = ''),                   schedule)]
-    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                                    schedule)]
-    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),                    schedule)]
+    cell_schedule_f[, schedule := gsub('<fert-amt>',     paste('(',cell_sch_data[, fertN.amt],'N,',
+                                                               cell_sch_data[, frac_NH4],'F,',
+                                                               cell_sch_data[, frac_NO3],'T)', sep = ''),                   schedule)]
+    cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                          schedule)]
+    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),          schedule)]
     # IRIG events
-    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date -1L),                                                            schedule)]
+    cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date + 1L),                                                 schedule)]
 
     # create .sch block with dynamic GDD harvest dates
     cell_schedule_f[, schedule := gsub('<plant_day>',    plant.date,      schedule)]
