@@ -11,7 +11,7 @@ conv,N,0,1,0,0,0,-1            pH effect
 conv,N,0,1,0,0,0,-1            Soil Warming
 conv,N,0,1,0,0,0,0             N input scalar option
 conv,N,0,1,0,0,0,0             OMAD scalar option
-conv,N,0,1,0,0,0,-1            Climate scalar option
+conv,N,0,1,0,0,0,0             Climate scalar option
 conv,N,0,1,0,0,0,1             Initial system
 conv,N,0,1,0,0,0,<crop_cultivar>        Initial crop
 conv,N,0,1,0,0,0,Initial tree
@@ -48,7 +48,7 @@ conv,N,1,1,0,0,0,-1            pH effect
 conv,N,1,1,0,0,0,-1            Soil Warming
 conv,N,1,1,0,0,0,0             N input scalar option
 conv,N,1,1,0,0,0,0             OMAD scalar option
-conv,N,1,1,0,0,0,-1            Climate scalar option
+conv,N,1,1,0,0,0,0             Climate scalar option
 conv,N,1,1,0,0,0,1             Initial system
 conv,N,1,1,0,0,0,<crop_cultivar>        Initial crop
 conv,N,1,1,0,0,0,Initial tree
@@ -86,7 +86,7 @@ conv,S,0,1,0,0,0,-1            pH effect
 conv,S,0,1,0,0,0,-1            Soil Warming
 conv,S,0,1,0,0,0,0             N input scalar option
 conv,S,0,1,0,0,0,0             OMAD scalar option
-conv,S,0,1,0,0,0,-1            Climate scalar option
+conv,S,0,1,0,0,0,0             Climate scalar option
 conv,S,0,1,0,0,0,1             Initial system
 conv,S,0,1,0,0,0,<crop_cultivar>        Initial crop
 conv,S,0,1,0,0,0,Initial tree
@@ -123,7 +123,7 @@ conv,S,1,1,0,0,0,-1            pH effect
 conv,S,1,1,0,0,0,-1            Soil Warming
 conv,S,1,1,0,0,0,0             N input scalar option
 conv,S,1,1,0,0,0,0             OMAD scalar option
-conv,S,1,1,0,0,0,-1            Climate scalar option
+conv,S,1,1,0,0,0,0             Climate scalar option
 conv,S,1,1,0,0,0,1             Initial system
 conv,S,1,1,0,0,0,<crop_cultivar>        Initial crop
 conv,S,1,1,0,0,0,Initial tree
@@ -161,7 +161,7 @@ res,N,0,1,0,0,0,-1            pH effect
 res,N,0,1,0,0,0,-1            Soil Warming
 res,N,0,1,0,0,0,0             N input scalar option
 res,N,0,1,0,0,0,0             OMAD scalar option
-res,N,0,1,0,0,0,-1            Climate scalar option
+res,N,0,1,0,0,0,0             Climate scalar option
 res,N,0,1,0,0,0,1             Initial system
 res,N,0,1,0,0,0,<crop_cultivar>        Initial crop
 res,N,0,1,0,0,0,Initial tree
@@ -198,7 +198,7 @@ res,N,1,1,0,0,0,-1            pH effect
 res,N,1,1,0,0,0,-1            Soil Warming
 res,N,1,1,0,0,0,0             N input scalar option
 res,N,1,1,0,0,0,0             OMAD scalar option
-res,N,1,1,0,0,0,-1            Climate scalar option
+res,N,1,1,0,0,0,0             Climate scalar option
 res,N,1,1,0,0,0,1             Initial system
 res,N,1,1,0,0,0,<crop_cultivar>        Initial crop
 res,N,1,1,0,0,0,Initial tree
@@ -236,7 +236,7 @@ res,S,0,1,0,0,0,-1            pH effect
 res,S,0,1,0,0,0,-1            Soil Warming
 res,S,0,1,0,0,0,0             N input scalar option
 res,S,0,1,0,0,0,0             OMAD scalar option
-res,S,0,1,0,0,0,-1            Climate scalar option
+res,S,0,1,0,0,0,0             Climate scalar option
 res,S,0,1,0,0,0,1             Initial system
 res,S,0,1,0,0,0,<crop_cultivar>        Initial crop
 res,S,0,1,0,0,0,Initial tree
@@ -273,7 +273,7 @@ res,S,1,1,0,0,0,-1            pH effect
 res,S,1,1,0,0,0,-1            Soil Warming
 res,S,1,1,0,0,0,0             N input scalar option
 res,S,1,1,0,0,0,0             OMAD scalar option
-res,S,1,1,0,0,0,-1            Climate scalar option
+res,S,1,1,0,0,0,0             Climate scalar option
 res,S,1,1,0,0,0,1             Initial system
 res,S,1,1,0,0,0,<crop_cultivar>        Initial crop
 res,S,1,1,0,0,0,Initial tree
@@ -311,7 +311,7 @@ ntill,N,0,1,0,0,0,-1            pH effect
 ntill,N,0,1,0,0,0,-1            Soil Warming
 ntill,N,0,1,0,0,0,0             N input scalar option
 ntill,N,0,1,0,0,0,0             OMAD scalar option
-ntill,N,0,1,0,0,0,-1            Climate scalar option
+ntill,N,0,1,0,0,0,0             Climate scalar option
 ntill,N,0,1,0,0,0,1             Initial system
 ntill,N,0,1,0,0,0,<crop_cultivar>        Initial crop
 ntill,N,0,1,0,0,0,Initial tree
@@ -346,7 +346,7 @@ ntill,N,1,1,0,0,0,-1            pH effect
 ntill,N,1,1,0,0,0,-1            Soil Warming
 ntill,N,1,1,0,0,0,0             N input scalar option
 ntill,N,1,1,0,0,0,0             OMAD scalar option
-ntill,N,1,1,0,0,0,-1            Climate scalar option
+ntill,N,1,1,0,0,0,0             Climate scalar option
 ntill,N,1,1,0,0,0,1             Initial system
 ntill,N,1,1,0,0,0,<crop_cultivar>        Initial crop
 ntill,N,1,1,0,0,0,Initial tree
@@ -382,7 +382,7 @@ ntill,S,0,1,0,0,0,-1            pH effect
 ntill,S,0,1,0,0,0,-1            Soil Warming
 ntill,S,0,1,0,0,0,0             N input scalar option
 ntill,S,0,1,0,0,0,0             OMAD scalar option
-ntill,S,0,1,0,0,0,-1            Climate scalar option
+ntill,S,0,1,0,0,0,0             Climate scalar option
 ntill,S,0,1,0,0,0,1             Initial system
 ntill,S,0,1,0,0,0,<crop_cultivar>        Initial crop
 ntill,S,0,1,0,0,0,Initial tree
@@ -417,7 +417,7 @@ ntill,S,1,1,0,0,0,-1            pH effect
 ntill,S,1,1,0,0,0,-1            Soil Warming
 ntill,S,1,1,0,0,0,0             N input scalar option
 ntill,S,1,1,0,0,0,0             OMAD scalar option
-ntill,S,1,1,0,0,0,-1            Climate scalar option
+ntill,S,1,1,0,0,0,0             Climate scalar option
 ntill,S,1,1,0,0,0,1             Initial system
 ntill,S,1,1,0,0,0,<crop_cultivar>        Initial crop
 ntill,S,1,1,0,0,0,Initial tree
@@ -453,7 +453,7 @@ conv,N,0,0,1,0,0,-1            pH effect
 conv,N,0,0,1,0,0,-1            Soil Warming
 conv,N,0,0,1,0,0,0             N input scalar option
 conv,N,0,0,1,0,0,0             OMAD scalar option
-conv,N,0,0,1,0,0,-1            Climate scalar option
+conv,N,0,0,1,0,0,0             Climate scalar option
 conv,N,0,0,1,0,0,1             Initial system
 conv,N,0,0,1,0,0,<crop_cultivar>        Initial crop
 conv,N,0,0,1,0,0,Initial tree
@@ -490,7 +490,7 @@ conv,N,1,0,1,0,0,-1            pH effect
 conv,N,1,0,1,0,0,-1            Soil Warming
 conv,N,1,0,1,0,0,0             N input scalar option
 conv,N,1,0,1,0,0,0             OMAD scalar option
-conv,N,1,0,1,0,0,-1            Climate scalar option
+conv,N,1,0,1,0,0,0             Climate scalar option
 conv,N,1,0,1,0,0,1             Initial system
 conv,N,1,0,1,0,0,<crop_cultivar>        Initial crop
 conv,N,1,0,1,0,0,Initial tree
@@ -528,7 +528,7 @@ conv,S,0,0,1,0,0,-1            pH effect
 conv,S,0,0,1,0,0,-1            Soil Warming
 conv,S,0,0,1,0,0,0             N input scalar option
 conv,S,0,0,1,0,0,0             OMAD scalar option
-conv,S,0,0,1,0,0,-1            Climate scalar option
+conv,S,0,0,1,0,0,0             Climate scalar option
 conv,S,0,0,1,0,0,1             Initial system
 conv,S,0,0,1,0,0,<crop_cultivar>        Initial crop
 conv,S,0,0,1,0,0,Initial tree
@@ -565,7 +565,7 @@ conv,S,1,0,1,0,0,-1            pH effect
 conv,S,1,0,1,0,0,-1            Soil Warming
 conv,S,1,0,1,0,0,0             N input scalar option
 conv,S,1,0,1,0,0,0             OMAD scalar option
-conv,S,1,0,1,0,0,-1            Climate scalar option
+conv,S,1,0,1,0,0,0             Climate scalar option
 conv,S,1,0,1,0,0,1             Initial system
 conv,S,1,0,1,0,0,<crop_cultivar>        Initial crop
 conv,S,1,0,1,0,0,Initial tree
@@ -603,7 +603,7 @@ res,N,0,0,1,0,0,-1            pH effect
 res,N,0,0,1,0,0,-1            Soil Warming
 res,N,0,0,1,0,0,0             N input scalar option
 res,N,0,0,1,0,0,0             OMAD scalar option
-res,N,0,0,1,0,0,-1            Climate scalar option
+res,N,0,0,1,0,0,0             Climate scalar option
 res,N,0,0,1,0,0,1             Initial system
 res,N,0,0,1,0,0,<crop_cultivar>        Initial crop
 res,N,0,0,1,0,0,Initial tree
@@ -640,7 +640,7 @@ res,N,1,0,1,0,0,-1            pH effect
 res,N,1,0,1,0,0,-1            Soil Warming
 res,N,1,0,1,0,0,0             N input scalar option
 res,N,1,0,1,0,0,0             OMAD scalar option
-res,N,1,0,1,0,0,-1            Climate scalar option
+res,N,1,0,1,0,0,0             Climate scalar option
 res,N,1,0,1,0,0,1             Initial system
 res,N,1,0,1,0,0,<crop_cultivar>        Initial crop
 res,N,1,0,1,0,0,Initial tree
@@ -678,7 +678,7 @@ res,S,0,0,1,0,0,-1            pH effect
 res,S,0,0,1,0,0,-1            Soil Warming
 res,S,0,0,1,0,0,0             N input scalar option
 res,S,0,0,1,0,0,0             OMAD scalar option
-res,S,0,0,1,0,0,-1            Climate scalar option
+res,S,0,0,1,0,0,0             Climate scalar option
 res,S,0,0,1,0,0,1             Initial system
 res,S,0,0,1,0,0,<crop_cultivar>        Initial crop
 res,S,0,0,1,0,0,Initial tree
@@ -715,7 +715,7 @@ res,S,1,0,1,0,0,-1            pH effect
 res,S,1,0,1,0,0,-1            Soil Warming
 res,S,1,0,1,0,0,0             N input scalar option
 res,S,1,0,1,0,0,0             OMAD scalar option
-res,S,1,0,1,0,0,-1            Climate scalar option
+res,S,1,0,1,0,0,0             Climate scalar option
 res,S,1,0,1,0,0,1             Initial system
 res,S,1,0,1,0,0,<crop_cultivar>        Initial crop
 res,S,1,0,1,0,0,Initial tree
@@ -753,7 +753,7 @@ ntill,N,0,0,1,0,0,-1            pH effect
 ntill,N,0,0,1,0,0,-1            Soil Warming
 ntill,N,0,0,1,0,0,0             N input scalar option
 ntill,N,0,0,1,0,0,0             OMAD scalar option
-ntill,N,0,0,1,0,0,-1            Climate scalar option
+ntill,N,0,0,1,0,0,0             Climate scalar option
 ntill,N,0,0,1,0,0,1             Initial system
 ntill,N,0,0,1,0,0,<crop_cultivar>        Initial crop
 ntill,N,0,0,1,0,0,Initial tree
@@ -788,7 +788,7 @@ ntill,N,1,0,1,0,0,-1            pH effect
 ntill,N,1,0,1,0,0,-1            Soil Warming
 ntill,N,1,0,1,0,0,0             N input scalar option
 ntill,N,1,0,1,0,0,0             OMAD scalar option
-ntill,N,1,0,1,0,0,-1            Climate scalar option
+ntill,N,1,0,1,0,0,0             Climate scalar option
 ntill,N,1,0,1,0,0,1             Initial system
 ntill,N,1,0,1,0,0,<crop_cultivar>        Initial crop
 ntill,N,1,0,1,0,0,Initial tree
@@ -824,7 +824,7 @@ ntill,S,0,0,1,0,0,-1            pH effect
 ntill,S,0,0,1,0,0,-1            Soil Warming
 ntill,S,0,0,1,0,0,0             N input scalar option
 ntill,S,0,0,1,0,0,0             OMAD scalar option
-ntill,S,0,0,1,0,0,-1            Climate scalar option
+ntill,S,0,0,1,0,0,0             Climate scalar option
 ntill,S,0,0,1,0,0,1             Initial system
 ntill,S,0,0,1,0,0,<crop_cultivar>        Initial crop
 ntill,S,0,0,1,0,0,Initial tree
@@ -859,7 +859,7 @@ ntill,S,1,0,1,0,0,-1            pH effect
 ntill,S,1,0,1,0,0,-1            Soil Warming
 ntill,S,1,0,1,0,0,0             N input scalar option
 ntill,S,1,0,1,0,0,0             OMAD scalar option
-ntill,S,1,0,1,0,0,-1            Climate scalar option
+ntill,S,1,0,1,0,0,0             Climate scalar option
 ntill,S,1,0,1,0,0,1             Initial system
 ntill,S,1,0,1,0,0,<crop_cultivar>        Initial crop
 ntill,S,1,0,1,0,0,Initial tree
@@ -895,7 +895,7 @@ conv,S,0,0,0,1,0,-1            pH effect
 conv,S,0,0,0,1,0,-1            Soil Warming
 conv,S,0,0,0,1,0,0             N input scalar option
 conv,S,0,0,0,1,0,0             OMAD scalar option
-conv,S,0,0,0,1,0,-1            Climate scalar option
+conv,S,0,0,0,1,0,0             Climate scalar option
 conv,S,0,0,0,1,0,1             Initial system
 conv,S,0,0,0,1,0,<crop_cultivar>        Initial crop
 conv,S,0,0,0,1,0,Initial tree
@@ -932,7 +932,7 @@ conv,S,1,0,0,1,0,-1            pH effect
 conv,S,1,0,0,1,0,-1            Soil Warming
 conv,S,1,0,0,1,0,0             N input scalar option
 conv,S,1,0,0,1,0,0             OMAD scalar option
-conv,S,1,0,0,1,0,-1            Climate scalar option
+conv,S,1,0,0,1,0,0             Climate scalar option
 conv,S,1,0,0,1,0,1             Initial system
 conv,S,1,0,0,1,0,<crop_cultivar>        Initial crop
 conv,S,1,0,0,1,0,Initial tree
@@ -970,7 +970,7 @@ conv,N,0,0,0,1,0,-1            pH effect
 conv,N,0,0,0,1,0,-1            Soil Warming
 conv,N,0,0,0,1,0,0             N input scalar option
 conv,N,0,0,0,1,0,0             OMAD scalar option
-conv,N,0,0,0,1,0,-1            Climate scalar option
+conv,N,0,0,0,1,0,0             Climate scalar option
 conv,N,0,0,0,1,0,1             Initial system
 conv,N,0,0,0,1,0,<crop_cultivar>        Initial crop
 conv,N,0,0,0,1,0,Initial tree
@@ -1007,7 +1007,7 @@ conv,N,1,0,0,1,0,-1            pH effect
 conv,N,1,0,0,1,0,-1            Soil Warming
 conv,N,1,0,0,1,0,0             N input scalar option
 conv,N,1,0,0,1,0,0             OMAD scalar option
-conv,N,1,0,0,1,0,-1            Climate scalar option
+conv,N,1,0,0,1,0,0             Climate scalar option
 conv,N,1,0,0,1,0,1             Initial system
 conv,N,1,0,0,1,0,<crop_cultivar>        Initial crop
 conv,N,1,0,0,1,0,Initial tree
@@ -1045,7 +1045,7 @@ res,S,0,0,0,1,0,-1            pH effect
 res,S,0,0,0,1,0,-1            Soil Warming
 res,S,0,0,0,1,0,0             N input scalar option
 res,S,0,0,0,1,0,0             OMAD scalar option
-res,S,0,0,0,1,0,-1            Climate scalar option
+res,S,0,0,0,1,0,0             Climate scalar option
 res,S,0,0,0,1,0,1             Initial system
 res,S,0,0,0,1,0,<crop_cultivar>        Initial crop
 res,S,0,0,0,1,0,Initial tree
@@ -1082,7 +1082,7 @@ res,S,1,0,0,1,0,-1            pH effect
 res,S,1,0,0,1,0,-1            Soil Warming
 res,S,1,0,0,1,0,0             N input scalar option
 res,S,1,0,0,1,0,0             OMAD scalar option
-res,S,1,0,0,1,0,-1            Climate scalar option
+res,S,1,0,0,1,0,0             Climate scalar option
 res,S,1,0,0,1,0,1             Initial system
 res,S,1,0,0,1,0,<crop_cultivar>        Initial crop
 res,S,1,0,0,1,0,Initial tree
@@ -1120,7 +1120,7 @@ res,N,0,0,0,1,0,-1            pH effect
 res,N,0,0,0,1,0,-1            Soil Warming
 res,N,0,0,0,1,0,0             N input scalar option
 res,N,0,0,0,1,0,0             OMAD scalar option
-res,N,0,0,0,1,0,-1            Climate scalar option
+res,N,0,0,0,1,0,0             Climate scalar option
 res,N,0,0,0,1,0,1             Initial system
 res,N,0,0,0,1,0,<crop_cultivar>        Initial crop
 res,N,0,0,0,1,0,Initial tree
@@ -1157,7 +1157,7 @@ res,N,1,0,0,1,0,-1            pH effect
 res,N,1,0,0,1,0,-1            Soil Warming
 res,N,1,0,0,1,0,0             N input scalar option
 res,N,1,0,0,1,0,0             OMAD scalar option
-res,N,1,0,0,1,0,-1            Climate scalar option
+res,N,1,0,0,1,0,0             Climate scalar option
 res,N,1,0,0,1,0,1             Initial system
 res,N,1,0,0,1,0,<crop_cultivar>        Initial crop
 res,N,1,0,0,1,0,Initial tree
@@ -1195,7 +1195,7 @@ ntill,S,0,0,0,1,0,-1            pH effect
 ntill,S,0,0,0,1,0,-1            Soil Warming
 ntill,S,0,0,0,1,0,0             N input scalar option
 ntill,S,0,0,0,1,0,0             OMAD scalar option
-ntill,S,0,0,0,1,0,-1            Climate scalar option
+ntill,S,0,0,0,1,0,0             Climate scalar option
 ntill,S,0,0,0,1,0,1             Initial system
 ntill,S,0,0,0,1,0,<crop_cultivar>        Initial crop
 ntill,S,0,0,0,1,0,Initial tree
@@ -1230,7 +1230,7 @@ ntill,S,1,0,0,1,0,-1            pH effect
 ntill,S,1,0,0,1,0,-1            Soil Warming
 ntill,S,1,0,0,1,0,0             N input scalar option
 ntill,S,1,0,0,1,0,0             OMAD scalar option
-ntill,S,1,0,0,1,0,-1            Climate scalar option
+ntill,S,1,0,0,1,0,0             Climate scalar option
 ntill,S,1,0,0,1,0,1             Initial system
 ntill,S,1,0,0,1,0,<crop_cultivar>        Initial crop
 ntill,S,1,0,0,1,0,Initial tree
@@ -1266,7 +1266,7 @@ ntill,N,0,0,0,1,0,-1            pH effect
 ntill,N,0,0,0,1,0,-1            Soil Warming
 ntill,N,0,0,0,1,0,0             N input scalar option
 ntill,N,0,0,0,1,0,0             OMAD scalar option
-ntill,N,0,0,0,1,0,-1            Climate scalar option
+ntill,N,0,0,0,1,0,0             Climate scalar option
 ntill,N,0,0,0,1,0,1             Initial system
 ntill,N,0,0,0,1,0,<crop_cultivar>        Initial crop
 ntill,N,0,0,0,1,0,Initial tree
@@ -1301,7 +1301,7 @@ ntill,N,1,0,0,1,0,-1            pH effect
 ntill,N,1,0,0,1,0,-1            Soil Warming
 ntill,N,1,0,0,1,0,0             N input scalar option
 ntill,N,1,0,0,1,0,0             OMAD scalar option
-ntill,N,1,0,0,1,0,-1            Climate scalar option
+ntill,N,1,0,0,1,0,0             Climate scalar option
 ntill,N,1,0,0,1,0,1             Initial system
 ntill,N,1,0,0,1,0,<crop_cultivar>        Initial crop
 ntill,N,1,0,0,1,0,Initial tree
@@ -1337,7 +1337,7 @@ conv,S,0,0,0,0,1,-1            pH effect
 conv,S,0,0,0,0,1,-1            Soil Warming
 conv,S,0,0,0,0,1,0             N input scalar option
 conv,S,0,0,0,0,1,0             OMAD scalar option
-conv,S,0,0,0,0,1,-1            Climate scalar option
+conv,S,0,0,0,0,1,0             Climate scalar option
 conv,S,0,0,0,0,1,1             Initial system
 conv,S,0,0,0,0,1,<crop_cultivar>        Initial crop
 conv,S,0,0,0,0,1,Initial tree
@@ -1374,7 +1374,7 @@ conv,S,1,0,0,0,1,-1            pH effect
 conv,S,1,0,0,0,1,-1            Soil Warming
 conv,S,1,0,0,0,1,0             N input scalar option
 conv,S,1,0,0,0,1,0             OMAD scalar option
-conv,S,1,0,0,0,1,-1            Climate scalar option
+conv,S,1,0,0,0,1,0             Climate scalar option
 conv,S,1,0,0,0,1,1             Initial system
 conv,S,1,0,0,0,1,<crop_cultivar>        Initial crop
 conv,S,1,0,0,0,1,Initial tree
@@ -1412,7 +1412,7 @@ conv,N,0,0,0,0,1,-1            pH effect
 conv,N,0,0,0,0,1,-1            Soil Warming
 conv,N,0,0,0,0,1,0             N input scalar option
 conv,N,0,0,0,0,1,0             OMAD scalar option
-conv,N,0,0,0,0,1,-1            Climate scalar option
+conv,N,0,0,0,0,1,0             Climate scalar option
 conv,N,0,0,0,0,1,1             Initial system
 conv,N,0,0,0,0,1,<crop_cultivar>        Initial crop
 conv,N,0,0,0,0,1,Initial tree
@@ -1449,7 +1449,7 @@ conv,N,1,0,0,0,1,-1            pH effect
 conv,N,1,0,0,0,1,-1            Soil Warming
 conv,N,1,0,0,0,1,0             N input scalar option
 conv,N,1,0,0,0,1,0             OMAD scalar option
-conv,N,1,0,0,0,1,-1            Climate scalar option
+conv,N,1,0,0,0,1,0             Climate scalar option
 conv,N,1,0,0,0,1,1             Initial system
 conv,N,1,0,0,0,1,<crop_cultivar>        Initial crop
 conv,N,1,0,0,0,1,Initial tree
@@ -1487,7 +1487,7 @@ res,S,0,0,0,0,1,-1            pH effect
 res,S,0,0,0,0,1,-1            Soil Warming
 res,S,0,0,0,0,1,0             N input scalar option
 res,S,0,0,0,0,1,0             OMAD scalar option
-res,S,0,0,0,0,1,-1            Climate scalar option
+res,S,0,0,0,0,1,0             Climate scalar option
 res,S,0,0,0,0,1,1             Initial system
 res,S,0,0,0,0,1,<crop_cultivar>        Initial crop
 res,S,0,0,0,0,1,Initial tree
@@ -1524,7 +1524,7 @@ res,S,1,0,0,0,1,-1            pH effect
 res,S,1,0,0,0,1,-1            Soil Warming
 res,S,1,0,0,0,1,0             N input scalar option
 res,S,1,0,0,0,1,0             OMAD scalar option
-res,S,1,0,0,0,1,-1            Climate scalar option
+res,S,1,0,0,0,1,0             Climate scalar option
 res,S,1,0,0,0,1,1             Initial system
 res,S,1,0,0,0,1,<crop_cultivar>        Initial crop
 res,S,1,0,0,0,1,Initial tree
@@ -1562,7 +1562,7 @@ res,N,0,0,0,0,1,-1            pH effect
 res,N,0,0,0,0,1,-1            Soil Warming
 res,N,0,0,0,0,1,0             N input scalar option
 res,N,0,0,0,0,1,0             OMAD scalar option
-res,N,0,0,0,0,1,-1            Climate scalar option
+res,N,0,0,0,0,1,0             Climate scalar option
 res,N,0,0,0,0,1,1             Initial system
 res,N,0,0,0,0,1,<crop_cultivar>        Initial crop
 res,N,0,0,0,0,1,Initial tree
@@ -1599,7 +1599,7 @@ res,N,1,0,0,0,1,-1            pH effect
 res,N,1,0,0,0,1,-1            Soil Warming
 res,N,1,0,0,0,1,0             N input scalar option
 res,N,1,0,0,0,1,0             OMAD scalar option
-res,N,1,0,0,0,1,-1            Climate scalar option
+res,N,1,0,0,0,1,0             Climate scalar option
 res,N,1,0,0,0,1,1             Initial system
 res,N,1,0,0,0,1,<crop_cultivar>        Initial crop
 res,N,1,0,0,0,1,Initial tree
@@ -1637,7 +1637,7 @@ ntill,S,0,0,0,0,1,-1            pH effect
 ntill,S,0,0,0,0,1,-1            Soil Warming
 ntill,S,0,0,0,0,1,0             N input scalar option
 ntill,S,0,0,0,0,1,0             OMAD scalar option
-ntill,S,0,0,0,0,1,-1            Climate scalar option
+ntill,S,0,0,0,0,1,0             Climate scalar option
 ntill,S,0,0,0,0,1,1             Initial system
 ntill,S,0,0,0,0,1,<crop_cultivar>        Initial crop
 ntill,S,0,0,0,0,1,Initial tree
@@ -1672,7 +1672,7 @@ ntill,S,1,0,0,0,1,-1            pH effect
 ntill,S,1,0,0,0,1,-1            Soil Warming
 ntill,S,1,0,0,0,1,0             N input scalar option
 ntill,S,1,0,0,0,1,0             OMAD scalar option
-ntill,S,1,0,0,0,1,-1            Climate scalar option
+ntill,S,1,0,0,0,1,0             Climate scalar option
 ntill,S,1,0,0,0,1,1             Initial system
 ntill,S,1,0,0,0,1,<crop_cultivar>        Initial crop
 ntill,S,1,0,0,0,1,Initial tree
@@ -1708,7 +1708,7 @@ ntill,N,0,0,0,0,1,-1            pH effect
 ntill,N,0,0,0,0,1,-1            Soil Warming
 ntill,N,0,0,0,0,1,0             N input scalar option
 ntill,N,0,0,0,0,1,0             OMAD scalar option
-ntill,N,0,0,0,0,1,-1            Climate scalar option
+ntill,N,0,0,0,0,1,0             Climate scalar option
 ntill,N,0,0,0,0,1,1             Initial system
 ntill,N,0,0,0,0,1,<crop_cultivar>        Initial crop
 ntill,N,0,0,0,0,1,Initial tree
@@ -1743,7 +1743,7 @@ ntill,N,1,0,0,0,1,-1            pH effect
 ntill,N,1,0,0,0,1,-1            Soil Warming
 ntill,N,1,0,0,0,1,0             N input scalar option
 ntill,N,1,0,0,0,1,0             OMAD scalar option
-ntill,N,1,0,0,0,1,-1            Climate scalar option
+ntill,N,1,0,0,0,1,0             Climate scalar option
 ntill,N,1,0,0,0,1,1             Initial system
 ntill,N,1,0,0,0,1,<crop_cultivar>        Initial crop
 ntill,N,1,0,0,0,1,Initial tree

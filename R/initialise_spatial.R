@@ -18,6 +18,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   org_CN         = rast(paste(pkg.env$gis_path, 'global_manure_weighted_CN_agg.tif', sep='/'))
   residue_return = rast(paste(pkg.env$gis_path, 'wirsenius_global_res_rtrn_agg.tif', sep='/'))
   ipcc_clim      = rast(paste(pkg.env$gis_path, 'ipcc_climate_agg.tif',              sep='/'))
+  cmip6_calendars= fread(paste(pkg.env$gis_path,'cmip6_calendars.csv',              sep='/'))
 
   # tidy variables, names
   crop_calendar        = crop_calendar[[names(crop_calendar) %like% 'plant_' | names(crop_calendar) %like% 'harvest_']]
@@ -382,7 +383,33 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   main_table = main_table[gridid %in% gridid_f,]
   gc()
 
-  fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_21July23.csv", sep = "/")) #csv
-  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_21July23.RData", sep = "/")) #rda
+  # UPDATE Harvest Handling (consistency with baseline)
+  # change harvest returns
+  harv_m_hist        = fread(paste(pkg.env$gis_path, 'harv_param_maiz.csv', sep='/'))
+  harv_m_hist[,  crop := 'maiz']
+  harv_s_hist        = fread(paste(pkg.env$gis_path, 'harv_param_soyb.csv', sep='/'))
+  harv_s_hist[,  crop := 'soyb']
+  harv_ww_hist       = fread(paste(pkg.env$gis_path, 'harv_param_wwht.csv', sep='/'))
+  harv_ww_hist[, crop := 'wwht']
+  harv_sw_hist       = fread(paste(pkg.env$gis_path, 'harv_param_swht.csv', sep='/'))
+  harv_sw_hist[, crop := 'swht']
+  harv_hist = rbind(harv_m_hist, harv_s_hist, harv_ww_hist, harv_sw_hist)
+  setorder(harv_hist, gridid, crop)
+
+  main_table = main_table[harv_hist, on = .(gridid = gridid, crop = crop)]
+  main_table = main_table[!is.na(gridid.rotated)]
+  gc()
+  # update column with param
+  main_table[, res.rtrn.amt := param]
+  # match current input set-up
+  main_table[, res.rtrn.amt := gsub('GS', '', res.rtrn.amt)]
+  main_table[, res.rtrn.amt := as.numeric(res.rtrn.amt)/100L]
+  main_table[, param := NULL]
+
+  main_table = unique(main_table)
+  gc()
+
+  fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_01Aug23.csv", sep = "/")) #csv
+  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_01Aug23.RData", sep = "/")) #rda
   return(main_table)
 }
