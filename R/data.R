@@ -125,7 +125,7 @@
 #'
 #' Growing Degree Day Harvest Dates
 #'
-#' Contains growing degree day harvest dates obtained after an intial DayCent simulation.
+#' Contains growing degree day harvest dates obtained after an initial DayCent simulation.
 #' Replaces input harvest date for cover crop scenarios where available. Available for
 #' each ssp and gcm combination.
 #'
@@ -141,5 +141,5 @@
 #'   \item{<harvest_day_1>}{GDD havest date. 0's to be replaced by input date. One of 85 columns}
 #'   ...
 #' }
-#' @source Colorado State University, Yi Yang. Cornell University, S.C. McClelland.
+#' @source Cornell University, S.C. McClelland.
 "GDD_harvest_dates"
