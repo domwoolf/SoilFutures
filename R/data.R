@@ -122,3 +122,24 @@
 #' }
 #' @source Colorado State University, Yi Yang. Cornell University, S.C. McClelland.
 "eq_psh_sch_template"
+#'
+#' Growing Degree Day Harvest Dates
+#'
+#' Contains growing degree day harvest dates obtained after an intial DayCent simulation.
+#' Replaces input harvest date for cover crop scenarios where available. Available for
+#' each ssp and gcm combination.
+#'
+#' @format ## `GDD_harvest_dates`
+#' A data frame with 3040522 rows and 91 columns:
+#' \describe{
+#'   \item{gridid}{Grid ID}
+#'   \item{crop}{Crop, four levels}
+#'   \item{scenario}{Scenario, one level 'conv'}
+#'   \item{irr}{Irrigation, binary}
+#'   \item{ssp}{SSP, three levels 'historical', 'ssp126', 'ssp370'.}
+#'   \item{gcm}{GCM, multiple levels.}
+#'   \item{<harvest_day_1>}{GDD havest date. 0's to be replaced by input date. One of 85 columns}
+#'   ...
+#' }
+#' @source Colorado State University, Yi Yang. Cornell University, S.C. McClelland.
+"GDD_harvest_dates"
