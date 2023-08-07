@@ -419,7 +419,7 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
     harvest_dates_t    = as.list(harvest_dates_n)
     harvest_dates_t    = setDT(harvest_dates_t)
     colnames(harvest_dates_t) = harvest_dates_n
-    harvest_dates_t[1,]       = 'NA'
+    harvest_dates_t[1,]       = 0L
     GDD_harvest_dt = data.table(gridid   = .gridid,
                                 crop     = .crop,
                                 scenario = 'conv',
@@ -427,6 +427,8 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
                                 gcm      = .gcm,
                                 ssp      = .ssp)
     GDD_harvest_dt = cbind(GDD_harvest_dt, harvest_dates_t)
+    GDD_harvest_dt[,(harvest_dates_n):= lapply(.SD, as.numeric), .SDcols = harvest_dates_n]
+
   }
   # variable definition
   harvest_dates               = colnames(GDD_harvest_dt[,7:91])
