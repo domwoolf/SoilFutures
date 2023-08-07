@@ -413,6 +413,21 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
   cell_sch_data       = cell_data
   GDD_harvest_dt      = GDD_harvest_dt[gridid %in% .gridid & crop %in% .crop & irr %in% .irr
                                        & gcm %in% .gcm & ssp %in% .ssp,]
+  # catch 0 row returns, create empty table
+  if (NROW(GDD_harvest_dt) == 0) {
+    harvest_dates_n    = colnames(GDD_harvest_dt[,7:91])
+    harvest_dates_t    = as.list(harvest_dates_n)
+    harvest_dates_t    = setDT(harvest_dates_t)
+    colnames(harvest_dates_t) = harvest_dates_n
+    harvest_dates_t[1,]       = 'NA'
+    GDD_harvest_dt = data.table(gridid   = .gridid,
+                                crop     = .crop,
+                                scenario = 'conv',
+                                irr      = .irr,
+                                gcm      = .gcm,
+                                ssp      = .ssp)
+    GDD_harvest_dt = cbind(GDD_harvest_dt, harvest_dates_t)
+  }
   # variable definition
   harvest_dates               = colnames(GDD_harvest_dt[,7:91])
   cult_post_harvest_dates     = gsub('harvest_day_', 'cult_day_postharvest_', harvest_dates)
@@ -475,7 +490,7 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
       if (GDD_harvest_dt[,get(h_date)] + 7 > 365L) {
         cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], 365L, schedule)]
       } else {
-        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], (GDD_harvest_dt[,get(h_date)] + 7), schedule)]
+        cell_schedule_f[, schedule := gsub(cc_plant_dates[counter], (GDD_harvest_dt[,get(h_date)] + 7L), schedule)]
       }
       counter = counter + 1L
     }
@@ -515,7 +530,7 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
     cell_schedule_f[, schedule := gsub('<block_name>',   block_name,      schedule)]
     cell_schedule_f[, schedule := gsub('<start_year>',   start_year,      schedule)]
     cell_schedule_f[, schedule := gsub('<end_year>',     end_year,        schedule)]
-    cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,        schedule)]
+    cell_schedule_f[, schedule := gsub('<crop_cultivar>',crop_cultivar,   schedule)]
 
     # co2 option
     ifelse(.ssp %in% 'historical',
