@@ -112,7 +112,7 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   daily_tasmax = unname(unlist(extract(climate$tasmax, cell)))
   w[, tasmax := round(daily_tasmax[idx]/10, 1)]
   w[, tasmin := round(daily_tasmin[idx]/10, 1)]
-  w[, pr     := round(daily_pr[idx], 1)]
+  w[, pr     := round(daily_pr[idx]/10, 1)] # updated to convert to cm from mm
   w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
   w[, idx    := NULL]
   weather_fname = paste0('weather_', .ssp, '_', .gcm, '_', .gridid, '.wth')
