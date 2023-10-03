@@ -330,50 +330,50 @@ results_processing = function(.lis_fname, .gridid, .scenario, .crop, .irr, .ssp,
   nflux.annsum.out = unique(nflux.annsum.out, by = c('time'))
 
   # table 2 - grw season, ngrw season sum
-  nflux.szn.out    = nflux.out
-  if(.plant_date < .harv_date) {
-    nflux.grszn.out = nflux.szn.out[dayofyr >= .plant_date &
-                                      dayofyr <= .harv_date]
-  } else {
-    nflux.grszn.out = nflux.szn.out[dayofyr >= .plant_date |
-                                      dayofyr <= .harv_date]
-  }
-  nflux.grszn.out  = nflux.grszn.out[, .(
-    gridid         = gridid,
-    scenario       = scenario,
-    irr            = irr,
-    ssp            = ssp,
-    gcm            = gcm,
-    nit_N2O.N   = sum(`nit_N2O-N`),
-    dnit_N2O.N  = sum(`dnit_N2O-N`)
-  ),
-  by             = .(time)]
-  nflux.grszn.out  = unique(nflux.grszn.out, by = c('time'))
-  nflux.grszn.out[, period := 'grw']
-  setcolorder(nflux.grszn.out,
-              c('gridid', 'scenario', 'irr', 'ssp', 'gcm', 'period'))
-  if(.plant_date < .harv_date) {
-    nflux.ngrszn.out = nflux.szn.out[dayofyr < .plant_date |
-                                       dayofyr > .harv_date]
-  } else {
-    nflux.ngrszn.out = nflux.szn.out[dayofyr < .plant_date &
-                                       dayofyr > .harv_date]
-  }
-  nflux.ngrszn.out = nflux.ngrszn.out[, .(
-    gridid         = gridid,
-    scenario       = scenario,
-    irr            = irr,
-    ssp            = ssp,
-    gcm            = gcm,
-    nit_N2O.N   = sum(`nit_N2O-N`),
-    dnit_N2O.N  = sum(`dnit_N2O-N`)
-  ),
-  by               = .(time)]
-  nflux.ngrszn.out = unique(nflux.ngrszn.out, by = c('time'))
-  nflux.ngrszn.out[, period := 'ngrw']
-  setcolorder(nflux.ngrszn.out,
-              c('gridid', 'scenario', 'irr', 'ssp', 'gcm', 'period'))
-  nflux.szn.out    = rbind(nflux.grszn.out, nflux.ngrszn.out)
+  # nflux.szn.out    = nflux.out
+  # if(.plant_date < .harv_date) {
+  #   nflux.grszn.out = nflux.szn.out[dayofyr >= .plant_date &
+  #                                     dayofyr <= .harv_date]
+  # } else {
+  #   nflux.grszn.out = nflux.szn.out[dayofyr >= .plant_date |
+  #                                     dayofyr <= .harv_date]
+  # }
+  # nflux.grszn.out  = nflux.grszn.out[, .(
+  #   gridid         = gridid,
+  #   scenario       = scenario,
+  #   irr            = irr,
+  #   ssp            = ssp,
+  #   gcm            = gcm,
+  #   nit_N2O.N   = sum(`nit_N2O-N`),
+  #   dnit_N2O.N  = sum(`dnit_N2O-N`)
+  # ),
+  # by             = .(time)]
+  # nflux.grszn.out  = unique(nflux.grszn.out, by = c('time'))
+  # nflux.grszn.out[, period := 'grw']
+  # setcolorder(nflux.grszn.out,
+  #             c('gridid', 'scenario', 'irr', 'ssp', 'gcm', 'period'))
+  # if(.plant_date < .harv_date) {
+  #   nflux.ngrszn.out = nflux.szn.out[dayofyr < .plant_date |
+  #                                      dayofyr > .harv_date]
+  # } else {
+  #   nflux.ngrszn.out = nflux.szn.out[dayofyr < .plant_date &
+  #                                      dayofyr > .harv_date]
+  # }
+  # nflux.ngrszn.out = nflux.ngrszn.out[, .(
+  #   gridid         = gridid,
+  #   scenario       = scenario,
+  #   irr            = irr,
+  #   ssp            = ssp,
+  #   gcm            = gcm,
+  #   nit_N2O.N   = sum(`nit_N2O-N`),
+  #   dnit_N2O.N  = sum(`dnit_N2O-N`)
+  # ),
+  # by               = .(time)]
+  # nflux.ngrszn.out = unique(nflux.ngrszn.out, by = c('time'))
+  # nflux.ngrszn.out[, period := 'ngrw']
+  # setcolorder(nflux.ngrszn.out,
+  #             c('gridid', 'scenario', 'irr', 'ssp', 'gcm', 'period'))
+  # nflux.szn.out    = rbind(nflux.grszn.out, nflux.ngrszn.out)
 
   # results output
   table_out    = year_sum.out[harvest.csv,       on = .(
@@ -439,37 +439,37 @@ results_processing = function(.lis_fname, .gridid, .scenario, .crop, .irr, .ssp,
     append = TRUE
   )
 
-  nflux.szn.out[, clim_ipcc := .clim_ipcc]
-  nflux.szn.out[, crop := .crop]
-  setcolorder(
-    nflux.szn.out,
-    c(
-      'gridid',
-      'crop',
-      'scenario',
-      'irr',
-      'ssp',
-      'gcm',
-      'clim_ipcc',
-      'period'
-    )
-  )
-  fwrite(
-    nflux.szn.out,
-    paste(
-      .main_out_path,
-      '/',
-      .argsgcm.ssp,
-      '/',
-      .arg_rowstart,
-      '-',
-      .arg_endrow,
-      '/',
-      .out_gr_tbl_fname,
-      sep = ''
-    ),
-    append = TRUE
-  )
+  # nflux.szn.out[, clim_ipcc := .clim_ipcc]
+  # nflux.szn.out[, crop := .crop]
+  # setcolorder(
+  #   nflux.szn.out,
+  #   c(
+  #     'gridid',
+  #     'crop',
+  #     'scenario',
+  #     'irr',
+  #     'ssp',
+  #     'gcm',
+  #     'clim_ipcc',
+  #     'period'
+  #   )
+  # )
+  # fwrite(
+  #   nflux.szn.out,
+  #   paste(
+  #     .main_out_path,
+  #     '/',
+  #     .argsgcm.ssp,
+  #     '/',
+  #     .arg_rowstart,
+  #     '-',
+  #     .arg_endrow,
+  #     '/',
+  #     .out_gr_tbl_fname,
+  #     sep = ''
+  #   ),
+  #   append = TRUE
+  # )
 }
 #' Track simulation times
 #'

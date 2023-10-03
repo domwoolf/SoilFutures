@@ -11,10 +11,13 @@
 #' @import sf
 #' @export
 create_cell_data_csu_table = function(cmip6_calendars) {
+  library(terra)
+  library(data.table)
+  library(sf)
   # create rasters
   crop_calendar  = rast(paste(pkg.env$gis_path, 'crop_calendar.tif',                 sep='/'))
-  min_N          = rast(paste(pkg.env$gis_path, 'fertilizer-n_by_crop.tif',          sep='/'))
-  org_N          = rast(paste(pkg.env$gis_path, 'manure-n_cropland.tif',             sep='/'))
+  min_N          = rast(paste(pkg.env$gis_path, 'fertilizer-n_by_crop_focal.tif',    sep='/'))
+  org_N          = rast(paste(pkg.env$gis_path, 'manure-n_cropland_focal.tif',       sep='/'))
   org_CN         = rast(paste(pkg.env$gis_path, 'global_manure_weighted_CN_agg.tif', sep='/'))
   residue_return = rast(paste(pkg.env$gis_path, 'wirsenius_global_res_rtrn_agg.tif', sep='/'))
   ipcc_clim      = rast(paste(pkg.env$gis_path, 'ipcc_climate_agg.tif',              sep='/'))
@@ -370,6 +373,7 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   setorder(main_table, gridid)
   setcolorder(main_table, c('gridid', 'gridid.rotated', 'x', 'y', 'WB_NAME', 'WB_REGION','regionid', 'ssp', 'gcm',
                             'crop', 'irr','scenario','pset_id', 'clim_ipcc'))
+  gc()
   # ADD Cropping Area
   crop_area_r      = rast(paste(pkg.env$gis_path, 'all-cropland-rf-ir-area.tif', sep = '/'))
   crop_area_dt     = as.data.table(terra::as.data.frame(crop_area_r, xy = TRUE, cells = TRUE))
@@ -383,33 +387,10 @@ create_cell_data_csu_table = function(cmip6_calendars) {
   main_table = main_table[gridid %in% gridid_f,]
   gc()
 
-  # UPDATE Harvest Handling (consistency with baseline)
-  # change harvest returns
-  harv_m_hist        = fread(paste(pkg.env$gis_path, 'harv_param_maiz.csv', sep='/'))
-  harv_m_hist[,  crop := 'maiz']
-  harv_s_hist        = fread(paste(pkg.env$gis_path, 'harv_param_soyb.csv', sep='/'))
-  harv_s_hist[,  crop := 'soyb']
-  harv_ww_hist       = fread(paste(pkg.env$gis_path, 'harv_param_wwht.csv', sep='/'))
-  harv_ww_hist[, crop := 'wwht']
-  harv_sw_hist       = fread(paste(pkg.env$gis_path, 'harv_param_swht.csv', sep='/'))
-  harv_sw_hist[, crop := 'swht']
-  harv_hist = rbind(harv_m_hist, harv_s_hist, harv_ww_hist, harv_sw_hist)
-  setorder(harv_hist, gridid, crop)
-
-  main_table = main_table[harv_hist, on = .(gridid = gridid, crop = crop)]
-  main_table = main_table[!is.na(gridid.rotated)]
-  gc()
-  # update column with param
-  main_table[, res.rtrn.amt := param]
-  # match current input set-up
-  main_table[, res.rtrn.amt := gsub('GS', '', res.rtrn.amt)]
-  main_table[, res.rtrn.amt := as.numeric(res.rtrn.amt)/100L]
-  main_table[, param := NULL]
-
   main_table = unique(main_table)
   gc()
 
-  fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_01Aug23.csv", sep = "/")) #csv
-  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_01Aug23.RData", sep = "/")) #rda
+  # fwrite(main_table, paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_03Oct23.csv", sep = "/")) #csv
+  save(main_table, file = paste("/home/shelby/Documents/projects/SoilFutures/data-raw","cell_data_table_03Oct23.RData", sep = "/")) #rda
   return(main_table)
 }
