@@ -5,30 +5,35 @@ library(terra)
 #------------------------------------------------------------------------------------------------
 path      = getwd()
 save_path = paste(path, 'data-raw/', sep = '/')
-date      = '05December23'
+date      = '08December23'
 #------------------------------------------------------------------------------------------------
 load(paste0(path, '/data-raw/cell_data_table_', date, '.RData'))
+main_table_new = main_table
+rm(main_table)
+
+gridid_all     = unique(main_table_new[,gridid])
 #------------------------------------------------------------------------------------------------
 # MISSING CHECK AND FILTER
 #------------------------------------------------------------------------------------------------
-# October 2023
-crop_area_r      = rast(paste(pkg.env$gis_path, 'all-cropland-rf-ir-area.tif', sep = '/'))
-crop_area_dt     = as.data.table(terra::as.data.frame(crop_area_r, xy = TRUE, cells = TRUE))
-gridid_all       = unique(main_table[, gridid])
-crop_area_dt_f   = crop_area_dt[cell %in% gridid_all,]
-crop_area_dt_f   = crop_area_dt_f[wht_irr_area_ha >= 1 | wht_rain_area_ha >= 1 | maiz_rain_area_ha >= 1 |
-                 maiz_irr_area_ha >= 1 | soyb_rain_area_ha >=1 | soyb_irr_area_ha >= 1,]
-gridid_f         = unique(crop_area_dt_f[,cell])
+# October 2023 Run
+date_oct   = '03Oct23'
+load(paste0(path, '/data-raw/cell_data_table_', date_oct, '.RData'))
 
-# REMOVE < 1ha
-main_table_old = main_table[gcm %in% 'historical' & gridid %in% gridid_f,]
-gridid_old     = unique(main_table_old[,gridid])
+gridid_oct = unique(main_table[,gridid])
+rm(main_table)
+
+gridid_missing = gridid_all[!gridid_all %in% gridid_oct]
+
+# rename main_table
+main_table = main_table_new
+rm(main_table_new)
+gc()
 
 # December 2023
 crop_area_r      = rast(paste(pkg.env$gis_path, 'msw-cropland-rf-ir-area.tif', sep = '/'))
-crop_area_dt     = as.data.table(terra::as.data.frame(crop_area_r, xy = TRUE, cells = TRUE))
-gridid_all       = unique(main_table[, gridid])
+crop_area_dt     = as.data.table(terra::as.data.frame(crop_area_r, xy = TRUE, cells = TRUE, na.rm = 'NA'))
 crop_area_dt_f   = crop_area_dt[cell %in% gridid_all,]
+
 crop_area_dt_f   = crop_area_dt_f[wheat_irrigated_2015 >= 1 | wheat_rainfed_2015 >= 1 | maize_rainfed_2015 >= 1 |
                                     maize_irrigated_2015 >= 1 | soybean_rainfed_2015 >= 1 | soybean_irrigated_2015 >= 1,]
 gridid_f         = unique(crop_area_dt_f[,cell])
@@ -37,27 +42,20 @@ gridid_f         = unique(crop_area_dt_f[,cell])
 main_table_new = main_table[gcm %in% 'historical' & gridid %in% gridid_f,]
 gridid_new     = unique(main_table_new[,gridid])
 
-# Compute difference
-gridid_check   = gridid_new[gridid_new %in% gridid_old]
-# Data to remove based on 1 ha inclusion
-gridid_remove  = gridid_old[!gridid_old %in% gridid_check]
-remove_dt      = data.table(gridid = gridid_remove)
-fwrite(remove_dt, paste0(save_path, 'gridid_removal_03Oct23.csv')) # posthoc correction
-
 # Additional gridid runs based on revised raster
-gridid_add     = gridid_new[!gridid_new %in% gridid_old]
+gridid_add     = gridid_new[gridid_new %in% gridid_missing]
 add_dt         = data.table(gridid = gridid_add)
-fwrite(add_dt, paste0(save_path, 'gridid_addition_03Oct23.csv')) # new simulations
+fwrite(add_dt, paste0(save_path, 'gridid_additions_after_03Oct23.csv')) # new simulations
 #------------------------------------------------------------------------------------------------
-# 05 December Simulations (ALL)
+# December 2023 Simulations (ALL)
 #------------------------------------------------------------------------------------------------
-main_table = main_table[gridid %in% gridid_f,]
-save(main_table, file = paste0(save_path,'/','cell_data_table_', date, '_1ha-filtered.RData'))
+main_table_new = main_table[gridid %in% gridid_f,]
+save(main_table_new, file = paste0(save_path,'/','cell_data_table_', date, '_1ha-filtered.RData'))
 #------------------------------------------------------------------------------------------------
 # 05 December Simulations (Missing ONLY)
 #------------------------------------------------------------------------------------------------
 main_table = main_table[gridid %in% gridid_add,]
-save(main_table, file = paste0(save_path,'/','cell_data_table_', date, '_missing.RData'))
+save(main_table, file = paste0(save_path,'/','cell_data_table_', date, '_missing_1ha-filtered.RData'))
 #------------------------------------------------------------------------------------------------
 # RDA SPLIT
 #------------------------------------------------------------------------------------------------

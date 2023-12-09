@@ -119,6 +119,55 @@ make_weather_file = function(climate, .gridid, cell, .gcm, .ssp, weather = pkg.e
   fwrite(w, paste0(tmp.dir, '/', weather_fname), sep = ' ', col.names = FALSE) # removed pkg.env$tmp.path
   return(weather_fname)
 }
+#' Create a weather file from 0.25 degree data
+#'
+#' Used for side effect of writing a weather file based on location.
+#' Location is specified as a raster cell number.
+#'
+#' This function creates a weather file for a specified climate model, ssp, and location.
+#' Raw climate model data is converted into daily values in the Gregorian calendar, which sometimes
+#' requires date conversion from the native gcm calendar.  Daily vectors are constructed from 2015 through
+#' to 2100 for each of, minimum daily temperature (tasmin), maximum daily temperature (tasmax),
+#' and precipitation (pr).  These vectors are written as columns in the weather file which is written to
+#' a uniquely named file.  File naming is unique to allow parallel execution of DayCent, with each instance
+#' using a different weather file.
+#'
+#' @param climate list of spatial rast objects.
+#' One element of list for each of the climate variables (tasmin, tasmax, pr).
+#' Usually created using load_climate()
+#' @param .gridid integer, cell number (-180 to 180 longitude) from cell_data_table.
+#' @param .xy dataframe, specifying the rotated x coordinate and unrotated y coordinate from which to extract values.
+#' Note that climate rasters are in rotated (0-360 degree longitude) coordinates.
+#' @param .gcm character (length one) giving name of the cmip6 model.
+#' @param .ssp character (length one) giving name of ssp scenario.
+#' @param weather data.table containing gregorian calendar and index numbers to extract gregorian values
+#' from a daily climate rast that uses a different calendar. Usually created using initialize_weather()
+#' @param tmp.dir directory to create in tmp.path, set with arg[1]
+#' @param out.dir directory to create in out.path, set with arg[2]
+#' @importFrom terra rast extract
+#' @export
+make_weather_file_25deg = function(climate, .gridid, .xy, .gcm, .ssp, weather = pkg.env$weather_data, cmip6_calendars = cmip6_calendars, tmp.dir, out.dir) {
+  calendars    = c('proleptic_gregorian', '365_day', 'standard',      '360_day', 'historical')
+  calendar_idx = c('idx_gregorian',       'idx_365', 'idx_gregorian', 'idx_360', 'idx_historical')
+  calendar = cmip6_calendars[gcm == .gcm, calendar]
+  # Daycent column order: day of month, month, calendar year, day of year, maximum air temperature (°C), minimum air temperature (°C), and precipitation (cm).
+  .SDcols = c('dom', 'm', 'y', 'doy')
+  idx_col = calendar_idx[match(calendar, calendars)]
+  .SDcols = c(.SDcols, idx_col)
+  w = copy(weather)[, .SD, .SDcols = .SDcols]
+  setnames(w, idx_col, 'idx')
+  daily_pr     = unname(unlist(extract(climate$pr,     .xy)))
+  daily_tasmin = unname(unlist(extract(climate$tasmin, .xy)))
+  daily_tasmax = unname(unlist(extract(climate$tasmax, .xy)))
+  w[, tasmax := round(daily_tasmax[idx]/10, 1)]
+  w[, tasmin := round(daily_tasmin[idx]/10, 1)]
+  w[, pr     := round(daily_pr[idx]/10, 1)] # updated to convert to cm from mm
+  w[tasmin > tasmax, c('tasmin', 'tasmax') := (tasmin + tasmax)/2] # eliminate rare anomalies in the data where min > max
+  w[, idx    := NULL]
+  weather_fname = paste0('weather_', .ssp, '_', .gcm, '_', .gridid, '.wth')
+  fwrite(w, paste0(tmp.dir, '/', weather_fname), sep = ' ', col.names = FALSE) # removed pkg.env$tmp.path
+  return(weather_fname)
+}
 #' Fix weather file precipitation
 #'
 #' Used to convert precipitation in weather files (.wth) from mm/day to cm/day.

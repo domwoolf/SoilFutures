@@ -135,6 +135,49 @@ wthfile_exists_wpath = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gri
     )
   }
 }
+#' Check if weather file exists in directory of 0.25 degree data
+#'
+#' Checks the weather directory specified for the existence of weather file. If the file
+#' does not exist this function creates the specified weather file and saves it.
+#'
+#' @param .w_fname.path character, directory of weather file
+#' @param .start_yr vector, start year for weather file
+#' @param .end_yr vector, end year for weather file
+#' @param .gridid integer, gridid associated with row in data.table
+#' @param .gridid_rotated integer, rotated gridid associated with row in data.table
+#' @param .ssp character, ssp of row in data.table
+#' @param .gcm character, gcm of row in data.table
+#' @param .grab_wth_path character, directory to write wth file to
+#' @param .argsgcm.ssp character, second argument defined in bash script
+#' @export
+wthfile_exists_wpath_25deg = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gridid_rotated,
+                                .ssp, .gcm, .grab_wth_path, .argsgcm.ssp) {
+  if (!file.exists(.w_fname.path)) {
+    initial_wth = initialize_weather(.start_yr[1], .end_yr[1])
+    if (.gcm %in% 'historical') {
+      list_climate = load_climate(.ssp,
+                                  .gcm,
+                                  .start_yr[2],
+                                  .end_yr[2])
+    } else {
+      list_climate = load_climate(.ssp,
+                                  .gcm,
+                                  .start_yr[1],
+                                  .end_yr[1])
+    }
+    make_weather_file_25deg(
+      list_climate,
+      .gridid,
+      .xy,
+      .gcm,
+      .ssp,
+      weather = initial_wth,
+      cmip6_calendars,
+      .grab_wth_path,
+      .argsgcm.ssp
+    )
+  }
+}
 #' Check for bad weather file
 #'
 #' This function checks if the weather file has less than the required 7 columns
