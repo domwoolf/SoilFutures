@@ -144,13 +144,13 @@ wthfile_exists_wpath = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gri
 #' @param .start_yr vector, start year for weather file
 #' @param .end_yr vector, end year for weather file
 #' @param .gridid integer, gridid associated with row in data.table
-#' @param .gridid_rotated integer, rotated gridid associated with row in data.table
+#' @param .xy dataframe, specifying the rotated x coordinate and unrotated y coordinate from which to extract values.
 #' @param .ssp character, ssp of row in data.table
 #' @param .gcm character, gcm of row in data.table
 #' @param .grab_wth_path character, directory to write wth file to
 #' @param .argsgcm.ssp character, second argument defined in bash script
 #' @export
-wthfile_exists_wpath_25deg = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gridid_rotated,
+wthfile_exists_wpath_25deg = function(.w_fname.path, .start_yr, .end_yr, .gridid, .xy,
                                 .ssp, .gcm, .grab_wth_path, .argsgcm.ssp) {
   if (!file.exists(.w_fname.path)) {
     initial_wth = initialize_weather(.start_yr[1], .end_yr[1])
