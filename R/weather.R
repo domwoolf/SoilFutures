@@ -36,8 +36,11 @@ initialize_weather = function(start_year, end_year) {
 load_climate_vbl = function(vbl, path, start_year, end_year) {
   clim_files   = list.files(path = path, pattern = paste0(vbl, '.+tif$'), full.names = TRUE)
   clim_files   = sort(clim_files)
+  print(clim_files)
   clim_files_s = grep(start_year, clim_files)
+  print(clim_files_s)
   clim_files_e = grep(end_year, clim_files)
+  print(clim_files_e)
   clim_files   = clim_files[clim_files_s:clim_files_e]
   return(rast(clim_files))
 }
