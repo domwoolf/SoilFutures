@@ -9,7 +9,7 @@ wthfile_exists_wpath_25deg(
   .start_yr,
   .end_yr,
   .gridid,
-  .gridid_rotated,
+  .xy,
   .ssp,
   .gcm,
   .grab_wth_path,
@@ -25,7 +25,7 @@ wthfile_exists_wpath_25deg(
 
 \item{.gridid}{integer, gridid associated with row in data.table}
 
-\item{.gridid_rotated}{integer, rotated gridid associated with row in data.table}
+\item{.xy}{dataframe, specifying the rotated x coordinate and unrotated y coordinate from which to extract values.}
 
 \item{.ssp}{character, ssp of row in data.table}
 
