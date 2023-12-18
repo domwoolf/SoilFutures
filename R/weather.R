@@ -57,6 +57,7 @@ load_climate_vbl = function(vbl, path, start_year, end_year) {
 #' @export
 load_climate = function(ssp, gcm, start_year, end_year) {
   climate_path = paste(pkg.env$gis_path, 'climate', 'cmip6_0.25deg', ssp, gcm, sep='/')
+  print(climate_path)
   sapply(pkg.env$climate_vbls, load_climate_vbl, climate_path, start_year, end_year, USE.NAMES = TRUE)
 }
 
