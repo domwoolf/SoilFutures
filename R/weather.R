@@ -36,11 +36,8 @@ initialize_weather = function(start_year, end_year) {
 load_climate_vbl = function(vbl, path, start_year, end_year) {
   clim_files   = list.files(path = paste(path, vbl, sep = '/'), pattern = paste0(vbl, '.+tif$'), full.names = TRUE)
   clim_files   = sort(clim_files)
-  print(clim_files)
   clim_files_s = grep(start_year, clim_files)
-  print(clim_files_s)
   clim_files_e = grep(end_year, clim_files)
-  print(clim_files_e)
   clim_files   = clim_files[clim_files_s:clim_files_e]
   return(rast(clim_files))
 }
@@ -57,10 +54,8 @@ load_climate_vbl = function(vbl, path, start_year, end_year) {
 #' @export
 load_climate = function(ssp, gcm, start_year, end_year) {
   climate_path = paste(pkg.env$gis_path, 'climate', 'cmip6_0.25deg', ssp, gcm, sep='/')
-  print(climate_path)
   sapply(pkg.env$climate_vbls, load_climate_vbl, climate_path, start_year, end_year, USE.NAMES = TRUE)
 }
-
 
 #' Split vector into equal sized chunks
 make_blocks = function(x, n = 5) {
