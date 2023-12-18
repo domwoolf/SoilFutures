@@ -34,7 +34,7 @@ initialize_weather = function(start_year, end_year) {
 #' @importFrom terra rast
 #' @export
 load_climate_vbl = function(vbl, path, start_year, end_year) {
-  clim_files   = list.files(path = path, pattern = paste0(vbl, '.+tif$'), full.names = TRUE)
+  clim_files   = list.files(path = paste(path, vbl, sep = '/'), pattern = paste0(vbl, '.+tif$'), full.names = TRUE)
   clim_files   = sort(clim_files)
   print(clim_files)
   clim_files_s = grep(start_year, clim_files)
