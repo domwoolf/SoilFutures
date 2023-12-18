@@ -2,8 +2,8 @@ pkg.env = NULL
 .onLoad = function(...) {
   pkg.env <<- new.env(parent = emptyenv())
   assign('crop_types',   c('maiz', 'wwht', 'swht', 'soyb'), pkg.env)
-  assign('climate_vbls', c('tasmin', 'tasmax', 'tas', 'pr'), pkg.env)
-  assign('ssps',         c('historical','ssp126', "ssp370"), pkg.env)
+  assign('climate_vbls', c('tasmin', 'tasmax', 'pr'), pkg.env) # removed tas
+  assign('ssps',         c('historical','ssp126', 'ssp370'), pkg.env)
   assign('scenario',     c('conv', 'res', 'ntill', 'ccg', 'ccl', 'ccg-ntill', 'ccl-ntill','rewild'), pkg.env)
   assign('start_year',   c(2016, 1996), pkg.env)
   assign('end_year',     c(2100, 2008), pkg.env)
