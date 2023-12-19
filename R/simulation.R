@@ -111,17 +111,10 @@ wthfile_exists_wpath = function(.w_fname.path, .start_yr, .end_yr, .gridid, .gri
                                 .ssp, .gcm, .grab_wth_path, .argsgcm.ssp) {
   if (!file.exists(.w_fname.path)) {
     initial_wth = initialize_weather(.start_yr[1], .end_yr[1])
-    if (.gcm %in% 'historical') {
-      list_climate = load_climate(.ssp,
+    list_climate = load_climate(.ssp,
                                   .gcm,
                                   .start_yr[2],
                                   .end_yr[2])
-    } else {
-      list_climate = load_climate(.ssp,
-                                  .gcm,
-                                  .start_yr[1],
-                                  .end_yr[1])
-    }
     make_weather_file(
       list_climate,
       .gridid,
@@ -154,17 +147,10 @@ wthfile_exists_wpath_25deg = function(.w_fname.path, .start_yr, .end_yr, .gridid
                                 .ssp, .gcm, .grab_wth_path, .argsgcm.ssp) {
   if (!file.exists(.w_fname.path)) {
     initial_wth = initialize_weather(.start_yr[1], .end_yr[1])
-    if (.gcm %in% 'historical') {
-      list_climate = load_climate(.ssp,
-                                  .gcm,
-                                  .start_yr[2],
-                                  .end_yr[2])
-    } else {
-      list_climate = load_climate(.ssp,
+    list_climate = load_climate_25deg(.ssp,
                                   .gcm,
                                   .start_yr[1],
                                   .end_yr[1])
-    }
     make_weather_file_25deg(
       list_climate,
       .gridid,
