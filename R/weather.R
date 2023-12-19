@@ -42,7 +42,7 @@ load_climate_vbl = function(vbl, path, start_year, end_year) {
   return(rast(clim_files))
 }
 
-#' Loads climate data
+#' Loads climate data for 0.5 deg
 #'
 #' For specified gcm and ssp, creates a list of global daily rasters.  Each element of the list corresponds to a specific climate variable.
 #' These are mean daily temperature (tas), minimum daily temperature (tasmin), maximum daily temperature (tasmax),
@@ -53,6 +53,21 @@ load_climate_vbl = function(vbl, path, start_year, end_year) {
 #' @returns list of rasters (see details)
 #' @export
 load_climate = function(ssp, gcm, start_year, end_year) {
+  climate_path = paste(pkg.env$gis_path, 'climate', 'cmip6_0.5deg', ssp, gcm, sep='/')
+  sapply(pkg.env$climate_vbls, load_climate_vbl, climate_path, start_year, end_year, USE.NAMES = TRUE)
+}
+
+#' Loads climate data for 0.25 deg
+#'
+#' For specified gcm and ssp, creates a list of global daily rasters.  Each element of the list corresponds to a specific climate variable.
+#' These are mean daily temperature (tas), minimum daily temperature (tasmin), maximum daily temperature (tasmax),
+#' and precipitation (pr).  Each layer of the rasters corresponds to a day from a specified start year to end year (using the gcms calendar)
+#'
+#' @param ssp Chareacter secifying the ssp.
+#' @param gcm Character, specifying the climate model (gcm).
+#' @returns list of rasters (see details)
+#' @export
+load_climate_25deg = function(ssp, gcm, start_year, end_year) {
   climate_path = paste(pkg.env$gis_path, 'climate', 'cmip6_0.25deg', ssp, gcm, sep='/')
   sapply(pkg.env$climate_vbls, load_climate_vbl, climate_path, start_year, end_year, USE.NAMES = TRUE)
 }
