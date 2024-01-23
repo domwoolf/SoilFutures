@@ -1,7 +1,7 @@
 ## code to prepare individual gcm x spp growing degree day harvest dates as .rda goes here
 
 library(data.table)
-gdd_files         = paste(getwd(), 'data-raw', sep = '/')
+gdd_files         = paste(getwd(), 'data-raw', '',sep = '/')
 GDD_harvest_dates = list.files(gdd_files, pattern = 'GDD-harvest-dates.rds', full.names = TRUE)
 # bind into one table
 GDD_harvest_dates = lapply(GDD_harvest_dates, readRDS)
