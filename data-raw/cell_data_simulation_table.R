@@ -8,13 +8,13 @@ library(terra)
 library(data.table)
 library(sf)
 #-----------------------------------------------------------------------------------------------
-# functions
+# MUST RUN zzz.R BEFORE THIS SCRIPT
 #-----------------------------------------------------------------------------------------------
 # paths
 save_path = paste(getwd(), 'data-raw', sep = '/')
 #-----------------------------------------------------------------------------------------------
 # variables
-date = '08December23'
+date = '05February24'
 #-----------------------------------------------------------------------------------------------
   # create rasters
   crop_calendar  = rast(paste(pkg.env$gis_path, 'crop_calendar_agg.tif',             sep='/'))
@@ -73,11 +73,11 @@ date = '08December23'
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ccg', 'ccl', 'ccg-ntill', 'ccl-ntill','rewild'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ntill-res','ccg', 'ccl', 'ccg-res', 'ccl-res',
+                                                    'ccg-ntill', 'ccl-ntill'))), by = irr]
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
@@ -136,11 +136,12 @@ date = '08December23'
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ccg', 'ccl', 'ccg-ntill', 'ccl-ntill','rewild'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ntill-res','ccg', 'ccl', 'ccg-res', 'ccl-res',
+                                                    'ccg-ntill', 'ccl-ntill'))), by = irr]
+
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
@@ -199,11 +200,12 @@ date = '08December23'
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv','res','ntill','rewild'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ntill-res','ccg', 'ccl', 'ccg-res', 'ccl-res',
+                                                    'ccg-ntill', 'ccl-ntill'))), by = irr]
+
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
@@ -267,11 +269,11 @@ date = '08December23'
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ccg', 'ccl', 'ccg-ntill', 'ccl-ntill','rewild'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ntill-res','ccg', 'ccl', 'ccg-res', 'ccl-res',
+                                                    'ccg-ntill', 'ccl-ntill'))), by = irr]
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
   setorder(gridid.dt, gridid)
-  # gridid.dt      = gridid.dt[irr != 1 | scenario != 'rewild',]
   setcolorder(gridid.dt, c('gridid', 'gridid.rotated', 'regionid', 'ssp', 'gcm','crop', 'irr','scenario','pset_id'))
   setorder(gridid.dt, gridid, ssp, gcm, irr)
 
@@ -302,20 +304,27 @@ date = '08December23'
   gc()
 #-----------------------------------------------------------------------------------------------
   main_table = rbind(main_table, main_table.soy, fill = TRUE)
+  rm(main_table.soy)
+  gc()
   main_table = rbind(main_table, main_table.wwh, fill = TRUE)
+  rm(main_table.wwh)
+  gc()
   main_table = rbind(main_table, main_table.swh, fill = TRUE)
+  rm(main_table.swh)
+  gc()
 
   setorder(main_table, gridid)
   gc()
 
   length(unique(main_table[, gridid])) # 33316
 #-----------------------------------------------------------------------------------------------
+  #DEPRECATED
   # ADD EQ File Name
-  eq.file.lookup = fread(paste(pkg.env$gis_path, 'eq_file_assign_by-gridid.csv',       sep='/'))
-  main_table     = main_table[eq.file.lookup, on = .(gridid = gridid, regionid = regionid)]
-  main_table     = main_table[!is.na(gridid.rotated),]
-  gc()
-  length(unique(main_table[, gridid])) # 33316
+  # eq.file.lookup = fread(paste(pkg.env$gis_path, 'eq_file_assign_by-gridid.csv',       sep='/'))
+  # main_table     = main_table[eq.file.lookup, on = .(gridid = gridid, regionid = regionid)]
+  # main_table     = main_table[!is.na(gridid.rotated),]
+  # gc()
+  # length(unique(main_table[, gridid])) # 33316
 #-----------------------------------------------------------------------------------------------
   # ADD Country, Region Name
   country.sf  = st_read(paste(pkg.env$gis_path, 'WB_countries_Admin0_10m.shp', sep = '/'))
@@ -346,6 +355,7 @@ date = '08December23'
   main_table = main_table[country_r.dt[, .(cell, WB_NAME, WB_REGION)], on = .(gridid = cell)]
   gc()
   setorder(main_table, gridid)
+  gc()
   main_table = main_table[!is.na(crop),]
   gc()
 

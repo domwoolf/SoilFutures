@@ -5,36 +5,40 @@ library(terra)
 #------------------------------------------------------------------------------------------------
 path      = getwd()
 save_path = paste(path, 'data-raw/', sep = '/')
-date      = '08December23'
-#------------------------------------------------------------------------------------------------
+date      = '05February24'
+#-----------------------------------------------------------------------------------------------
+# MUST RUN zzz.R BEFORE THIS SCRIPT
+#-----------------------------------------------------------------------------------------------
 load(paste0(path, '/data-raw/cell_data_table_', date, '.RData'))
-main_table_new = main_table
-rm(main_table)
-
-gridid_all     = unique(main_table_new[,gridid])
+gridid_all     = unique(main_table[,gridid])
 #------------------------------------------------------------------------------------------------
 # MISSING CHECK AND FILTER
 #------------------------------------------------------------------------------------------------
+# DEPRECATED
+# main_table_new = main_table
+# rm(main_table)
+#
+# gridid_all     = unique(main_table_new[,gridid])
+
 # October 2023 Run
-date_oct   = '03Oct23'
-load(paste0(path, '/data-raw/cell_data_table_', date_oct, '.RData'))
-
-gridid_oct = unique(main_table[,gridid])
-rm(main_table)
-
-gridid_missing = gridid_all[!gridid_all %in% gridid_oct]
-
-# rename main_table
-main_table = main_table_new
-rm(main_table_new)
-gc()
-
-# December 2023
-crop_area_r      = rast(paste(pkg.env$gis_path, 'msw-cropland-rf-ir-area.tif', sep = '/'))
-crop_area_dt     = as.data.table(terra::as.data.frame(crop_area_r, xy = TRUE, cells = TRUE, na.rm = FALSE))
+# date_oct   = '03Oct23'
+# load(paste0(path, '/data-raw/cell_data_table_', date_oct, '.RData'))
+#
+# gridid_oct = unique(main_table[,gridid])
+# rm(main_table)
+#
+# gridid_missing = gridid_all[!gridid_all %in% gridid_oct]
+#
+# # rename main_table
+# main_table = main_table_new
+# rm(main_table_new)
+# gc()
 #------------------------------------------------------------------------------------------------
 # CREATE TABLE WITH ACTUAL CROP AREA GRIDID NUMBERS
 #------------------------------------------------------------------------------------------------
+crop_area_r      = rast(paste(pkg.env$gis_path, 'msw-cropland-rf-ir-area.tif', sep = '/'))
+crop_area_dt     = as.data.table(terra::as.data.frame(crop_area_r, xy = TRUE, cells = TRUE, na.rm = FALSE))
+
 crop_area_gr_dt  = copy(crop_area_dt)
 # remove NA
 crop_area_gr_dt  = crop_area_gr_dt[!is.na(maize_rainfed_2015)]
@@ -72,37 +76,44 @@ crop_area_dt_f[, crop_sum := (maize_rainfed_2015 + maize_irrigated_2015 + soybea
                            soybean_irrigated_2015 + wheat_rainfed_2015 + wheat_irrigated_2015)]
 
 sum(crop_area_dt_f[, crop_sum], na.rm = TRUE) # 493,834,741 BEFORE REMOVAL
-area_missing_dt  = crop_area_dt_f[is.na(crop_sum)] # WHY SIMULATED BUT MISSING FROM AREA
+area_missing_dt  = crop_area_dt_f[is.na(crop_sum)]
 
 
 crop_area_dt_f   = crop_area_dt_f[wheat_irrigated_2015 >= 1 | wheat_rainfed_2015 >= 1 | maize_rainfed_2015 >= 1 |
                                     maize_irrigated_2015 >= 1 | soybean_rainfed_2015 >= 1 | soybean_irrigated_2015 >= 1,]
 gridid_f         = unique(crop_area_dt_f[,cell])
 
+# DEPRECATED
+
 # REMOVE < 1ha
-main_table_new = main_table[gcm %in% 'historical' & gridid %in% gridid_f,]
-gridid_new     = unique(main_table_new[,gridid])
+# main_table_new = main_table[gcm %in% 'historical' & gridid %in% gridid_f,]
+# gridid_new     = unique(main_table_new[,gridid])
 
 # CHECK CROP AREA
 
 # Additional gridid runs based on revised raster
-gridid_add     = gridid_new[gridid_new %in% gridid_missing]
-add_dt         = data.table(gridid = gridid_add)
-fwrite(add_dt, paste0(save_path, 'gridid_additions_after_03Oct23.csv')) # new simulations
+# gridid_add     = gridid_new[gridid_new %in% gridid_missing]
+# add_dt         = data.table(gridid = gridid_add)
+# fwrite(add_dt, paste0(save_path, 'gridid_additions_after_03Oct23.csv')) # new simulations
 #------------------------------------------------------------------------------------------------
-# December 2023 Simulations (ALL)
+# December 2023 / February 2024 Simulations (ALL)
 #------------------------------------------------------------------------------------------------
-main_table_new = main_table[gridid %in% gridid_f,]
-save(main_table_new, file = paste0(save_path,'/','cell_data_table_', date, '_1ha-filtered.RData'))
+# DEPRECATED
+# main_table_new = main_table[gridid %in% gridid_f,]
+# save(main_table_new, file = paste0(save_path,'/','cell_data_table_', date, '_1ha-filtered.RData'))
 #------------------------------------------------------------------------------------------------
 # 05 December Simulations (Missing ONLY)
 #------------------------------------------------------------------------------------------------
-main_table = main_table[gridid %in% gridid_add,]
-save(main_table, file = paste0(save_path,'/','cell_data_table_', date, '_missing_1ha-filtered.RData'))
+# DEPRECATED
+# main_table = main_table[gridid %in% gridid_add,]
+# save(main_table, file = paste0(save_path,'/','cell_data_table_', date, '_missing_1ha-filtered.RData'))
 #------------------------------------------------------------------------------------------------
 # RDA SPLIT
 #------------------------------------------------------------------------------------------------
 # split into gcm x ssp combinations
+main_table= main_table[gridid %in% gridid_f,]
+gc()
+
 gcm       = fread(paste(path,'/data-raw/cmip6_calendars.csv', sep = ''))
 gcm       = gcm[, calendar := NULL]
 gcm       = gcm[gcm != 'historical',]

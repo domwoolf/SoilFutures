@@ -362,7 +362,9 @@ non_cc_sched = function(cell_data, schedule_table = copy(schedule_template), .gr
                                                              cell_sch_data[, frac_NH4],'F,',
                                                              cell_sch_data[, frac_NO3],'T)', sep = ''),                   schedule)]
   cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                          schedule)]
-  cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),          schedule)]
+  ifelse(!.scenario %in% 'ntill-res',
+         cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),          schedule)],
+         print('This is a full residue return ntill scenario.'))
   # IRIG events
   cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date + 1L),                                                 schedule)]
 
@@ -478,7 +480,10 @@ cc_sched = function(cell_data, schedule_table = copy(covercrop_schedule_template
                                                                cell_sch_data[, frac_NH4],'F,',
                                                                cell_sch_data[, frac_NO3],'T)', sep = ''),                   schedule)]
     cell_schedule_f[, schedule := gsub('<manure>',       'O_cell',                                                          schedule)]
-    cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),          schedule)]
+    # residue based on scenario with/without full residue retention
+    ifelse(!.scenario %like% '-res',
+           cell_schedule_f[, schedule := gsub('<res-amt>',      paste('G',(cell_sch_data[, res.rtrn.amt]*100), sep = ''),          schedule)],
+           print('This is a full residue return cover crop scenario.'))
     # IRIG events
     cell_schedule_f[, schedule := gsub('<irr_day>',      (plant.date + 1L),                                                 schedule)]
 

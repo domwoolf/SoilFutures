@@ -1767,3 +1767,571 @@ ntill,N,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
 ntill,N,1,0,0,0,1,1   <harvest_day>  HARV <res-amt>
 ntill,N,1,0,0,0,1,1   <harvest_day>  LAST
 ntill,N,1,0,0,0,1,-999 -999 X
+ntill-res,N,0,1,0,0,0,<start_year>           Starting year
+ntill-res,N,0,1,0,0,0,<end_year>         Last year
+ntill-res,N,0,1,0,0,0,<fname>       Site file name
+ntill-res,N,0,1,0,0,0,0             Labeling type
+ntill-res,N,0,1,0,0,0,-1            Labeling year
+ntill-res,N,0,1,0,0,0,-1.00         Microcosm
+ntill-res,N,0,1,0,0,0,<co2_option>             CO2 Systems
+ntill-res,N,0,1,0,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,0,1,0,0,0,-1            pH effect
+ntill-res,N,0,1,0,0,0,-1            Soil Warming
+ntill-res,N,0,1,0,0,0,0             N input scalar option
+ntill-res,N,0,1,0,0,0,0             OMAD scalar option
+ntill-res,N,0,1,0,0,0,0             Climate scalar option
+ntill-res,N,0,1,0,0,0,1             Initial system
+ntill-res,N,0,1,0,0,0,<crop_cultivar>        Initial crop
+ntill-res,N,0,1,0,0,0,Initial tree
+ntill-res,N,0,1,0,0,0,
+ntill-res,N,0,1,0,0,0,Year Month Option
+ntill-res,N,0,1,0,0,0,1             Block #   <block_name>
+ntill-res,N,0,1,0,0,0,<end_year>    Last year
+ntill-res,N,0,1,0,0,0,1             Repeats # years
+ntill-res,N,0,1,0,0,0,<start_year>          Output starting year
+ntill-res,N,0,1,0,0,0,12            Output month
+ntill-res,N,0,1,0,0,0,1.0           Output interval
+ntill-res,N,0,1,0,0,0,F             Weather choice
+ntill-res,N,0,1,0,0,0,<weather_file>
+ntill-res,N,0,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,0,1,0,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,N,0,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,0,1,0,0,0,1   <plant_day>  PLTM
+ntill-res,N,0,1,0,0,0,1   <plant_day>  CULT B
+ntill-res,N,0,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,0,1,0,0,0,1   <harvest_day>  HARV G
+ntill-res,N,0,1,0,0,0,1   <harvest_day>  LAST
+ntill-res,N,0,1,0,0,0,-999 -999 X
+ntill-res,N,1,1,0,0,0,<start_year>           Starting year
+ntill-res,N,1,1,0,0,0,<end_year>         Last year
+ntill-res,N,1,1,0,0,0,<fname>       Site file name
+ntill-res,N,1,1,0,0,0,0             Labeling type
+ntill-res,N,1,1,0,0,0,-1            Labeling year
+ntill-res,N,1,1,0,0,0,-1.00         Microcosm
+ntill-res,N,1,1,0,0,0,<co2_option>             CO2 Systems
+ntill-res,N,1,1,0,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,1,1,0,0,0,-1            pH effect
+ntill-res,N,1,1,0,0,0,-1            Soil Warming
+ntill-res,N,1,1,0,0,0,0             N input scalar option
+ntill-res,N,1,1,0,0,0,0             OMAD scalar option
+ntill-res,N,1,1,0,0,0,0             Climate scalar option
+ntill-res,N,1,1,0,0,0,1             Initial system
+ntill-res,N,1,1,0,0,0,<crop_cultivar>        Initial crop
+ntill-res,N,1,1,0,0,0,Initial tree
+ntill-res,N,1,1,0,0,0,
+ntill-res,N,1,1,0,0,0,Year Month Option
+ntill-res,N,1,1,0,0,0,1             Block #   <block_name>
+ntill-res,N,1,1,0,0,0,<end_year>    Last year
+ntill-res,N,1,1,0,0,0,1             Repeats # years
+ntill-res,N,1,1,0,0,0,<start_year>          Output starting year
+ntill-res,N,1,1,0,0,0,12            Output month
+ntill-res,N,1,1,0,0,0,1.0           Output interval
+ntill-res,N,1,1,0,0,0,F             Weather choice
+ntill-res,N,1,1,0,0,0,<weather_file>
+ntill-res,N,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,N,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,1,1,0,0,0,1   <plant_day>  PLTM
+ntill-res,N,1,1,0,0,0,1   <plant_day>  CULT B
+ntill-res,N,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,N,1,1,0,0,0,1   <harvest_day>  HARV G
+ntill-res,N,1,1,0,0,0,1   <harvest_day>  LAST
+ntill-res,N,1,1,0,0,0,-999 -999 X
+ntill-res,S,0,1,0,0,0,<start_year>           Starting year
+ntill-res,S,0,1,0,0,0,<end_year>         Last year
+ntill-res,S,0,1,0,0,0,<fname>       Site file name
+ntill-res,S,0,1,0,0,0,0             Labeling type
+ntill-res,S,0,1,0,0,0,-1            Labeling year
+ntill-res,S,0,1,0,0,0,-1.00         Microcosm
+ntill-res,S,0,1,0,0,0,<co2_option>             CO2 Systems
+ntill-res,S,0,1,0,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,0,1,0,0,0,-1            pH effect
+ntill-res,S,0,1,0,0,0,-1            Soil Warming
+ntill-res,S,0,1,0,0,0,0             N input scalar option
+ntill-res,S,0,1,0,0,0,0             OMAD scalar option
+ntill-res,S,0,1,0,0,0,0             Climate scalar option
+ntill-res,S,0,1,0,0,0,1             Initial system
+ntill-res,S,0,1,0,0,0,<crop_cultivar>        Initial crop
+ntill-res,S,0,1,0,0,0,Initial tree
+ntill-res,S,0,1,0,0,0,
+ntill-res,S,0,1,0,0,0,Year Month Option
+ntill-res,S,0,1,0,0,0,1             Block #   <block_name>
+ntill-res,S,0,1,0,0,0,<end_year>    Last year
+ntill-res,S,0,1,0,0,0,1             Repeats # years
+ntill-res,S,0,1,0,0,0,<start_year>          Output starting year
+ntill-res,S,0,1,0,0,0,12            Output month
+ntill-res,S,0,1,0,0,0,1.0           Output interval
+ntill-res,S,0,1,0,0,0,F             Weather choice
+ntill-res,S,0,1,0,0,0,<weather_file>
+ntill-res,S,0,1,0,0,0,1   <harvest_day>  HARV G
+ntill-res,S,0,1,0,0,0,1   <harvest_day>  LAST
+ntill-res,S,0,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,0,1,0,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,S,0,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,0,1,0,0,0,1   <plant_day>  PLTM
+ntill-res,S,0,1,0,0,0,1   <plant_day>  CULT B
+ntill-res,S,0,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,0,1,0,0,0,-999 -999 X
+ntill-res,S,1,1,0,0,0,<start_year>           Starting year
+ntill-res,S,1,1,0,0,0,<end_year>         Last year
+ntill-res,S,1,1,0,0,0,<fname>       Site file name
+ntill-res,S,1,1,0,0,0,0             Labeling type
+ntill-res,S,1,1,0,0,0,-1            Labeling year
+ntill-res,S,1,1,0,0,0,-1.00         Microcosm
+ntill-res,S,1,1,0,0,0,<co2_option>             CO2 Systems
+ntill-res,S,1,1,0,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,1,1,0,0,0,-1            pH effect
+ntill-res,S,1,1,0,0,0,-1            Soil Warming
+ntill-res,S,1,1,0,0,0,0             N input scalar option
+ntill-res,S,1,1,0,0,0,0             OMAD scalar option
+ntill-res,S,1,1,0,0,0,0             Climate scalar option
+ntill-res,S,1,1,0,0,0,1             Initial system
+ntill-res,S,1,1,0,0,0,<crop_cultivar>        Initial crop
+ntill-res,S,1,1,0,0,0,Initial tree
+ntill-res,S,1,1,0,0,0,
+ntill-res,S,1,1,0,0,0,Year Month Option
+ntill-res,S,1,1,0,0,0,1             Block #   <block_name>
+ntill-res,S,1,1,0,0,0,<end_year>    Last year
+ntill-res,S,1,1,0,0,0,1             Repeats # years
+ntill-res,S,1,1,0,0,0,<start_year>          Output starting year
+ntill-res,S,1,1,0,0,0,12            Output month
+ntill-res,S,1,1,0,0,0,1.0           Output interval
+ntill-res,S,1,1,0,0,0,F             Weather choice
+ntill-res,S,1,1,0,0,0,<weather_file>
+ntill-res,S,1,1,0,0,0,1   <harvest_day>  HARV G
+ntill-res,S,1,1,0,0,0,1   <harvest_day>  LAST
+ntill-res,S,1,1,0,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,1,1,0,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,S,1,1,0,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,1,1,0,0,0,1   <plant_day>  PLTM
+ntill-res,S,1,1,0,0,0,1   <plant_day>  CULT B
+ntill-res,S,1,1,0,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,1,1,0,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,S,1,1,0,0,0,-999 -999 X
+ntill-res,N,0,0,1,0,0,<start_year>           Starting year
+ntill-res,N,0,0,1,0,0,<end_year>         Last year
+ntill-res,N,0,0,1,0,0,<fname>       Site file name
+ntill-res,N,0,0,1,0,0,0             Labeling type
+ntill-res,N,0,0,1,0,0,-1            Labeling year
+ntill-res,N,0,0,1,0,0,-1.00         Microcosm
+ntill-res,N,0,0,1,0,0,<co2_option>             CO2 Systems
+ntill-res,N,0,0,1,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,0,0,1,0,0,-1            pH effect
+ntill-res,N,0,0,1,0,0,-1            Soil Warming
+ntill-res,N,0,0,1,0,0,0             N input scalar option
+ntill-res,N,0,0,1,0,0,0             OMAD scalar option
+ntill-res,N,0,0,1,0,0,0             Climate scalar option
+ntill-res,N,0,0,1,0,0,1             Initial system
+ntill-res,N,0,0,1,0,0,<crop_cultivar>        Initial crop
+ntill-res,N,0,0,1,0,0,Initial tree
+ntill-res,N,0,0,1,0,0,
+ntill-res,N,0,0,1,0,0,Year Month Option
+ntill-res,N,0,0,1,0,0,1             Block #   <block_name>
+ntill-res,N,0,0,1,0,0,<end_year>    Last year
+ntill-res,N,0,0,1,0,0,1             Repeats # years
+ntill-res,N,0,0,1,0,0,<start_year>          Output starting year
+ntill-res,N,0,0,1,0,0,12            Output month
+ntill-res,N,0,0,1,0,0,1.0           Output interval
+ntill-res,N,0,0,1,0,0,F             Weather choice
+ntill-res,N,0,0,1,0,0,<weather_file>
+ntill-res,N,0,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,0,0,1,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,N,0,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,0,0,1,0,0,1   <plant_day>  PLTM
+ntill-res,N,0,0,1,0,0,1   <plant_day>  CULT B
+ntill-res,N,0,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,0,0,1,0,0,1   <harvest_day>  HARV G
+ntill-res,N,0,0,1,0,0,1   <harvest_day>  LAST
+ntill-res,N,0,0,1,0,0,-999 -999 X
+ntill-res,N,1,0,1,0,0,<start_year>           Starting year
+ntill-res,N,1,0,1,0,0,<end_year>         Last year
+ntill-res,N,1,0,1,0,0,<fname>       Site file name
+ntill-res,N,1,0,1,0,0,0             Labeling type
+ntill-res,N,1,0,1,0,0,-1            Labeling year
+ntill-res,N,1,0,1,0,0,-1.00         Microcosm
+ntill-res,N,1,0,1,0,0,<co2_option>             CO2 Systems
+ntill-res,N,1,0,1,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,1,0,1,0,0,-1            pH effect
+ntill-res,N,1,0,1,0,0,-1            Soil Warming
+ntill-res,N,1,0,1,0,0,0             N input scalar option
+ntill-res,N,1,0,1,0,0,0             OMAD scalar option
+ntill-res,N,1,0,1,0,0,0             Climate scalar option
+ntill-res,N,1,0,1,0,0,1             Initial system
+ntill-res,N,1,0,1,0,0,<crop_cultivar>        Initial crop
+ntill-res,N,1,0,1,0,0,Initial tree
+ntill-res,N,1,0,1,0,0,
+ntill-res,N,1,0,1,0,0,Year Month Option
+ntill-res,N,1,0,1,0,0,1             Block #   <block_name>
+ntill-res,N,1,0,1,0,0,<end_year>    Last year
+ntill-res,N,1,0,1,0,0,1             Repeats # years
+ntill-res,N,1,0,1,0,0,<start_year>          Output starting year
+ntill-res,N,1,0,1,0,0,12            Output month
+ntill-res,N,1,0,1,0,0,1.0           Output interval
+ntill-res,N,1,0,1,0,0,F             Weather choice
+ntill-res,N,1,0,1,0,0,<weather_file>
+ntill-res,N,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,N,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,1,0,1,0,0,1   <plant_day>  PLTM
+ntill-res,N,1,0,1,0,0,1   <plant_day>  CULT B
+ntill-res,N,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,N,1,0,1,0,0,1   <harvest_day>  HARV G
+ntill-res,N,1,0,1,0,0,1   <harvest_day>  LAST
+ntill-res,N,1,0,1,0,0,-999 -999 X
+ntill-res,S,0,0,1,0,0,<start_year>           Starting year
+ntill-res,S,0,0,1,0,0,<end_year>         Last year
+ntill-res,S,0,0,1,0,0,<fname>       Site file name
+ntill-res,S,0,0,1,0,0,0             Labeling type
+ntill-res,S,0,0,1,0,0,-1            Labeling year
+ntill-res,S,0,0,1,0,0,-1.00         Microcosm
+ntill-res,S,0,0,1,0,0,<co2_option>             CO2 Systems
+ntill-res,S,0,0,1,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,0,0,1,0,0,-1            pH effect
+ntill-res,S,0,0,1,0,0,-1            Soil Warming
+ntill-res,S,0,0,1,0,0,0             N input scalar option
+ntill-res,S,0,0,1,0,0,0             OMAD scalar option
+ntill-res,S,0,0,1,0,0,0             Climate scalar option
+ntill-res,S,0,0,1,0,0,1             Initial system
+ntill-res,S,0,0,1,0,0,<crop_cultivar>        Initial crop
+ntill-res,S,0,0,1,0,0,Initial tree
+ntill-res,S,0,0,1,0,0,
+ntill-res,S,0,0,1,0,0,Year Month Option
+ntill-res,S,0,0,1,0,0,1             Block #   <block_name>
+ntill-res,S,0,0,1,0,0,<end_year>    Last year
+ntill-res,S,0,0,1,0,0,1             Repeats # years
+ntill-res,S,0,0,1,0,0,<start_year>          Output starting year
+ntill-res,S,0,0,1,0,0,12            Output month
+ntill-res,S,0,0,1,0,0,1.0           Output interval
+ntill-res,S,0,0,1,0,0,F             Weather choice
+ntill-res,S,0,0,1,0,0,<weather_file>
+ntill-res,S,0,0,1,0,0,1   <harvest_day>  HARV G
+ntill-res,S,0,0,1,0,0,1   <harvest_day>  LAST
+ntill-res,S,0,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,0,0,1,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,S,0,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,0,0,1,0,0,1   <plant_day>  PLTM
+ntill-res,S,0,0,1,0,0,1   <plant_day>  CULT B
+ntill-res,S,0,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,0,0,1,0,0,-999 -999 X
+ntill-res,S,1,0,1,0,0,<start_year>           Starting year
+ntill-res,S,1,0,1,0,0,<end_year>         Last year
+ntill-res,S,1,0,1,0,0,<fname>       Site file name
+ntill-res,S,1,0,1,0,0,0             Labeling type
+ntill-res,S,1,0,1,0,0,-1            Labeling year
+ntill-res,S,1,0,1,0,0,-1.00         Microcosm
+ntill-res,S,1,0,1,0,0,<co2_option>             CO2 Systems
+ntill-res,S,1,0,1,0,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,1,0,1,0,0,-1            pH effect
+ntill-res,S,1,0,1,0,0,-1            Soil Warming
+ntill-res,S,1,0,1,0,0,0             N input scalar option
+ntill-res,S,1,0,1,0,0,0             OMAD scalar option
+ntill-res,S,1,0,1,0,0,0             Climate scalar option
+ntill-res,S,1,0,1,0,0,1             Initial system
+ntill-res,S,1,0,1,0,0,<crop_cultivar>        Initial crop
+ntill-res,S,1,0,1,0,0,Initial tree
+ntill-res,S,1,0,1,0,0,
+ntill-res,S,1,0,1,0,0,Year Month Option
+ntill-res,S,1,0,1,0,0,1             Block #   <block_name>
+ntill-res,S,1,0,1,0,0,<end_year>    Last year
+ntill-res,S,1,0,1,0,0,1             Repeats # years
+ntill-res,S,1,0,1,0,0,<start_year>          Output starting year
+ntill-res,S,1,0,1,0,0,12            Output month
+ntill-res,S,1,0,1,0,0,1.0           Output interval
+ntill-res,S,1,0,1,0,0,F             Weather choice
+ntill-res,S,1,0,1,0,0,<weather_file>
+ntill-res,S,1,0,1,0,0,1   <harvest_day>  HARV G
+ntill-res,S,1,0,1,0,0,1   <harvest_day>  LAST
+ntill-res,S,1,0,1,0,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,1,0,1,0,0,1   <cult_kill_day>  CULT KILL
+ntill-res,S,1,0,1,0,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,1,0,1,0,0,1   <plant_day>  PLTM
+ntill-res,S,1,0,1,0,0,1   <plant_day>  CULT B
+ntill-res,S,1,0,1,0,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,1,0,1,0,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,S,1,0,1,0,0,-999 -999 X
+ntill-res,S,0,0,0,1,0,<start_year>           Starting year
+ntill-res,S,0,0,0,1,0,<end_year>         Last year
+ntill-res,S,0,0,0,1,0,<fname>       Site file name
+ntill-res,S,0,0,0,1,0,0             Labeling type
+ntill-res,S,0,0,0,1,0,-1            Labeling year
+ntill-res,S,0,0,0,1,0,-1.00         Microcosm
+ntill-res,S,0,0,0,1,0,<co2_option>             CO2 Systems
+ntill-res,S,0,0,0,1,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,0,0,0,1,0,-1            pH effect
+ntill-res,S,0,0,0,1,0,-1            Soil Warming
+ntill-res,S,0,0,0,1,0,0             N input scalar option
+ntill-res,S,0,0,0,1,0,0             OMAD scalar option
+ntill-res,S,0,0,0,1,0,0             Climate scalar option
+ntill-res,S,0,0,0,1,0,1             Initial system
+ntill-res,S,0,0,0,1,0,<crop_cultivar>        Initial crop
+ntill-res,S,0,0,0,1,0,Initial tree
+ntill-res,S,0,0,0,1,0,
+ntill-res,S,0,0,0,1,0,Year Month Option
+ntill-res,S,0,0,0,1,0,1             Block #   <block_name>
+ntill-res,S,0,0,0,1,0,<end_year>    Last year
+ntill-res,S,0,0,0,1,0,1             Repeats # years
+ntill-res,S,0,0,0,1,0,<start_year>          Output starting year
+ntill-res,S,0,0,0,1,0,12            Output month
+ntill-res,S,0,0,0,1,0,1.0           Output interval
+ntill-res,S,0,0,0,1,0,F             Weather choice
+ntill-res,S,0,0,0,1,0,<weather_file>
+ntill-res,S,0,0,0,1,0,1   <harvest_day>  HARV G
+ntill-res,S,0,0,0,1,0,1   <harvest_day>  LAST
+ntill-res,S,0,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,0,0,0,1,0,1   <cult_kill_day>  CULT KILL
+ntill-res,S,0,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,0,0,0,1,0,1   <plant_day>  PLTM
+ntill-res,S,0,0,0,1,0,1   <plant_day>  CULT B
+ntill-res,S,0,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,0,0,0,1,0,-999 -999 X
+ntill-res,S,1,0,0,1,0,<start_year>           Starting year
+ntill-res,S,1,0,0,1,0,<end_year>         Last year
+ntill-res,S,1,0,0,1,0,<fname>       Site file name
+ntill-res,S,1,0,0,1,0,0             Labeling type
+ntill-res,S,1,0,0,1,0,-1            Labeling year
+ntill-res,S,1,0,0,1,0,-1.00         Microcosm
+ntill-res,S,1,0,0,1,0,<co2_option>             CO2 Systems
+ntill-res,S,1,0,0,1,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,1,0,0,1,0,-1            pH effect
+ntill-res,S,1,0,0,1,0,-1            Soil Warming
+ntill-res,S,1,0,0,1,0,0             N input scalar option
+ntill-res,S,1,0,0,1,0,0             OMAD scalar option
+ntill-res,S,1,0,0,1,0,0             Climate scalar option
+ntill-res,S,1,0,0,1,0,1             Initial system
+ntill-res,S,1,0,0,1,0,<crop_cultivar>        Initial crop
+ntill-res,S,1,0,0,1,0,Initial tree
+ntill-res,S,1,0,0,1,0,
+ntill-res,S,1,0,0,1,0,Year Month Option
+ntill-res,S,1,0,0,1,0,1             Block #   <block_name>
+ntill-res,S,1,0,0,1,0,<end_year>    Last year
+ntill-res,S,1,0,0,1,0,1             Repeats # years
+ntill-res,S,1,0,0,1,0,<start_year>          Output starting year
+ntill-res,S,1,0,0,1,0,12            Output month
+ntill-res,S,1,0,0,1,0,1.0           Output interval
+ntill-res,S,1,0,0,1,0,F             Weather choice
+ntill-res,S,1,0,0,1,0,<weather_file>
+ntill-res,S,1,0,0,1,0,1   <harvest_day>  HARV G
+ntill-res,S,1,0,0,1,0,1   <harvest_day>  LAST
+ntill-res,S,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
+ntill-res,S,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,1,0,0,1,0,1   <plant_day>  PLTM
+ntill-res,S,1,0,0,1,0,1   <plant_day>  CULT B
+ntill-res,S,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,S,1,0,0,1,0,-999 -999 X
+ntill-res,N,0,0,0,1,0,<start_year>           Starting year
+ntill-res,N,0,0,0,1,0,<end_year>         Last year
+ntill-res,N,0,0,0,1,0,<fname>       Site file name
+ntill-res,N,0,0,0,1,0,0             Labeling type
+ntill-res,N,0,0,0,1,0,-1            Labeling year
+ntill-res,N,0,0,0,1,0,-1.00         Microcosm
+ntill-res,N,0,0,0,1,0,<co2_option>             CO2 Systems
+ntill-res,N,0,0,0,1,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,0,0,0,1,0,-1            pH effect
+ntill-res,N,0,0,0,1,0,-1            Soil Warming
+ntill-res,N,0,0,0,1,0,0             N input scalar option
+ntill-res,N,0,0,0,1,0,0             OMAD scalar option
+ntill-res,N,0,0,0,1,0,0             Climate scalar option
+ntill-res,N,0,0,0,1,0,1             Initial system
+ntill-res,N,0,0,0,1,0,<crop_cultivar>        Initial crop
+ntill-res,N,0,0,0,1,0,Initial tree
+ntill-res,N,0,0,0,1,0,
+ntill-res,N,0,0,0,1,0,Year Month Option
+ntill-res,N,0,0,0,1,0,1             Block #   <block_name>
+ntill-res,N,0,0,0,1,0,<end_year>    Last year
+ntill-res,N,0,0,0,1,0,1             Repeats # years
+ntill-res,N,0,0,0,1,0,<start_year>          Output starting year
+ntill-res,N,0,0,0,1,0,12            Output month
+ntill-res,N,0,0,0,1,0,1.0           Output interval
+ntill-res,N,0,0,0,1,0,F             Weather choice
+ntill-res,N,0,0,0,1,0,<weather_file>
+ntill-res,N,0,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,0,0,0,1,0,1   <cult_kill_day>  CULT KILL
+ntill-res,N,0,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,0,0,0,1,0,1   <plant_day>  PLTM
+ntill-res,N,0,0,0,1,0,1   <plant_day>  CULT B
+ntill-res,N,0,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,0,0,0,1,0,1   <harvest_day>  HARV G
+ntill-res,N,0,0,0,1,0,1   <harvest_day>  LAST
+ntill-res,N,0,0,0,1,0,-999 -999 X
+ntill-res,N,1,0,0,1,0,<start_year>           Starting year
+ntill-res,N,1,0,0,1,0,<end_year>         Last year
+ntill-res,N,1,0,0,1,0,<fname>       Site file name
+ntill-res,N,1,0,0,1,0,0             Labeling type
+ntill-res,N,1,0,0,1,0,-1            Labeling year
+ntill-res,N,1,0,0,1,0,-1.00         Microcosm
+ntill-res,N,1,0,0,1,0,<co2_option>             CO2 Systems
+ntill-res,N,1,0,0,1,0,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,1,0,0,1,0,-1            pH effect
+ntill-res,N,1,0,0,1,0,-1            Soil Warming
+ntill-res,N,1,0,0,1,0,0             N input scalar option
+ntill-res,N,1,0,0,1,0,0             OMAD scalar option
+ntill-res,N,1,0,0,1,0,0             Climate scalar option
+ntill-res,N,1,0,0,1,0,1             Initial system
+ntill-res,N,1,0,0,1,0,<crop_cultivar>        Initial crop
+ntill-res,N,1,0,0,1,0,Initial tree
+ntill-res,N,1,0,0,1,0,
+ntill-res,N,1,0,0,1,0,Year Month Option
+ntill-res,N,1,0,0,1,0,1             Block #   <block_name>
+ntill-res,N,1,0,0,1,0,<end_year>    Last year
+ntill-res,N,1,0,0,1,0,1             Repeats # years
+ntill-res,N,1,0,0,1,0,<start_year>          Output starting year
+ntill-res,N,1,0,0,1,0,12            Output month
+ntill-res,N,1,0,0,1,0,1.0           Output interval
+ntill-res,N,1,0,0,1,0,F             Weather choice
+ntill-res,N,1,0,0,1,0,<weather_file>
+ntill-res,N,1,0,0,1,0,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,1,0,0,1,0,1   <cult_kill_day>  CULT KILL
+ntill-res,N,1,0,0,1,0,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,1,0,0,1,0,1   <plant_day>  PLTM
+ntill-res,N,1,0,0,1,0,1   <plant_day>  CULT B
+ntill-res,N,1,0,0,1,0,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,1,0,0,1,0,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,N,1,0,0,1,0,1   <harvest_day>  HARV G
+ntill-res,N,1,0,0,1,0,1   <harvest_day>  LAST
+ntill-res,N,1,0,0,1,0,-999 -999 X
+ntill-res,S,0,0,0,0,1,<start_year>           Starting year
+ntill-res,S,0,0,0,0,1,<end_year>         Last year
+ntill-res,S,0,0,0,0,1,<fname>       Site file name
+ntill-res,S,0,0,0,0,1,0             Labeling type
+ntill-res,S,0,0,0,0,1,-1            Labeling year
+ntill-res,S,0,0,0,0,1,-1.00         Microcosm
+ntill-res,S,0,0,0,0,1,<co2_option>             CO2 Systems
+ntill-res,S,0,0,0,0,1,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,0,0,0,0,1,-1            pH effect
+ntill-res,S,0,0,0,0,1,-1            Soil Warming
+ntill-res,S,0,0,0,0,1,0             N input scalar option
+ntill-res,S,0,0,0,0,1,0             OMAD scalar option
+ntill-res,S,0,0,0,0,1,0             Climate scalar option
+ntill-res,S,0,0,0,0,1,1             Initial system
+ntill-res,S,0,0,0,0,1,<crop_cultivar>        Initial crop
+ntill-res,S,0,0,0,0,1,Initial tree
+ntill-res,S,0,0,0,0,1,
+ntill-res,S,0,0,0,0,1,Year Month Option
+ntill-res,S,0,0,0,0,1,1             Block #   <block_name>
+ntill-res,S,0,0,0,0,1,<end_year>    Last year
+ntill-res,S,0,0,0,0,1,1             Repeats # years
+ntill-res,S,0,0,0,0,1,<start_year>          Output starting year
+ntill-res,S,0,0,0,0,1,12            Output month
+ntill-res,S,0,0,0,0,1,1.0           Output interval
+ntill-res,S,0,0,0,0,1,F             Weather choice
+ntill-res,S,0,0,0,0,1,<weather_file>
+ntill-res,S,0,0,0,0,1,1   <harvest_day>  HARV G
+ntill-res,S,0,0,0,0,1,1   <harvest_day>  LAST
+ntill-res,S,0,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,0,0,0,0,1,1   <cult_kill_day>  CULT KILL
+ntill-res,S,0,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,0,0,0,0,1,1   <plant_day>  PLTM
+ntill-res,S,0,0,0,0,1,1   <plant_day>  CULT B
+ntill-res,S,0,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,0,0,0,0,1,-999 -999 X
+ntill-res,S,1,0,0,0,1,<start_year>           Starting year
+ntill-res,S,1,0,0,0,1,<end_year>         Last year
+ntill-res,S,1,0,0,0,1,<fname>       Site file name
+ntill-res,S,1,0,0,0,1,0             Labeling type
+ntill-res,S,1,0,0,0,1,-1            Labeling year
+ntill-res,S,1,0,0,0,1,-1.00         Microcosm
+ntill-res,S,1,0,0,0,1,<co2_option>             CO2 Systems
+ntill-res,S,1,0,0,0,1,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,S,1,0,0,0,1,-1            pH effect
+ntill-res,S,1,0,0,0,1,-1            Soil Warming
+ntill-res,S,1,0,0,0,1,0             N input scalar option
+ntill-res,S,1,0,0,0,1,0             OMAD scalar option
+ntill-res,S,1,0,0,0,1,0             Climate scalar option
+ntill-res,S,1,0,0,0,1,1             Initial system
+ntill-res,S,1,0,0,0,1,<crop_cultivar>        Initial crop
+ntill-res,S,1,0,0,0,1,Initial tree
+ntill-res,S,1,0,0,0,1,
+ntill-res,S,1,0,0,0,1,Year Month Option
+ntill-res,S,1,0,0,0,1,1             Block #   <block_name>
+ntill-res,S,1,0,0,0,1,<end_year>    Last year
+ntill-res,S,1,0,0,0,1,1             Repeats # years
+ntill-res,S,1,0,0,0,1,<start_year>          Output starting year
+ntill-res,S,1,0,0,0,1,12            Output month
+ntill-res,S,1,0,0,0,1,1.0           Output interval
+ntill-res,S,1,0,0,0,1,F             Weather choice
+ntill-res,S,1,0,0,0,1,<weather_file>
+ntill-res,S,1,0,0,0,1,1   <harvest_day>  HARV G
+ntill-res,S,1,0,0,0,1,1   <harvest_day>  LAST
+ntill-res,S,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,S,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
+ntill-res,S,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,S,1,0,0,0,1,1   <plant_day>  PLTM
+ntill-res,S,1,0,0,0,1,1   <plant_day>  CULT B
+ntill-res,S,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+ntill-res,S,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,S,1,0,0,0,1,-999 -999 X
+ntill-res,N,0,0,0,0,1,<start_year>           Starting year
+ntill-res,N,0,0,0,0,1,<end_year>         Last year
+ntill-res,N,0,0,0,0,1,<fname>       Site file name
+ntill-res,N,0,0,0,0,1,0             Labeling type
+ntill-res,N,0,0,0,0,1,-1            Labeling year
+ntill-res,N,0,0,0,0,1,-1.00         Microcosm
+ntill-res,N,0,0,0,0,1,<co2_option>             CO2 Systems
+ntill-res,N,0,0,0,0,1,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,0,0,0,0,1,-1            pH effect
+ntill-res,N,0,0,0,0,1,-1            Soil Warming
+ntill-res,N,0,0,0,0,1,0             N input scalar option
+ntill-res,N,0,0,0,0,1,0             OMAD scalar option
+ntill-res,N,0,0,0,0,1,0             Climate scalar option
+ntill-res,N,0,0,0,0,1,1             Initial system
+ntill-res,N,0,0,0,0,1,<crop_cultivar>        Initial crop
+ntill-res,N,0,0,0,0,1,Initial tree
+ntill-res,N,0,0,0,0,1,
+ntill-res,N,0,0,0,0,1,Year Month Option
+ntill-res,N,0,0,0,0,1,1             Block #   <block_name>
+ntill-res,N,0,0,0,0,1,<end_year>    Last year
+ntill-res,N,0,0,0,0,1,1             Repeats # years
+ntill-res,N,0,0,0,0,1,<start_year>          Output starting year
+ntill-res,N,0,0,0,0,1,12            Output month
+ntill-res,N,0,0,0,0,1,1.0           Output interval
+ntill-res,N,0,0,0,0,1,F             Weather choice
+ntill-res,N,0,0,0,0,1,<weather_file>
+ntill-res,N,0,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,0,0,0,0,1,1   <cult_kill_day>  CULT KILL
+ntill-res,N,0,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,0,0,0,0,1,1   <plant_day>  PLTM
+ntill-res,N,0,0,0,0,1,1   <plant_day>  CULT B
+ntill-res,N,0,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,0,0,0,0,1,1   <harvest_day>  HARV G
+ntill-res,N,0,0,0,0,1,1   <harvest_day>  LAST
+ntill-res,N,0,0,0,0,1,-999 -999 X
+ntill-res,N,1,0,0,0,1,<start_year>           Starting year
+ntill-res,N,1,0,0,0,1,<end_year>         Last year
+ntill-res,N,1,0,0,0,1,<fname>       Site file name
+ntill-res,N,1,0,0,0,1,0             Labeling type
+ntill-res,N,1,0,0,0,1,-1            Labeling year
+ntill-res,N,1,0,0,0,1,-1.00         Microcosm
+ntill-res,N,1,0,0,0,1,<co2_option>             CO2 Systems
+ntill-res,N,1,0,0,0,1,<start_year>  <end_year>  co2tm(1) and co2tm(2)
+ntill-res,N,1,0,0,0,1,-1            pH effect
+ntill-res,N,1,0,0,0,1,-1            Soil Warming
+ntill-res,N,1,0,0,0,1,0             N input scalar option
+ntill-res,N,1,0,0,0,1,0             OMAD scalar option
+ntill-res,N,1,0,0,0,1,0             Climate scalar option
+ntill-res,N,1,0,0,0,1,1             Initial system
+ntill-res,N,1,0,0,0,1,<crop_cultivar>        Initial crop
+ntill-res,N,1,0,0,0,1,Initial tree
+ntill-res,N,1,0,0,0,1,
+ntill-res,N,1,0,0,0,1,Year Month Option
+ntill-res,N,1,0,0,0,1,1             Block #   <block_name>
+ntill-res,N,1,0,0,0,1,<end_year>    Last year
+ntill-res,N,1,0,0,0,1,1             Repeats # years
+ntill-res,N,1,0,0,0,1,<start_year>          Output starting year
+ntill-res,N,1,0,0,0,1,12            Output month
+ntill-res,N,1,0,0,0,1,1.0           Output interval
+ntill-res,N,1,0,0,0,1,F             Weather choice
+ntill-res,N,1,0,0,0,1,<weather_file>
+ntill-res,N,1,0,0,0,1,1   <cult_day_preharvest> OMAD <manure>
+ntill-res,N,1,0,0,0,1,1   <cult_kill_day>  CULT KILL
+ntill-res,N,1,0,0,0,1,1   <plant_day>  CROP <crop_cultivar>
+ntill-res,N,1,0,0,0,1,1   <plant_day>  PLTM
+ntill-res,N,1,0,0,0,1,1   <plant_day>  CULT B
+ntill-res,N,1,0,0,0,1,1   <plant_day>  FERT <fert-amt>
+ntill-res,N,1,0,0,0,1,"1   <irr_day> IRIG (1A,0.925F,-1L)"
+ntill-res,N,1,0,0,0,1,1   <harvest_day>  HARV G
+ntill-res,N,1,0,0,0,1,1   <harvest_day>  LAST
+ntill-res,N,1,0,0,0,1,-999 -999 X
