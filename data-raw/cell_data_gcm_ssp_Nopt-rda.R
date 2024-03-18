@@ -5,7 +5,7 @@ library(terra)
 #------------------------------------------------------------------------------------------------
 path      = getwd()
 save_path = paste(path, 'data-raw/', sep = '/')
-date      = '08December23'
+date      = '05February24'
 #------------------------------------------------------------------------------------------------
 load(paste0(path, '/data-raw/cell_data_table_', date, '.RData'))
 crop_area_r      = rast(paste(pkg.env$gis_path, 'msw-cropland-rf-ir-area.tif', sep = '/'))
@@ -23,14 +23,47 @@ crop_area_dt_f[, crop_sum := (maize_rainfed_2015 + maize_irrigated_2015 + soybea
 sum(crop_area_dt_f[, crop_sum], na.rm = TRUE) # 493,834,741 BEFORE REMOVAL
 area_missing_dt  = crop_area_dt_f[is.na(crop_sum)]
 
+# REMOVE < 1 HA BY CROP AND IRR
+maiz_0_gr        = crop_area_dt_f[, .(cell, x, y, maize_rainfed_2015)]
+maiz_0_gr        = maiz_0_gr[maize_rainfed_2015 < 1, cell]
 
-crop_area_dt_f   = crop_area_dt_f[wheat_irrigated_2015 >= 1 | wheat_rainfed_2015 >= 1 | maize_rainfed_2015 >= 1 |
-                                    maize_irrigated_2015 >= 1 | soybean_rainfed_2015 >= 1 | soybean_irrigated_2015 >= 1,]
-gridid_f         = unique(crop_area_dt_f[,cell])
-main_table       = main_table[gridid %in% gridid_f,]
+maiz_1_gr        = crop_area_dt_f[, .(cell, x, y, maize_irrigated_2015)]
+maiz_1_gr        = maiz_1_gr[maize_irrigated_2015 < 1, cell]
+
+soyb_0_gr        = crop_area_dt_f[, .(cell, x, y, soybean_rainfed_2015)]
+soyb_0_gr        = soyb_0_gr[soybean_rainfed_2015 < 1, cell]
+
+soyb_1_gr        = crop_area_dt_f[, .(cell, x, y, soybean_irrigated_2015)]
+soyb_1_gr        = soyb_1_gr[soybean_irrigated_2015 < 1, cell]
+
+wht_0_gr         = crop_area_dt_f[, .(cell, x, y, wheat_rainfed_2015)]
+wht_0_gr         = wht_0_gr[wheat_rainfed_2015 < 1, cell]
+
+wht_1_gr         = crop_area_dt_f[, .(cell, x, y, wheat_irrigated_2015)]
+wht_1_gr         = wht_1_gr[wheat_irrigated_2015 < 1, cell]
+
+  # FILTER
+main_table       = main_table[!crop %in% 'maiz' | !irr == 0 | !gridid %in% maiz_0_gr,]
+gc()
+main_table       = main_table[!crop %in% 'maiz' | !irr == 1 | !gridid %in% maiz_1_gr,]
+gc()
+main_table       = main_table[!crop %in% 'soyb' | !irr == 0 | !gridid %in% soyb_0_gr,]
+gc()
+main_table       = main_table[!crop %in% 'soyb' | !irr == 1 | !gridid %in% soyb_1_gr,]
+gc()
+main_table       = main_table[!crop %in% c('swht, wwht') | !irr == 0 | !gridid %in% wht_0_gr,]
+gc()
+main_table       = main_table[!crop %in% c('swht, wwht') | !irr == 1 | !gridid %in% wht_1_gr,]
+gc()
 #------------------------------------------------------------------------------------------------
 # RDA SPLIT
 #------------------------------------------------------------------------------------------------
+# remove non-used scenarios
+scenarios = c('res', 'ntill', 'ccg', 'ccl', 'ccg-res', 'ccl-res')
+
+main_table = main_table[!scenario %in% scenarios]
+gc()
+
 # split into gcm x ssp combinations
 gcm       = fread(paste(path,'/data-raw/cmip6_calendars.csv', sep = ''))
 gcm       = gcm[, calendar := NULL]
@@ -45,34 +78,48 @@ for (.ssp in ssp) {
   for (.gcm in gcm$gcm) {
     print(paste('Creating ', .ssp, ' ', .gcm, ' cell data rda file.', sep = ''))
     gcm_ssp_data = main_table[gcm %in% .gcm & ssp %in% .ssp,]
-    # reduce scenarios to BMP and BAU
-    gcm_ssp_data = gcm_ssp_data[scenario %in% c('conv', 'ccg-ntill', 'ccl-ntill')]
     gc()
-    # add nitrogen yield response curve levels
-    n_scenario.col = gcm_ssp_data[, .('n_scenario' = rep(c('actual', 'none', 'n_p05', 'n_p10', 'n_p15', 'n_p20', 'n_p25', 'n_p30', 'n_p35',
-                                                        'n_r05', 'n_r10', 'n_r15', 'n_r20', 'n_r25', 'n_r30', 'n_r35'))), by = scenario]
+    # add nitrogen yield response curve levels by crop type
+    n_scenario.col = gcm_ssp_data[, .('n_scenario' = rep(c('actual', 'none', 'n_1', 'n_2', 'n_3',
+                                                                          'n_4', 'n_5', 'n_6', 'n_7', 'n_8'))), by = scenario]
     gcm_ssp_data      = unique(gcm_ssp_data[n_scenario.col, on = .(scenario = scenario), by = .EACHI, allow.cartesian = TRUE])
     gc()
     # order
     setcolorder(gcm_ssp_data, c('gridid', 'gridid.rotated', 'x', 'x.rotated','y','regionid', 'ssp', 'gcm','crop', 'irr','scenario', 'n_scenario','pset_id'))
     setorder(gcm_ssp_data, gridid, ssp, gcm, crop, irr, scenario, n_scenario)
     gc()
-    # adjust nitrogen levels
-    gcm_ssp_data[n_scenario %in% 'none', fertN.amt := 0]
-    gcm_ssp_data[n_scenario %in% 'n_p05', fertN.amt := fertN.amt + 5L]
-    gcm_ssp_data[n_scenario %in% 'n_p10', fertN.amt := fertN.amt + 10L]
-    gcm_ssp_data[n_scenario %in% 'n_p15', fertN.amt := fertN.amt + 15L]
-    gcm_ssp_data[n_scenario %in% 'n_p20', fertN.amt := fertN.amt + 20L]
-    gcm_ssp_data[n_scenario %in% 'n_p25', fertN.amt := fertN.amt + 25L]
-    gcm_ssp_data[n_scenario %in% 'n_p30', fertN.amt := fertN.amt + 30L]
-    gcm_ssp_data[n_scenario %in% 'n_p35', fertN.amt := fertN.amt + 35L]
-    gcm_ssp_data[n_scenario %in% 'n_r05', fertN.amt := fertN.amt - 5L]
-    gcm_ssp_data[n_scenario %in% 'n_r10', fertN.amt := fertN.amt - 10L]
-    gcm_ssp_data[n_scenario %in% 'n_r15', fertN.amt := fertN.amt - 15L]
-    gcm_ssp_data[n_scenario %in% 'n_r20', fertN.amt := fertN.amt - 20L]
-    gcm_ssp_data[n_scenario %in% 'n_r25', fertN.amt := fertN.amt - 25L]
-    gcm_ssp_data[n_scenario %in% 'n_r30', fertN.amt := fertN.amt - 30L]
-    gcm_ssp_data[n_scenario %in% 'n_r35', fertN.amt := fertN.amt - 35L]
+    # adjust nitrogen levels, 8 increments, maize
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'none', fertN.amt := 0]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_1', fertN.amt := 4.38]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_2', fertN.amt := 8.75]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_3', fertN.amt := 13.13]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_4', fertN.amt := 17.5]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_5', fertN.amt := 21.88]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_6', fertN.amt := 26.25]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_7', fertN.amt := 30.63]
+    gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_8', fertN.amt := 35L]
+
+    # adjust nitrogen levels, 8 increments, soybean
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'none', fertN.amt := 0]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_1', fertN.amt := 1.25]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_2', fertN.amt := 2.5]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_3', fertN.amt := 3.75]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_4', fertN.amt := 5]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_5', fertN.amt := 6.25]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_6', fertN.amt := 7.5]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_7', fertN.amt := 8.75]
+    gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_8', fertN.amt := 10]
+
+    # adjust nitrogen levels, 8 increments, wheat
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'none', fertN.amt := 0]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_1', fertN.amt := 2.5]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_2', fertN.amt := 5L]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_3', fertN.amt := 7.5]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_4', fertN.amt := 10L]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_5', fertN.amt := 12.5]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_6', fertN.amt := 15L]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_7', fertN.amt := 17.5]
+    gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_8', fertN.amt := 20L]
     # save
     save(gcm_ssp_data, file = paste(.gcm, .ssp, 'cell_data_Nopt.rda', sep = '_'))
     gc()
@@ -80,34 +127,48 @@ for (.ssp in ssp) {
 }
 # historical case
 gcm_ssp_data = main_table[gcm %in% 'historical' & ssp %in% 'historical',]
-# reduce scenarios to BMP and BAU
-gcm_ssp_data = gcm_ssp_data[scenario %in% c('conv', 'ccg-ntill', 'ccl-ntill')]
-gc()
-# add nitrogen yield response curve levels
-n_scenario.col = gcm_ssp_data[, .('n_scenario' = rep(c('actual', 'none', 'n_p05', 'n_p10', 'n_p15', 'n_p20', 'n_p25', 'n_p30', 'n_p35',
-                                                       'n_r05', 'n_r10', 'n_r15', 'n_r20', 'n_r25', 'n_r30', 'n_r35'))), by = scenario]
+# add nitrogen yield response curve levels by crop type
+n_scenario.col = gcm_ssp_data[, .('n_scenario' = rep(c('actual', 'none', 'n_1', 'n_2', 'n_3',
+                                                       'n_4', 'n_5', 'n_6', 'n_7', 'n_8'))), by = scenario]
 gcm_ssp_data      = unique(gcm_ssp_data[n_scenario.col, on = .(scenario = scenario), by = .EACHI, allow.cartesian = TRUE])
 gc()
 # order
 setcolorder(gcm_ssp_data, c('gridid', 'gridid.rotated', 'x', 'x.rotated','y','regionid', 'ssp', 'gcm','crop', 'irr','scenario', 'n_scenario','pset_id'))
 setorder(gcm_ssp_data, gridid, ssp, gcm, crop, irr, scenario, n_scenario)
 gc()
-# adjust nitrogen levels
-gcm_ssp_data[n_scenario %in% 'none', fertN.amt := 0]
-gcm_ssp_data[n_scenario %in% 'n_p05', fertN.amt := fertN.amt + 5L]
-gcm_ssp_data[n_scenario %in% 'n_p10', fertN.amt := fertN.amt + 10L]
-gcm_ssp_data[n_scenario %in% 'n_p15', fertN.amt := fertN.amt + 15L]
-gcm_ssp_data[n_scenario %in% 'n_p20', fertN.amt := fertN.amt + 20L]
-gcm_ssp_data[n_scenario %in% 'n_p25', fertN.amt := fertN.amt + 25L]
-gcm_ssp_data[n_scenario %in% 'n_p30', fertN.amt := fertN.amt + 30L]
-gcm_ssp_data[n_scenario %in% 'n_p35', fertN.amt := fertN.amt + 35L]
-gcm_ssp_data[n_scenario %in% 'n_r05', fertN.amt := fertN.amt - 5L]
-gcm_ssp_data[n_scenario %in% 'n_r10', fertN.amt := fertN.amt - 10L]
-gcm_ssp_data[n_scenario %in% 'n_r15', fertN.amt := fertN.amt - 15L]
-gcm_ssp_data[n_scenario %in% 'n_r20', fertN.amt := fertN.amt - 20L]
-gcm_ssp_data[n_scenario %in% 'n_r25', fertN.amt := fertN.amt - 25L]
-gcm_ssp_data[n_scenario %in% 'n_r30', fertN.amt := fertN.amt - 30L]
-gcm_ssp_data[n_scenario %in% 'n_r35', fertN.amt := fertN.amt - 35L]
+# adjust nitrogen levels, 8 increments, maize
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'none', fertN.amt := 0]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_1', fertN.amt := 4.38]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_2', fertN.amt := 8.75]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_3', fertN.amt := 13.13]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_4', fertN.amt := 17.5]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_5', fertN.amt := 21.88]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_6', fertN.amt := 26.25]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_7', fertN.amt := 30.63]
+gcm_ssp_data[crop %in% 'maiz' & n_scenario %in% 'n_8', fertN.amt := 35L]
+
+# adjust nitrogen levels, 8 increments, soybean
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'none', fertN.amt := 0]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_1', fertN.amt := 1.25]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_2', fertN.amt := 2.5]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_3', fertN.amt := 3.75]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_4', fertN.amt := 5]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_5', fertN.amt := 6.25]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_6', fertN.amt := 7.5]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_7', fertN.amt := 8.75]
+gcm_ssp_data[crop %in% 'soyb' & n_scenario %in% 'n_8', fertN.amt := 10]
+
+# adjust nitrogen levels, 8 increments, wheat
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'none', fertN.amt := 0]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_1', fertN.amt := 2.5]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_2', fertN.amt := 5L]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_3', fertN.amt := 7.5]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_4', fertN.amt := 10L]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_5', fertN.amt := 12.5]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_6', fertN.amt := 15L]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_7', fertN.amt := 17.5]
+gcm_ssp_data[crop %in% c('swht', 'wwht') & n_scenario %in% 'n_8', fertN.amt := 20L]
+# save
 save(gcm_ssp_data, file = 'historical_historical_cell_data.rda')
 
 # N.B. the data table name is gcm_ssp_data when loaded

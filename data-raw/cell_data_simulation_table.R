@@ -200,8 +200,7 @@ date = '05February24'
   setorder(gcm.ssp.hist, gridid)
 
   # add scenario column, filter, and order
-  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ntill-res','ccg', 'ccl', 'ccg-res', 'ccl-res',
-                                                    'ccg-ntill', 'ccl-ntill'))), by = irr]
+  scenario.col   = gridid.dt[, .('scenario' = rep(c('conv', 'res', 'ntill', 'ntill-res'))), by = irr]
 
   gridid.dt      = unique(gridid.dt[scenario.col, on = .(irr = irr), by = .EACHI, allow.cartesian = TRUE])
   gridid.dt      = gridid.dt[gcm.ssp.hist, on = .(gridid = gridid, irr = irr), by = .EACHI, allow.cartesian = TRUE]
@@ -394,6 +393,7 @@ date = '05February24'
   gc()
 
   main_table = unique(main_table)
+  gc()
   length(unique(main_table[, gridid])) # 33316
 #-----------------------------------------------------------------------------------------------
 save(main_table, file = paste0(save_path,'/','cell_data_table_', date, '.RData'))
