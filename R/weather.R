@@ -214,6 +214,78 @@ weather_pr_mm_to_cm = function(.wthfile) {
 }
 
 
+#' Calculate bio-climatic variables
+#'
+#' Calculates bioclimatic variables from daily values for Tmin, Tmax, and precipitation
+#'
+#' @import data.table
+#' @importFrom moments kurtosis, skewness
+#' @param prec vector of daily precipitation
+#' @param tmin vector of daily minimum temperature
+#' @param tmax vector of daily maximum temperature
+#' @returns A named list (bio1... bio19), length  19 of the following bioclimatic variables
+#'  - bio1 : Annual Mean Temperature
+#'  - bio2 : Mean Diurnal Range
+#'  - bio4 : Temperature Seasonality
+#'  - bio5 : Max Temperature of Warmest Period
+#'  - bio6 : Min Temperature of Coldest Period
+#'  - bio7 : Temperature Annual Range (P5-P6)
+#'  - bio3 : Isothermality (P2 / P7)
+#'  - bio8 : Mean Temperature of Wettest Quarter
+#'  - bio9 : Mean Temperature of Driest Quarter
+#'  - bio10: Mean Temperature of Warmest Quarter
+#'  - bio11: Mean Temperature of Coldest Quarter
+#'  - bio12: Annual Precipitation
+#'  - bio13: Precipitation of Wettest Period
+#'  - bio14: Precipitation of Driest Period
+#'  - bio15: Precipitation Seasonality
+#'  - bio16: Precipitation of Wettest Quarter
+#'  - bio17: Precipitation of Driest Quarter
+#'  - bio18: Precipitation of Warmest Quarter
+#'  - bio19: Precipitation of Coldest Quarter
+#' @export
+biov = function(prec, tmin, tmax) {
+  quarterly = function(x, fun=sum)  {
+    c(fun(x[1:3]), fun(x[4:6]), fun(x[7:9]), fun(x[10:12]))
+  }
+
+  tavg = (tmin + tmax) / 2
+  wet = quarterly(prec)              # precip by quarter (3 months)
+  wetqrt = which.max(wet)
+  dryqrt = which.min(wet)
+  tmp = quarterly(tavg) / 3          # average temp by quarter
+  hot = which.max(tmp)
+  cold = which.min(tmp)
+
+  # Note: in following, we define seasonality as range (Dismo package used sd*100), according to
+  # https://www.sciencedirect.com/science/article/abs/pii/S0012825221003445
+  # https://www.nature.com/articles/s41597-020-00726-5
+
+  p = as.list(rep(NA, 19))
+  names(p) = paste0('bio', 1:19)
+  p[[1]]  = mean(tavg)            # P1  Annual Mean Temperature
+  p[[2]]  = mean(tmax-tmin)       # P2  Mean Diurnal Range
+  p[[4]]  = diff(range(tavg))     # P4  Temperature Seasonality
+  p[[5]]  = max(tmax)             # P5  Max Temperature of Warmest Period
+  p[[6]]  = min(tmin)             # P6  Min Temperature of Coldest Period
+  p[[7]]  = p[[5]] - p[[6]]       # P7  Temperature Annual Range (P5-P6)
+  p[[3]]  = p[[2]] / p[[7]]       # P3  Isothermality (P2 / P7)
+  p[[8]]  = tmp[wetqrt]           # P8  Mean Temperature of Wettest Quarter
+  p[[9]]  = tmp[dryqrt]           # P9  Mean Temperature of Driest Quarter
+  p[[10]] = max(tmp)              # P10 Mean Temperature of Warmest Quarter
+  p[[11]] = min(tmp)              # P11 Mean Temperature of Coldest Quarter
+  p[[12]] = sum(prec)             # P12 Annual Precipitation
+  p[[13]] = max(prec)             # P13 Precipitation of Wettest Period
+  p[[14]] = min(prec)             # P14 Precipitation of Driest Period
+  p[[15]] = diff(range(prec))     # P15 Precipitation Seasonality
+  p[[16]] = max(wet)              # P16 Precipitation of Wettest Quarter
+  p[[17]] = min(wet)              # P17 Precipitation of Driest Quarter
+  p[[18]] = wet[hot]              # P18. Precipitation of Warmest Quarter
+  p[[19]] = wet[cold]             # P19. Precipitation of Coldest Quarter
+  return(p)
+}
+
+
 #' Calculate weather statistics
 #'
 #' Used to calculate summary statistics of weather file data, over successive periods of time (default is decadal).
