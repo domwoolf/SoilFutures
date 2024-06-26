@@ -4,7 +4,7 @@
 \alias{make_blocks}
 \title{Split vector into equal sized chunks}
 \usage{
-make_blocks(x, n = 5)
+make_blocks(x, n = 5, offset = 1, method = "year")
 }
 \description{
 Split vector into equal sized chunks
